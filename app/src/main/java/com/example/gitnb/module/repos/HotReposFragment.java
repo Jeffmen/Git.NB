@@ -3,8 +3,8 @@ package com.example.gitnb.module.repos;
 import java.util.ArrayList;
 
 import com.example.gitnb.R;
-import src.com.example.gitnb.api.RetrofitNetworkAbs;
-import src.com.example.gitnb.api.SearchClient;
+import com.example.gitnb.api.RetrofitNetworkAbs;
+import com.example.gitnb.api.SearchClient;
 import com.example.gitnb.app.BaseFragment;
 import com.example.gitnb.model.Repository;
 import com.example.gitnb.model.search.ReposSearch;

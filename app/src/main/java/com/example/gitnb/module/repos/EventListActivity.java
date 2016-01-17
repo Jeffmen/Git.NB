@@ -11,9 +11,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.gitnb.R;
-import src.com.example.gitnb.api.RepoClient;
-import src.com.example.gitnb.api.RetrofitNetworkAbs;
-import src.com.example.gitnb.api.UsersClient;
+import com.example.gitnb.api.RepoClient;
+import com.example.gitnb.api.RetrofitNetworkAbs;
+import com.example.gitnb.api.UsersClient;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.model.Event;
 import com.example.gitnb.model.Organization;

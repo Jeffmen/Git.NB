@@ -1,4 +1,4 @@
-package src.com.example.gitnb.api;
+package com.example.gitnb.api;
 
 //http://blog.csdn.net/lmj623565791/article/details/48129405
 public class SearchClient extends RetrofitNetworkAbs{

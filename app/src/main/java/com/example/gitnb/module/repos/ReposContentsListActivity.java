@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.gitnb.R;
-import src.com.example.gitnb.api.RepoClient;
-import src.com.example.gitnb.api.RetrofitNetworkAbs;
+import com.example.gitnb.api.RepoClient;
+import com.example.gitnb.api.RetrofitNetworkAbs;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.model.Content;
 import com.example.gitnb.model.Repository;

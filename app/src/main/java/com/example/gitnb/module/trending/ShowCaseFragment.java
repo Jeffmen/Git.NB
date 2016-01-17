@@ -3,8 +3,8 @@ package com.example.gitnb.module.trending;
 import java.util.ArrayList;
 
 import com.example.gitnb.R;
-import src.com.example.gitnb.api.RetrofitNetworkAbs;
-import src.com.example.gitnb.api.TrendingClient;
+import com.example.gitnb.api.RetrofitNetworkAbs;
+import com.example.gitnb.api.TrendingClient;
 import com.example.gitnb.app.BaseFragment;
 import com.example.gitnb.model.ShowCase;
 import com.example.gitnb.module.MainActivity.UpdateLanguageListener;

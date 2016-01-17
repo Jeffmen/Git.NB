@@ -1,4 +1,4 @@
-package src.com.example.gitnb.api;
+package com.example.gitnb.api;
 
 import com.example.gitnb.model.search.ReposSearch;
 import com.example.gitnb.model.search.UsersSearch;

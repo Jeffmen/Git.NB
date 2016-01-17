@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
 		if(me != null){
 			pagerAdapter.addFragment(new ReceivedEventsFragment(), "News");
 		}
-		pagerAdapter.addFragment(new HotReposFragment(), "Repos");
-		pagerAdapter.addFragment(new HotUserFragment(), "User");
+		pagerAdapter.addFragment(new HotReposFragment(), "HotRepos");
+		pagerAdapter.addFragment(new HotUserFragment(), "HotUser");
 		pager.setAdapter(pagerAdapter);
 		tabs.setupWithViewPager(pager);
 		tabs.setTabMode(TabLayout.MODE_SCROLLABLE);

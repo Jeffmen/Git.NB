@@ -1,10 +1,10 @@
 package com.example.gitnb.module;
 
 import com.example.gitnb.R;
-import src.com.example.gitnb.api.GitHub;
-import src.com.example.gitnb.api.LoginClient;
-import src.com.example.gitnb.api.RetrofitNetworkAbs;
-import src.com.example.gitnb.api.UsersClient;
+import com.example.gitnb.api.GitHub;
+import com.example.gitnb.api.LoginClient;
+import com.example.gitnb.api.RetrofitNetworkAbs;
+import com.example.gitnb.api.UsersClient;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.model.Token;
 import com.example.gitnb.model.User;

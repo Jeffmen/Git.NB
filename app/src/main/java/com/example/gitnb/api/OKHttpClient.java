@@ -1,11 +1,11 @@
-package src.com.example.gitnb.api;
+package com.example.gitnb.api;
 
 import java.io.IOException;
 
 import android.os.Handler;
 import android.os.Looper;
 
-import src.com.example.gitnb.api.RetrofitNetworkAbs.NetworkListener;
+import com.example.gitnb.api.RetrofitNetworkAbs.NetworkListener;
 import com.google.gson.Gson;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;

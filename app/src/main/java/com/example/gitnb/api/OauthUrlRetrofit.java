@@ -1,4 +1,4 @@
-package src.com.example.gitnb.api;
+package com.example.gitnb.api;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -14,7 +14,7 @@ import javax.net.ssl.TrustManager;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
-import src.com.example.gitnb.api.FakeX509TrustManager;
+import com.example.gitnb.api.FakeX509TrustManager;
 
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;

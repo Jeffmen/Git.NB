@@ -184,7 +184,8 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			Event item = getItem(position);
 			if(item != null){
 				viewHolder.type_img.setBackgroundResource(R.drawable.ic_chevron_right_white_18dp);
-				int hours = Utils.fromNow(item.created_at);
+				int minute = Utils.fromNow(item.created_at);
+				int hours = minute/60;
 				int days = hours/24;
 				int months = days/30;
 				int years = months/12;
@@ -210,7 +211,7 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
 					viewHolder.created_date.setText(hours + " hours ago");
 				}
 				else{
-					viewHolder.created_date.setText(hours + " hour ago");
+					viewHolder.created_date.setText(minute + " minutes ago");
 				}
 				//viewHolder.event_user.setText(item.actor.getLogin());
 				//viewHolder.description.setText(item.payload.issue.title);

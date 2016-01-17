@@ -3,9 +3,9 @@ package com.example.gitnb.module.repos;
 import java.text.SimpleDateFormat;
 
 import com.example.gitnb.R;
-import src.com.example.gitnb.api.OKHttpClient;
-import src.com.example.gitnb.api.RepoActionsClient;
-import src.com.example.gitnb.api.RetrofitNetworkAbs;
+import com.example.gitnb.api.OKHttpClient;
+import com.example.gitnb.api.RepoActionsClient;
+import com.example.gitnb.api.RetrofitNetworkAbs;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.model.Repository;
 import com.example.gitnb.module.user.HotUserFragment;

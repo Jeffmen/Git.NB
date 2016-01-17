@@ -1,4 +1,4 @@
-package src.com.example.gitnb.api;
+package com.example.gitnb.api;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;

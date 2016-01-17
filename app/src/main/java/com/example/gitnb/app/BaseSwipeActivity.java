@@ -1,8 +1,6 @@
 package com.example.gitnb.app;
 
-import me.imid.swipebacklayout.lib.SwipeBackLayout;
-import me.imid.swipebacklayout.lib.app.SwipeBackActivityBase;
-import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 import com.example.gitnb.R;
 import com.example.gitnb.utils.Utils;
@@ -14,7 +12,6 @@ import android.os.Message;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +20,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-public abstract class BaseSwipeActivity  extends AppCompatActivity implements SwipeBackActivityBase {
-    private SwipeBackActivityHelper mHelper;
+public abstract class BaseSwipeActivity  extends SwipeBackActivity {
 	protected static int START_UPDATE = 100;
 	protected static int END_UPDATE = 200;
 	protected static int END_ERROR = 300;
@@ -54,41 +50,9 @@ public abstract class BaseSwipeActivity  extends AppCompatActivity implements Sw
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHelper = new SwipeBackActivityHelper(this);
-        mHelper.onActivityCreate();
         setStatus();
     }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mHelper.onPostCreate();
-    }
-
-    @Override
-    public View findViewById(int id) {
-        View v = super.findViewById(id);
-        if (v == null && mHelper != null)
-            return mHelper.findViewById(id);
-        return v;
-    }
-
-    @Override
-    public SwipeBackLayout getSwipeBackLayout() {
-        return mHelper.getSwipeBackLayout();
-    }
-
-    @Override
-    public void setSwipeBackEnable(boolean enable) {
-        getSwipeBackLayout().setEnableGesture(enable);
-    }
-
-    @Override
-    public void scrollToFinishActivity() {
-        me.imid.swipebacklayout.lib.Utils.convertActivityToTranslucent(this);
-        getSwipeBackLayout().scrollToFinishActivity();
-    }
-
+    
     @Override
     public void setContentView(int layoutResId) {
         super.setContentView(layoutResId);   
@@ -157,7 +121,7 @@ public abstract class BaseSwipeActivity  extends AppCompatActivity implements Sw
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            //window.setStatusBarColor(Color.TRANSPARENT);
+            window.setStatusBarColor(Color.TRANSPARENT);
             window.setNavigationBarColor(Color.TRANSPARENT);
         }
     }
