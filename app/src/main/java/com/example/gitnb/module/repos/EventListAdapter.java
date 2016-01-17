@@ -332,7 +332,7 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			break;
 		case ReleaseEvent:
 			viewHolder.event_user.append(" released ");
-			viewHolder.event_user.append(createReposSpan(item.payload.repository.getName(), position));
+			viewHolder.event_user.append(item.payload.release.body);
 			viewHolder.description.setText("");
 			break;
 		default:
