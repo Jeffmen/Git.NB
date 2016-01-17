@@ -111,6 +111,7 @@ public class HotReposFragment extends BaseFragment implements RetrofitNetworkAbs
 	public void onOK(ReposSearch date) {   	
 		if(page == 1){
         	adapter.update((ArrayList<Repository>)date.items);
+			recyclerView.scrollToPosition(0);
     	}
     	else{
             isLoadingMore = false;
