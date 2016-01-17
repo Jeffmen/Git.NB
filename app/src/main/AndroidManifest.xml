@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.gitnb">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application
+        android:name="com.example.gitnb.app.Application"
+        android:allowBackup="true"
+        android:icon="@drawable/launcher_icon2"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.gitnb.module.WelcomeActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.user.UserDetailActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.repos.ReposDetailActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.repos.ReposContentsListActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.repos.ReposContentActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.user.ImageShowerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ImageScale">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.LanguageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentActivityStyle">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.user.UserListActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.repos.ReposListActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.repos.EventListActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.GitHubAnthorizeActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.user.OrganizationListActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.example.gitnb.module.user.OrganizationDetailActivity"
+            android:screenOrientation="portrait">
+        </activity>
+    </application>
+
+</manifest>

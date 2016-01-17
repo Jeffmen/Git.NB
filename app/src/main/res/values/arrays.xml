@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="all_language_name">
+        <item>JavaScript</item>
+        <item>Java</item>
+        <item>PHP</item>
+        <item>Ruby</item>
+        <item>Python</item>
+        <item>CSS</item>
+        <item>C</item>
+        <item>Objective-C</item>
+        <item>Shell</item>
+        <item>R</item>
+        <item>Perl</item>
+        <item>Lua</item>
+        <item>HTML</item>
+        <item>Scala</item>
+        <item>Go</item>
+        <item>Cancel</item>
+    </string-array>    
+    <string-array name="all_language_value">
+        <item>javascript</item>
+        <item>java</item>
+        <item>php</item>
+        <item>ruby</item>
+        <item>python</item>
+        <item>css</item>
+        <item>c</item>
+        <item>objective-C</item>
+        <item>shell</item>
+        <item>r</item>
+        <item>perl</item>
+        <item>lua</item>
+        <item>html</item>
+        <item>scala</item>
+        <item>go</item>
+        <item></item>
+    </string-array>
+</resources>

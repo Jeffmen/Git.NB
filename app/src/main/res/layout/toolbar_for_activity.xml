@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>  
+	<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+         xmlns:app="http://schemas.android.com/apk/res-auto"
+	     android:layout_width="match_parent"
+	     android:layout_height="80dp"
+	     android:elevation="10dp">
+		
+		<LinearLayout 
+		    android:orientation="vertical"  
+		    android:layout_width="match_parent"  
+		    android:layout_height="match_parent"> 
+		    <ImageView
+		        android:id="@+id/title_bg"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+	            android:gravity="center" 
+	            android:layout_gravity="center"
+		        android:scaleType="fitXY"
+		        android:src="@drawable/title_bg_autumn">
+		    </ImageView>
+		</LinearLayout> 
+		    
+		<LinearLayout 
+		    android:orientation="vertical"  
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:background="@color/transparent_gray"> 
+		    
+			<LinearLayout 
+			    android:orientation="vertical"  
+			    android:layout_width="match_parent"  
+			    android:layout_height="25dp"> 
+			</LinearLayout> 
+			
+			<include layout="@layout/toolbar" />
+			
+		</LinearLayout> 
+    </FrameLayout>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+         xmlns:app="http://schemas.android.com/apk/res-auto"
+	     android:layout_width="match_parent"
+	     android:layout_height="wrap_content"
+         android:background="@color/orange_yellow">
+	
+	<LinearLayout 
+	    android:orientation="vertical"  
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+		<View 
+		    android:orientation="vertical"  
+		    android:layout_width="match_parent"  
+		    android:layout_height="25dp"> 
+		</View> 
+		<android.support.v7.widget.Toolbar
+		    android:id="@+id/toolbar"  
+		    android:layout_width="match_parent"  
+		    android:layout_height="50dp">  
+				<LinearLayout 
+			        android:layout_width="match_parent"
+				    android:layout_height="match_parent"
+					android:gravity="center_vertical"
+			        android:orientation="horizontal">
+			        <TextView
+				        android:id="@+id/title"
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+			            android:singleLine="true"
+			            android:ellipsize="end" 
+						android:paddingLeft="5dp"
+						android:textColor="@android:color/white"
+						android:textSize="20sp"
+						android:textStyle="bold" />
+			        <Switch
+				        android:id="@+id/switch_bt"
+				        android:layout_width="80dp"
+				        android:layout_height="wrap_content"
+						android:visibility="gone"/>
+			</LinearLayout> 
+		</android.support.v7.widget.Toolbar>
+	</LinearLayout>
+
+</android.support.design.widget.AppBarLayout>
