@@ -133,6 +133,7 @@ public class HotUserFragment extends BaseFragment implements RetrofitNetworkAbs.
 	public void onOK(UsersSearch data) {   	
 		if(page == 1){
         	adapter.update((ArrayList<User>)data.items);
+			recyclerView.scrollToPosition(0);
     	}
     	else{
             isLoadingMore = false;
