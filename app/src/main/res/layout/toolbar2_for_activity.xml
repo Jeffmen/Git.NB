@@ -39,6 +39,12 @@
 				        android:layout_width="80dp"
 				        android:layout_height="wrap_content"
 						android:visibility="gone"/>
+					<com.example.gitnb.widget.FlipImageView
+						android:id="@+id/star"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="bottom"
+						app:src="@drawable/ic_star_white_24dp" />
 			</LinearLayout> 
 		</android.support.v7.widget.Toolbar>
 	</LinearLayout>

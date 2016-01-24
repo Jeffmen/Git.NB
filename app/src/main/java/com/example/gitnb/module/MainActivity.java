@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 		//tabs.setTabTextColors(getResources().getColor(R.color.transparent_dark_gray), Color.WHITE);
 		//tabs.setOnPageChangeListener(new PageListener());
 		//setTabsValue();
-		pager.setCurrentItem(2);
+		pager.setCurrentItem(4);
 		pager.setOffscreenPageLimit(4);
 		layout = (CoordinatorLayout) findViewById(R.id.layout);
 		faButton = (FloatingActionButton) findViewById(R.id.faButton);

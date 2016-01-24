@@ -1,5 +1,6 @@
 <resources>
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/orange_yellow</item>
         <!-- toolbar（actionbar）颜色 -->  
         <item name="colorPrimary">@android:color/transparent</item>
         <!-- 状态栏颜色 -->  
@@ -13,6 +14,9 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlActivated">?colorAccent</item>
+        <item name="colorControlHighlight">?colorAccent</item>
     </style>
     
 	<style name="ClubToolbar" parent="Widget.AppCompat.Toolbar">  

@@ -9,14 +9,21 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.gitnb.R;
 import com.example.gitnb.model.User;
+import com.example.gitnb.module.custom.ExpandAnimation;
 import com.example.gitnb.module.viewholder.LoadMoreViewHolder;
 import com.example.gitnb.module.viewholder.SearchViewHolder;
 import com.example.gitnb.module.viewholder.UserViewHolder;
@@ -39,6 +46,8 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
     private boolean isShowSearch = false;
     private boolean isLoadingMore = false;
     private String searchText = "";
+	private ArrayList openPosition;
+	private int maxContentWidth;
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -47,6 +56,10 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
     public UserListAdapter(Context context) {
     	mContext = context;
     	mInflater = LayoutInflater.from(mContext);
+		openPosition = new ArrayList();
+		maxContentWidth = (int)(mContext.getResources().getDisplayMetrics().widthPixels
+				- 2.0F * mContext.getResources().getDimension(R.dimen.card_padding_horizontal)
+				- 2.0F * mContext.getResources().getDimension(R.dimen.card_padding));
 	}
     
     public void setShowLoadMore(boolean value){
@@ -119,14 +132,14 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
     
 	@Override
 	public int getItemCount() {
-		int orther = 0;
-		if(isShowLoadMore) orther++;
-		if(isShowSearch) orther++;
+		int other = 0;
+		if(isShowLoadMore) other++;
+		if(isShowSearch) other++;
 		if(mUsers == null){
-			return 0 + orther;
+			return 0 + other;
 		}
 		else {
-			return mUsers.size() + orther;
+			return mUsers.size() + other;
 		}
 	}
 	
@@ -175,6 +188,7 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			if(user != null){
 			    viewHolder.ivAvatar.setImageURI(Uri.parse(user.getAvatar_url()));
 				viewHolder.tvLogin.setText(user.getLogin());
+				initExpendContentView(viewHolder, user, position);
 			}
 			viewHolder.tvRank.setText(String.valueOf(isShowSearch?position:position+1)+".");
 			break;
@@ -191,13 +205,65 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			break;
 		}
 	}
-	
-	
+
+	private void initExpendContentView(UserView viewHolder, User user, int position){
+		TextView contentView = new TextView(mContext);
+		contentView.setText(user.getFollowers_url() + "/" + user.getAvatar_url());
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+		viewHolder.expandableContent.removeAllViews();
+		//params.setMargins(0, 0, 0, bottom);
+		viewHolder.expandableContent.addView(contentView, params);
+
+		RelativeLayout.LayoutParams relParams = (RelativeLayout.LayoutParams) viewHolder.expandableContent.getLayoutParams();
+		if(openPosition.contains(String.valueOf(position))){
+			viewHolder.expandableContent.setVisibility(View.VISIBLE);
+			viewHolder.buttonLearnMore.setText("Hide");
+			relParams.setMargins(relParams.leftMargin, relParams.topMargin, relParams.rightMargin, 0);
+		}
+		else{
+			viewHolder.expandableContent.setVisibility(View.GONE);
+			viewHolder.buttonLearnMore.setText("Learn more");
+			int j = View.MeasureSpec.makeMeasureSpec(maxContentWidth, View.MeasureSpec.EXACTLY);
+			int k = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+			viewHolder.expandableContent.measure(j, k);
+			relParams.setMargins(relParams.leftMargin, relParams.topMargin, relParams.rightMargin, 0 - viewHolder.expandableContent.getMeasuredHeight());
+		}
+		viewHolder.expandableContent.setLayoutParams(relParams);
+	}
+
 	private class UserView extends UserViewHolder implements View.OnClickListener{
-
-
+        public ImageButton buttonLike;
+		public Button buttonLearnMore;
+		public final LinearLayout expandableContent;
 		public UserView(View view) {
 			super(view);
+			expandableContent = (LinearLayout) view.findViewById(R.id.expandableContent);
+			buttonLearnMore = (Button) view.findViewById(R.id.buttonLearnMore);
+			buttonLike = (ImageButton) view.findViewById(R.id.buttonLike);
+			buttonLearnMore.setOnClickListener(new View.OnClickListener()
+			{
+				public void onClick(View paramAnonymousView)
+				{
+					ExpandAnimation localExpandAnimation = new ExpandAnimation(expandableContent, 1000);
+					expandableContent.startAnimation(localExpandAnimation);
+					if(openPosition.contains(String.valueOf(getLayoutPosition()))){
+						buttonLearnMore.setText("Learn more");
+						openPosition.remove(String.valueOf(getLayoutPosition()));
+					}
+					else {
+						buttonLearnMore.setText("Hide");
+						openPosition.add(String.valueOf(getLayoutPosition()));
+					}
+				}
+			});
+			buttonLike.setOnClickListener(new View.OnClickListener(){
+
+				@Override
+				public void onClick(View view) {
+					buttonLike.setSelected(true);
+				}
+			});
             view.setOnClickListener(this);
 		}
 	

@@ -5,5 +5,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <item name="letter_to_tile_ratio" type="dimen">20%</item>
     <item name="chinese_to_tile_ratio" type="dimen">60%</item>
+    <dimen name="card_padding">13.0dip</dimen>
+    <dimen name="card_padding_horizontal">10.0dip</dimen>
+    <dimen name="card_padding_vertical">6.0dip</dimen>
 
 </resources>

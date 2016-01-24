@@ -20,6 +20,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
+
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 
 public class HotUserFragment extends BaseFragment implements RetrofitNetworkAbs.NetworkListener<UsersSearch>, UpdateLanguageListener{
 	private String TAG = "HotUserFragment";
@@ -28,7 +32,7 @@ public class HotUserFragment extends BaseFragment implements RetrofitNetworkAbs.
     private RecyclerView recyclerView;
     private UserListAdapter adapter;
 	private boolean isLoadingMore;
-    private String language;
+    private String language = "java";
     private String location;
     private String key;
 	private int page;
@@ -43,7 +47,7 @@ public class HotUserFragment extends BaseFragment implements RetrofitNetworkAbs.
         adapter = new UserListAdapter(getActivity());
         adapter.setShowSearch(true);
         adapter.setOnItemClickListener(new UserListAdapter.OnItemClickListener() {
-			
+
 			@Override
 			public void onItemClick(View view, int position) {
 				Intent intent = new Intent(getActivity(), UserDetailActivity.class);
@@ -62,7 +66,7 @@ public class HotUserFragment extends BaseFragment implements RetrofitNetworkAbs.
 	            } else{
 	             	page++;
 	                isLoadingMore = true;
-	             	requestHotUser();
+					startRefresh();
 	            }
 			}
 		});        
@@ -75,9 +79,13 @@ public class HotUserFragment extends BaseFragment implements RetrofitNetworkAbs.
 	        	startRefresh();
 			}
 		});
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
+        //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
+		ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(adapter);
+		SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+		slideInAdapter.setDuration(300);
+		slideInAdapter.setInterpolator(new OvershootInterpolator());
+		recyclerView.setAdapter(slideInAdapter);
         /*
         recyclerView.addOnScrollListener(new OnScrollListener() {
             @Override
@@ -115,7 +123,6 @@ public class HotUserFragment extends BaseFragment implements RetrofitNetworkAbs.
 	@Override
     protected void startRefresh(){
 		super.startRefresh();
-    	page = 1;
     	requestHotUser();
     }
 

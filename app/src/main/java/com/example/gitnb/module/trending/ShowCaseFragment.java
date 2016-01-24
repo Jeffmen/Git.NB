@@ -19,6 +19,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
+
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 
 public class ShowCaseFragment extends BaseFragment implements RetrofitNetworkAbs.NetworkListener<ArrayList<ShowCase>>, UpdateLanguageListener{
 	private String TAG = "TrendingReposFragment";
@@ -34,7 +38,7 @@ public class ShowCaseFragment extends BaseFragment implements RetrofitNetworkAbs
         initSwipeRefreshLayout(view);
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
         adapter = new ShowCaseAdapter(getActivity());
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
+        //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
         adapter.SetOnItemClickListener(new ShowCaseAdapter.OnItemClickListener() {
 			
 			@Override
@@ -50,7 +54,11 @@ public class ShowCaseFragment extends BaseFragment implements RetrofitNetworkAbs
 		});
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(adapter);
+		ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(adapter);
+		SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+		slideInAdapter.setDuration(300);
+		slideInAdapter.setInterpolator(new OvershootInterpolator());
+		recyclerView.setAdapter(slideInAdapter);
 
         return view;
     }

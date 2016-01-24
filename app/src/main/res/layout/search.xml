@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="43dip"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="@color/search_gray">
+	android:layout_marginTop="6dp"
+	android:layout_marginBottom="6dp"
+	android:layout_marginRight="10dp"
+	android:layout_marginLeft="10dp"
+	card_view:cardElevation="5dp"
+	card_view:cardCornerRadius="10dp"
+	card_view:cardPreventCornerOverlap="true">
     <FrameLayout
         android:id="@+id/search"
         android:layout_width="match_parent"
@@ -17,16 +22,15 @@
 		    android:layout_height="32dp"
 		    android:orientation="horizontal" 
 		    android:layout_gravity="center"
-            android:background="@drawable/searchview_corner">
+			android:layout_margin="10dp">
 	        <ImageView
 		        android:id="@+id/search_icon"
 		        android:layout_width="wrap_content"
 		        android:layout_height="match_parent"
-		        android:layout_marginLeft="8dp"
 	            android:gravity="center" 
 	            android:layout_gravity="center"
 		        android:scaleType="centerInside"
-                android:tint="@color/search_gray"
+                android:tint="?colorAccent"
 		        android:src="@drawable/ic_search_white_24dp">
 		    </ImageView>
 		    <EditText
@@ -37,7 +41,6 @@
 				android:layout_gravity="center"
 		        android:layout_marginLeft="3dp" 
 		        android:singleLine="true"
-		        android:background="@null"
                 android:textSize="15sp"
                 android:inputType="textNoSuggestions">
 		    </EditText>   
@@ -53,4 +56,4 @@
             android:tint="#4876FF"
             android:visibility="gone"/>        
 	</FrameLayout>
-</LinearLayout>
+</android.support.v7.widget.CardView >

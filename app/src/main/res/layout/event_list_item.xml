@@ -6,8 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="40dp"
+	android:layout_marginTop="6dp"
+	android:layout_marginBottom="6dp"
+	android:layout_marginRight="10dp"
+	android:layout_marginLeft="10dp"
 	card_view:cardBackgroundColor="@color/miky_white" 
-	card_view:cardElevation="0dp"
+	card_view:cardElevation="5dp"
 	card_view:cardPreventCornerOverlap="true">
 
     <LinearLayout

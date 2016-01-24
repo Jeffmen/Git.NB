@@ -4,58 +4,127 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/card_padding_vertical"
+    android:layout_marginBottom="@dimen/card_padding_vertical"
+    android:layout_marginStart="@dimen/card_padding_horizontal"
+    android:layout_marginEnd="@dimen/card_padding_horizontal"
 	card_view:cardBackgroundColor="@color/miky_white" 
-	card_view:cardElevation="0dp"
+	card_view:cardElevation="5dp"
 	card_view:cardPreventCornerOverlap="true">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <RelativeLayout
+        android:id="@+id/rootLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="false">
         android:padding="10dp">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_weight="2"
-            android:gravity="center">
+            android:id="@+id/textViewContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="2"
+                android:gravity="center">
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/user_avatar"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/user_avatar"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:gravity="center"
+                    fresco:actualImageScaleType="focusCrop"
+                    fresco:placeholderImage="@drawable/ic_git_gray_240"
+                    fresco:roundedCornerRadius="10dp"
+                    fresco:roundingBorderWidth="1dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="4"
                 android:gravity="center"
-    			fresco:actualImageScaleType="focusCrop"
-                fresco:placeholderImage="@drawable/ic_git_gray_240"
-                fresco:roundedCornerRadius="10dp"
-			    fresco:roundingBorderWidth="1dp"/>
+                android:orientation="horizontal">
 
+                    <TextView
+                        android:id="@+id/user_login"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:singleLine="true"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/user_rank"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true" />
+
+            </LinearLayout>
         </LinearLayout>
-
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="4"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/user_login"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:singleLine="true"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/user_rank"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:singleLine="true" />
-
-        </LinearLayout>
-    </LinearLayout>
+            android:orientation="vertical"
+            android:id="@+id/expandableContent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewContent"
+            android:layout_marginStart="@dimen/card_padding"
+            android:layout_marginEnd="@dimen/card_padding" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45.0dip"
+            android:layout_below="@id/expandableContent"
+            android:paddingStart="@dimen/card_padding"
+            android:paddingEnd="@dimen/card_padding">
+            <ImageButton
+                android:id="@+id/buttonLike"
+                android:background="@drawable/ripple"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/button_like"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="13dp"
+                android:layout_alignParentEnd="true" />
+            <ImageButton
+                android:id="@+id/buttonUnarchived"
+                android:background="@drawable/ripple"
+                android:visibility="gone"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_unarchive"
+                android:scaleType="centerInside"
+                android:layout_centerVertical="true"
+                android:contentDescription="UNARCHIVE"
+                android:layout_alignParentEnd="true" />
+            <ImageButton
+                android:id="@+id/buttonSettings"
+                android:background="@drawable/ripple"
+                android:scaleType="centerInside"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/button_settings"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/buttonLike" />
+            <Button
+                android:textSize="14dp"
+                android:textColor="@color/dark_red"
+                android:id="@+id/buttonLearnMore"
+                android:background="@drawable/ripple"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Learn more"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                style="android:Widget.Material.Button.Borderless" />
+        </RelativeLayout>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

@@ -13,6 +13,7 @@ import com.example.gitnb.module.user.UserDetailActivity;
 import com.example.gitnb.module.user.UserListActivity;
 import com.example.gitnb.utils.MessageUtils;
 import com.example.gitnb.utils.Utils;
+import com.example.gitnb.widget.FlipImageView;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import android.content.Intent;
@@ -32,6 +33,7 @@ public class ReposDetailActivity extends BaseSwipeActivity{
     private LinearLayout main;
 	private Repository repos;
     private Switch swithBt;
+	private FlipImageView star;
 	
     protected void setTitle(TextView view){
         if(repos != null && !repos.getName().isEmpty()){
@@ -50,8 +52,9 @@ public class ReposDetailActivity extends BaseSwipeActivity{
         main = (LinearLayout) findViewById(R.id.main);
         main.setVisibility(View.GONE);
 
-        swithBt = (Switch) findViewById(R.id.switch_bt);  
-    }
+        swithBt = (Switch) findViewById(R.id.switch_bt);
+		star = (FlipImageView) findViewById(R.id.star);
+	}
 
     private void setSwitchClicker(){
         swithBt.setOnClickListener(new View.OnClickListener() {
@@ -268,6 +271,7 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 	}
 	
 	private void starRepo(){
+		star.start();
 		final Snackbar snackbar = Snackbar.make(getSwipeRefreshLayout(), "UnStaring ...", Snackbar.LENGTH_INDEFINITE);
 		snackbar.show();
 		RepoActionsClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<Object>() {
@@ -275,6 +279,7 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 			@Override
 			public void onOK(Object ts) {
 				swithBt.setChecked(true);
+				star.setState(FlipImageView.Type.CLOSE);
 				snackbar.dismiss();
 			}
 
@@ -288,6 +293,7 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 	}	
 	
 	private void unstarRepo(){
+		star.start();
 		final Snackbar snackbar = Snackbar.make(getSwipeRefreshLayout(), "Staring ...", Snackbar.LENGTH_INDEFINITE);
 		snackbar.show();
 		RepoActionsClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<Object>() {
@@ -295,6 +301,7 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 			@Override
 			public void onOK(Object ts) {
 				swithBt.setChecked(false);
+				star.setState(FlipImageView.Type.OPEN);
 				snackbar.dismiss();
 			}
 

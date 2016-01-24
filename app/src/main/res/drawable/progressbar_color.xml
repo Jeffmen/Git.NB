@@ -6,7 +6,7 @@
         <shape>
 	        <size 
 	            android:height="5dp"/>
-            <solid android:color="#ffffff" />
+            <solid android:color="@android:color/white" />
         </shape>
     </item>
     <!-- 进度条 -->
@@ -15,7 +15,7 @@
             <shape>
 		        <size 
 		            android:height="5dp"/>
-                <solid android:color="#FF8080" />
+                <solid android:color="@android:color/black" />
             </shape>
         </clip>
     </item> 

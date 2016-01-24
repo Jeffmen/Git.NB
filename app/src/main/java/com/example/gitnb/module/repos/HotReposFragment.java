@@ -20,6 +20,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
+
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 
 public class HotReposFragment extends BaseFragment implements RetrofitNetworkAbs.NetworkListener<ReposSearch>, UpdateLanguageListener{
 	private String TAG = "HotReposFragment";
@@ -37,6 +41,7 @@ public class HotReposFragment extends BaseFragment implements RetrofitNetworkAbs
         initSwipeRefreshLayout(view);
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
         language = "java";
+		page = 1;
         adapter = new ReposListAdapter(getActivity());
         adapter.setShowSearch(true);
         adapter.setOnItemClickListener(new ReposListAdapter.OnItemClickListener() {
@@ -59,7 +64,7 @@ public class HotReposFragment extends BaseFragment implements RetrofitNetworkAbs
 	            } else{
 	             	page++;
 	                isLoadingMore = true;
-	                startRefresh();
+					startRefresh();
 	            }
 			}
 		});        
@@ -72,9 +77,13 @@ public class HotReposFragment extends BaseFragment implements RetrofitNetworkAbs
 				startRefresh();
 			}
 		});
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
+        //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
+		ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(adapter);
+		SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+		slideInAdapter.setDuration(300);
+		slideInAdapter.setInterpolator(new OvershootInterpolator());
+		recyclerView.setAdapter(slideInAdapter);
 
         return view;
     }
@@ -93,7 +102,6 @@ public class HotReposFragment extends BaseFragment implements RetrofitNetworkAbs
 	@Override
     protected void startRefresh(){
 		super.startRefresh();
-    	page = 1;
     	requestHotRepos();
     }
 

@@ -24,6 +24,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
+
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 
 public class ReceivedEventsFragment extends BaseFragment implements RetrofitNetworkAbs.NetworkListener<ArrayList<Event>>, UpdateLanguageListener{
 	private String TAG = "HotUserFragment";
@@ -41,7 +45,7 @@ public class ReceivedEventsFragment extends BaseFragment implements RetrofitNetw
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
         adapter = new EventListAdapter(getActivity());
         adapter.setOnItemClickListener(new EventListAdapter.OnItemClickListener() {
-			
+
 			@Override
 			public void onItemClick(View view, int position) {
 				Intent intent = new Intent(getActivity(), ReposDetailActivity.class);
@@ -52,21 +56,26 @@ public class ReceivedEventsFragment extends BaseFragment implements RetrofitNetw
 			}
 		});
         adapter.setOnLoadMoreClickListener(new EventListAdapter.OnItemClickListener() {
-			
+
 			@Override
 			public void onItemClick(View view, int position) {
-                if(isLoadingMore){
-	                Log.d(TAG,"ignore manually update!");
-	            } else{
-	             	page++;
-	                isLoadingMore = true;
-	                startRefresh();
-	            }
+				if (isLoadingMore) {
+					Log.d(TAG, "ignore manually update!");
+				} else {
+					page++;
+					isLoadingMore = true;
+					startRefresh();
+				}
 			}
 		});        
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
+        //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
+		//recyclerView.setItemAnimator(new SlideInLeftAnimator());
+		ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(adapter);
+		SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+		slideInAdapter.setDuration(300);
+		slideInAdapter.setInterpolator(new OvershootInterpolator());
+        recyclerView.setAdapter(slideInAdapter);
         startRefresh();
         return view;
     }
