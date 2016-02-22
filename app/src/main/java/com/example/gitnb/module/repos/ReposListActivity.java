@@ -113,7 +113,7 @@ public class ReposListActivity  extends BaseSwipeActivity implements RetrofitNet
 		}); 
         
         recyclerView = (RecyclerView) findViewById(R.id.recylerView);  
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
+        //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 	}

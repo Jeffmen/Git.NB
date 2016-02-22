@@ -122,4 +122,10 @@ public class ReceivedEventsFragment extends BaseFragment implements RetrofitNetw
 	public Void updateLanguage(String language) {
 		return null;
 	}
+
+	@Override
+	public Void moveToUp() {
+		recyclerView.smoothScrollToPosition(0);
+		return null;
+	}
 }

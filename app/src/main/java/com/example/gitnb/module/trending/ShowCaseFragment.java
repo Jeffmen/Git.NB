@@ -110,4 +110,10 @@ public class ShowCaseFragment extends BaseFragment implements RetrofitNetworkAbs
 	public Void updateLanguage(String language) {
 		return null;
 	}
+
+	@Override
+	public Void moveToUp() {
+		recyclerView.smoothScrollToPosition(0);
+		return null;
+	}
 }

@@ -12,6 +12,7 @@ import com.example.gitnb.module.repos.ReposListActivity;
 import com.example.gitnb.utils.MessageUtils;
 import com.example.gitnb.utils.Utils;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.kyleduo.switchbutton.SwitchButton;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -30,7 +31,7 @@ public class UserDetailActivity extends BaseSwipeActivity{
 	public static String AVATAR_URL = "avatar_url";
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     private LinearLayout main;
-    private Switch swithBt;
+    private SwitchButton swithBt;
 	private User user;
 	
     protected void setTitle(TextView view){
@@ -50,25 +51,21 @@ public class UserDetailActivity extends BaseSwipeActivity{
         main = (LinearLayout) findViewById(R.id.main);
         main.setVisibility(View.GONE);
       
-        swithBt = (Switch) findViewById(R.id.switch_bt); 
-        swithBt.setTextOn("UnFollow");
-        swithBt.setTextOff("Follow");
-    }
-	
-    private void setSwitchClicker(){
-        swithBt.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
-            
-            @Override 
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        	   if(isChecked){
-        		   followUser();
-        	   }
-        	   else{
-        		   unfollowUser();
-        	   }
-            }
-         
-         });
+        swithBt = (SwitchButton) findViewById(R.id.switch_bt);
+		swithBt.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				swithBt.setEnabled(false);
+				if(isChecked){
+					followUser();
+				}
+				else{
+					unFollowUser();
+				}
+			}
+
+		});
     }
     
     private void setUserInfo(){
@@ -216,48 +213,58 @@ public class UserDetailActivity extends BaseSwipeActivity{
 			public void onOK(Object ts) {
 		        swithBt.setVisibility(View.VISIBLE);
 				swithBt.setChecked(true);
-				setSwitchClicker();
 			}
 
 			@Override
 			public void onError(String Message) {
 		        swithBt.setVisibility(View.VISIBLE);
-				setSwitchClicker();
 			}
 			
     	}).checkFollowing(user.getLogin());
 	}
 	
 	private void followUser(){
+		final Snackbar snackbar = Snackbar.make(getSwipeRefreshLayout(), "Following ...", Snackbar.LENGTH_INDEFINITE);
+		snackbar.show();
     	UsersClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<Object>() {
 
 			@Override
 			public void onOK(Object ts) {
-				Snackbar.make(getSwipeRefreshLayout(), "Already Followed", Snackbar.LENGTH_LONG).show();
+				snackbar.dismiss();
+				swithBt.setEnabled(true);
+				//Snackbar.make(getSwipeRefreshLayout(), "Already Followed", Snackbar.LENGTH_LONG).show();
 			}
 
 			@Override
 			public void onError(String Message) {
+				snackbar.dismiss();
+				swithBt.setEnabled(true);
 				MessageUtils.showErrorMessage(UserDetailActivity.this, Message);
 			}
 			
     	}).followUser(user.getLogin());
 	}	
 	
-	private void unfollowUser(){
+	private void unFollowUser(){
+		final Snackbar snackbar = Snackbar.make(getSwipeRefreshLayout(), "UnFollowing ...", Snackbar.LENGTH_INDEFINITE);
+		snackbar.show();
     	UsersClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<Object>() {
 
 			@Override
 			public void onOK(Object ts) {
-				Snackbar.make(getSwipeRefreshLayout(), "Already unFollowed", Snackbar.LENGTH_LONG).show();
+				snackbar.dismiss();
+				swithBt.setEnabled(true);
+				//Snackbar.make(getSwipeRefreshLayout(), "Already unFollowed", Snackbar.LENGTH_LONG).show();
 			}
 
 			@Override
 			public void onError(String Message) {
+				snackbar.dismiss();
+				swithBt.setEnabled(true);
 				MessageUtils.showErrorMessage(UserDetailActivity.this, Message);
 			}
 			
-    	}).unfollowUser(user.getLogin());
+    	}).unFollowUser(user.getLogin());
 	}
     
 }

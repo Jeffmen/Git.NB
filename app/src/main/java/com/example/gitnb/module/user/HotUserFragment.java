@@ -182,4 +182,11 @@ public class HotUserFragment extends BaseFragment implements RetrofitNetworkAbs.
 		}
 		return null;
 	}
+
+	@Override
+	public Void moveToUp() {
+		recyclerView.smoothScrollToPosition(0);
+		return null;
+	}
+
 }

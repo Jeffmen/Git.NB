@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 	
     public interface UpdateLanguageListener{
     	Void updateLanguage(String language);
+		Void moveToUp();
     }
     /*
     @Override
@@ -83,14 +84,32 @@ public class MainActivity extends AppCompatActivity {
 		pagerAdapter.addFragment(new HotReposFragment(), "HotRepos");
 		pagerAdapter.addFragment(new HotUserFragment(), "HotUser");
 		pager.setAdapter(pagerAdapter);
+		pager.setCurrentItem(4);
+		pager.setOffscreenPageLimit(4);
+
 		tabs.setupWithViewPager(pager);
 		tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+		tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+			@Override
+			public void onTabSelected(TabLayout.Tab tab) {
+				pager.setCurrentItem(tab.getPosition());
+			}
+
+			@Override
+			public void onTabUnselected(TabLayout.Tab tab) {
+
+			}
+
+			@Override
+			public void onTabReselected(TabLayout.Tab tab) {
+				UpdateLanguageListener languageListener = (UpdateLanguageListener) pagerAdapter.getItem(pager.getCurrentItem());
+				languageListener.moveToUp();
+			}
+		});
 		//tabs.setSelectedTabIndicatorColor(Color.WHITE);
 		//tabs.setTabTextColors(getResources().getColor(R.color.transparent_dark_gray), Color.WHITE);
 		//tabs.setOnPageChangeListener(new PageListener());
-		//setTabsValue();
-		pager.setCurrentItem(4);
-		pager.setOffscreenPageLimit(4);
+
 		layout = (CoordinatorLayout) findViewById(R.id.layout);
 		faButton = (FloatingActionButton) findViewById(R.id.faButton);
 		faButton.setOnClickListener(new View.OnClickListener() {

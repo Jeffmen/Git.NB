@@ -31,5 +31,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'jp.wasabeef:recyclerview-animators:2.1.0'
+    compile 'com.kyleduo.switchbutton:library:1.3.3'
     compile project(':Swipebacklayout')
 }

@@ -111,4 +111,10 @@ public class TrendingReposFragment extends BaseFragment implements RetrofitNetwo
     	startRefresh();
 		return null;
 	}
+
+	@Override
+	public Void moveToUp() {
+		recyclerView.smoothScrollToPosition(0);
+		return null;
+	}
 }

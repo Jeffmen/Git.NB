@@ -28,8 +28,8 @@ public class UsersClient extends RetrofitNetworkAbs{
 		execute(usersService.checkFollowing(username));
 	}
 	
-	public void unfollowUser(String username){
-		execute(usersService.checkFollowing(username));
+	public void unFollowUser(String username){
+		execute(usersService.unfollowUser(username));
 	}
 	
 	public void following(String username, int page){

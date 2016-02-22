@@ -15,6 +15,7 @@ import com.example.gitnb.utils.MessageUtils;
 import com.example.gitnb.utils.Utils;
 import com.example.gitnb.widget.FlipImageView;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.kyleduo.switchbutton.SwitchButton;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -32,8 +33,7 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     private LinearLayout main;
 	private Repository repos;
-    private Switch swithBt;
-	private FlipImageView star;
+    private SwitchButton swithBt;
 	
     protected void setTitle(TextView view){
         if(repos != null && !repos.getName().isEmpty()){
@@ -52,25 +52,22 @@ public class ReposDetailActivity extends BaseSwipeActivity{
         main = (LinearLayout) findViewById(R.id.main);
         main.setVisibility(View.GONE);
 
-        swithBt = (Switch) findViewById(R.id.switch_bt);
-		star = (FlipImageView) findViewById(R.id.star);
-	}
+        swithBt = (SwitchButton) findViewById(R.id.switch_bt);
+		swithBt.setOnClickListener(new View.OnClickListener() {
 
-    private void setSwitchClicker(){
-        swithBt.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View arg0) {
-        	   if(swithBt.isChecked()){
-        		   starRepo();
-        	   }
-        	   else{
-        		   unstarRepo();
-        	   }
-            }
-         
-         });
-    }
+				swithBt.setEnabled(false);
+				if(swithBt.isChecked()){
+					starRepo();
+				}
+				else{
+					unStarRepo();
+				}
+			}
+
+		});
+	}
     
     private void setRepository(){
     	TextView repos_name = (TextView) findViewById(R.id.repos_name);
@@ -258,56 +255,54 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 			public void onOK(Object ts) {
 		        swithBt.setVisibility(View.VISIBLE);
 				swithBt.setChecked(true);
-				setSwitchClicker();
 			}
 
 			@Override
 			public void onError(String Message) {
 		        swithBt.setVisibility(View.VISIBLE);
-				setSwitchClicker();
 			}
 			
     	}).checkIfRepoIsStarred(repos.getOwner().getLogin(), repos.getName());
 	}
 	
 	private void starRepo(){
-		star.start();
-		final Snackbar snackbar = Snackbar.make(getSwipeRefreshLayout(), "UnStaring ...", Snackbar.LENGTH_INDEFINITE);
-		snackbar.show();
-		RepoActionsClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<Object>() {
-
-			@Override
-			public void onOK(Object ts) {
-				swithBt.setChecked(true);
-				star.setState(FlipImageView.Type.CLOSE);
-				snackbar.dismiss();
-			}
-
-			@Override
-			public void onError(String Message) {
-				snackbar.dismiss();
-				MessageUtils.showErrorMessage(ReposDetailActivity.this, Message);
-			}
-			
-    	}).starRepo(repos.getOwner().getLogin(), repos.getName());
-	}	
-	
-	private void unstarRepo(){
-		star.start();
 		final Snackbar snackbar = Snackbar.make(getSwipeRefreshLayout(), "Staring ...", Snackbar.LENGTH_INDEFINITE);
 		snackbar.show();
 		RepoActionsClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<Object>() {
 
 			@Override
 			public void onOK(Object ts) {
-				swithBt.setChecked(false);
-				star.setState(FlipImageView.Type.OPEN);
+				swithBt.setChecked(true);
 				snackbar.dismiss();
+				swithBt.setEnabled(true);
 			}
 
 			@Override
 			public void onError(String Message) {
 				snackbar.dismiss();
+				swithBt.setEnabled(true);
+				MessageUtils.showErrorMessage(ReposDetailActivity.this, Message);
+			}
+			
+    	}).starRepo(repos.getOwner().getLogin(), repos.getName());
+	}	
+	
+	private void unStarRepo(){
+		final Snackbar snackbar = Snackbar.make(getSwipeRefreshLayout(), "UnStaring ...", Snackbar.LENGTH_INDEFINITE);
+		snackbar.show();
+		RepoActionsClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<Object>() {
+
+			@Override
+			public void onOK(Object ts) {
+				swithBt.setChecked(false);
+				snackbar.dismiss();
+				swithBt.setEnabled(true);
+			}
+
+			@Override
+			public void onError(String Message) {
+				snackbar.dismiss();
+				swithBt.setEnabled(true);
 				MessageUtils.showErrorMessage(ReposDetailActivity.this, Message);
 			}
 			

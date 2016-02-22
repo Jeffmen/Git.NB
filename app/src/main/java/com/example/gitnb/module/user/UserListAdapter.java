@@ -3,8 +3,10 @@ package com.example.gitnb.module.user;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import com.example.gitnb.R;
 import com.example.gitnb.model.User;
 import com.example.gitnb.module.custom.ExpandAnimation;
+import com.example.gitnb.module.repos.ReposListActivity;
 import com.example.gitnb.module.viewholder.LoadMoreViewHolder;
 import com.example.gitnb.module.viewholder.SearchViewHolder;
 import com.example.gitnb.module.viewholder.UserViewHolder;
@@ -208,7 +211,7 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
 
 	private void initExpendContentView(UserView viewHolder, User user, int position){
 		TextView contentView = new TextView(mContext);
-		contentView.setText(user.getFollowers_url() + "/" + user.getAvatar_url());
+		contentView.setText("\n       Have some fun... \n");
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
 		viewHolder.expandableContent.removeAllViews();
@@ -235,12 +238,14 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
 	private class UserView extends UserViewHolder implements View.OnClickListener{
         public ImageButton buttonLike;
 		public Button buttonLearnMore;
+		public ImageButton buttonSettings;
 		public final LinearLayout expandableContent;
 		public UserView(View view) {
 			super(view);
 			expandableContent = (LinearLayout) view.findViewById(R.id.expandableContent);
 			buttonLearnMore = (Button) view.findViewById(R.id.buttonLearnMore);
 			buttonLike = (ImageButton) view.findViewById(R.id.buttonLike);
+			buttonSettings = (ImageButton) view.findViewById(R.id.buttonSettings);
 			buttonLearnMore.setOnClickListener(new View.OnClickListener()
 			{
 				public void onClick(View paramAnonymousView)
@@ -261,7 +266,19 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
 
 				@Override
 				public void onClick(View view) {
-					buttonLike.setSelected(true);
+					buttonLike.setSelected(!buttonLike.isSelected());
+				}
+			});
+			buttonSettings.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+
+					Intent intent = new Intent(mContext, ReposListActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putParcelable(HotUserFragment.USER, getItem(getAdapterPosition()));
+					intent.putExtras(bundle);
+					intent.putExtra(ReposListActivity.REPOS_TYPE, ReposListActivity.REPOS_TYPE_USER);
+					mContext.startActivity(intent);
 				}
 			});
             view.setOnClickListener(this);
