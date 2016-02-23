@@ -1,7 +1,7 @@
 package com.example.gitnb.utils;
 
 import com.example.gitnb.app.Application;
-import com.example.gitnb.module.GitHubAnthorizeActivity;
+import com.example.gitnb.module.GitHubAuthorizeActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +18,7 @@ public class MessageUtils {
     public static void showErrorMessage(Context cxt, String errorString) {
         Activity activity = (Activity) cxt;
         if(errorString == "Requires authentication" && activity != null){
-			Intent intent = new Intent(activity, GitHubAnthorizeActivity.class);
+			Intent intent = new Intent(activity, GitHubAuthorizeActivity.class);
 			activity.startActivity(intent);
         }
         else if (activity == null){

@@ -1,19 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
 	<include layout="@layout/toolbar2_for_activity" />
-    
-	<ScrollView
-	    android:id="@+id/text_scrollview"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
-		    <com.example.gitnb.widget.ProgressWebView
-		        android:id="@+id/web_content"
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"/>
-	</ScrollView>
+	
+    <FrameLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent">
+        
+	    <com.example.gitnb.widget.ProgressWebView
+	        android:id="@+id/web_content"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"/>
+	    
+	    <FrameLayout
+	        android:id="@+id/loading_bg"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:background="@color/transparent_gray"
+	        android:visibility="gone">
+	        <com.facebook.drawee.view.SimpleDraweeView
+	            android:id="@+id/loading_gif"
+	            android:layout_width="50dp"
+	            android:layout_height="50dp"
+	            android:layout_gravity="center"
+				fresco:actualImageScaleType="focusCrop"
+	            fresco:placeholderImage="@drawable/ic_git_gray_240"/>
+		</FrameLayout>
 		
+    </FrameLayout>
+        
 </LinearLayout>

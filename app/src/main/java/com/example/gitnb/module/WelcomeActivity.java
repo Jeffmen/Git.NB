@@ -94,7 +94,7 @@ public class WelcomeActivity extends Activity{
 	
 				@Override
 				public void onClick(View arg0) {
-					Intent intent = new Intent(WelcomeActivity.this, GitHubAnthorizeActivity.class);
+					Intent intent = new Intent(WelcomeActivity.this, GitHubAuthorizeActivity.class);
 					startActivityForResult(intent, FOR_ANTHORIZE);
 				}
 	        	

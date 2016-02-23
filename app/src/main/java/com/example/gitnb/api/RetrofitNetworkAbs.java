@@ -1,5 +1,16 @@
 package com.example.gitnb.api;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+
+import com.example.gitnb.app.BaseFragment;
+import com.example.gitnb.module.GitHubAuthorizeActivity;
+import com.example.gitnb.module.WelcomeActivity;
+import com.example.gitnb.utils.CurrentUser;
+
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Retrofit;
@@ -42,13 +53,44 @@ public abstract class RetrofitNetworkAbs {
             return true;
         } else {
             String mess = response.message();
-            if (networkListener != null) {
+            if(mess.equals("Unauthorized") && networkListener instanceof BaseFragment){
+            	Activity context = ((BaseFragment)networkListener).getActivity();
+				CurrentUser.detete(context);
+                sureToAuthorize(context);
+                networkListener.onError("Please refresh again");
+            }
+            else if (networkListener != null) {
                 networkListener.onError(mess);
             }
             return false;
         }
     }
 
+    private void sureToAuthorize(final Activity context){
+		Dialog dialog = new AlertDialog.Builder(context).setTitle("Caution")
+				.setMessage("The GitHup request is unauthorized. Please authorizing again?")
+				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+						Intent intent = new Intent(context, GitHubAuthorizeActivity.class);
+						context.startActivity(intent);
+					}
+				})
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						context.finish();
+						Intent intent = new Intent(context, WelcomeActivity.class);
+						context.startActivity(intent);
+					}
+				})
+				.setCancelable(false).create();
+		dialog.show();
+    }
+    
     /**
      * OnFailure
      */

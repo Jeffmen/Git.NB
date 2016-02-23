@@ -17,6 +17,13 @@ import com.example.gitnb.module.user.UserListActivity;
 import com.example.gitnb.utils.CurrentUser;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -92,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 		tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(TabLayout.Tab tab) {
+				controlFloatButton(tab.getPosition());
 				pager.setCurrentItem(tab.getPosition());
 			}
 
@@ -144,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
 				@Override
 				public void onClick(View arg0) {
-					Intent intent = new Intent(MainActivity.this, GitHubAnthorizeActivity.class);
+					Intent intent = new Intent(MainActivity.this, GitHubAuthorizeActivity.class);
 					startActivity(intent);
 				}
 	        	
@@ -226,17 +234,61 @@ public class MainActivity extends AppCompatActivity {
 	    	sign_out.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
-				public void onClick(View v) {
-					CurrentUser.detete(MainActivity.this);
-					me = null;
-					finish();
-					Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
-					startActivity(intent);
+				public void onClick(View v) {				
+					Dialog dialog = new AlertDialog.Builder(MainActivity.this).setTitle("Caution")
+							.setMessage("Are you sure to sign out?")
+							.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									CurrentUser.detete(MainActivity.this);
+									me = null;
+									finish();
+									Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+									startActivity(intent);
+								}
+							})
+							.setNegativeButton("N0", null)
+							.setCancelable(false).create();
+					dialog.show();
 				}
 			});
 		}
     }
-    
+
+	private void controlFloatButton(int position){
+		if(position == 0|| position==2){
+			faButtonAni(false);
+		}
+		else{
+			faButtonAni(true);
+		}
+	}
+
+	public void faButtonAni(final boolean visiable){
+		AnimatorSet bouncer = new AnimatorSet();
+		ObjectAnimator alpha = ObjectAnimator.ofFloat(faButton, "alpha", visiable?1.0f:0.0f);
+		ObjectAnimator scaleX = ObjectAnimator.ofFloat(faButton, "scaleX", visiable?1.0f:0.0f);
+		ObjectAnimator scaleY = ObjectAnimator.ofFloat(faButton, "scaleY", visiable?1.0f:0.0f);
+		bouncer.play(alpha).with(scaleX).with(scaleY);
+		bouncer.setDuration(500);
+		bouncer.addListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationStart(Animator animation) {
+				if (visiable) {
+					faButton.setVisibility(View.VISIBLE);
+				}
+			}
+
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				if (!visiable) {
+					faButton.setVisibility(View.INVISIBLE);
+				}
+			}
+		});
+		bouncer.start();
+	}
+
     public class TabPagerAdapter extends FragmentPagerAdapter {
 
         private final List<Fragment> mFragments = new ArrayList<Fragment>();
