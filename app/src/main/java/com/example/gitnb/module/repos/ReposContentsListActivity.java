@@ -3,7 +3,9 @@ package com.example.gitnb.module.repos;
 import java.util.ArrayList;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -49,7 +51,7 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        repos = (Repository) intent.getParcelableExtra(HotReposFragment.REPOS);
+        repos = intent.getParcelableExtra(HotReposFragment.REPOS);
         setContentView(R.layout.activity_list_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recylerView);
         adapter = new ReposContentsAdapter(this);
@@ -58,11 +60,11 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
 			@Override
 			public void onItemClick(View view, int position) {
 				Content content = adapter.getItem(position);
-				if(content.isDir()){
+				if (content.isDir()) {
 					clickName = content.name;
 					getRefreshdler().sendEmptyMessage(START_UPDATE);
 				}
-				if(content.isFile()){
+				if (content.isFile()) {
 					showContent(content);
 				}
 			}
@@ -70,25 +72,31 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
         adapter.SetOnHeadClickListener(new ReposContentsAdapter.OnItemClickListener() {
 			@Override
 			public void onItemClick(View view, int position) {
-				int pos;
-				if(path != null || !path.isEmpty()){
-					pos = path.lastIndexOf("/");
-					if(pos >= 0)
-						path = path.substring(0, pos);
+				if (path.isEmpty() || path.equals("/")) {
+					Snackbar.make(getSwipeRefreshLayout(), "Already to root ...", Snackbar.LENGTH_LONG).show();
+				} else {
+					int pos;
+					if (path != null && !path.isEmpty()) {
+						pos = path.lastIndexOf("/");
+						if (pos >= 0)
+							path = path.substring(0, pos);
+					}
+					if (path != null && !path.isEmpty()) {
+						pos = path.lastIndexOf("/");
+						if (pos >= 0)
+							path = path.substring(0, pos);
+					}
+					clickName = "";
+					getRefreshdler().sendEmptyMessage(START_UPDATE);
 				}
-				if(path != null || !path.isEmpty()){
-					pos = path.lastIndexOf("/");
-					if(pos >= 0)
-						path = path.substring(0, pos);
-				}
-				clickName = "";
-				getRefreshdler().sendEmptyMessage(START_UPDATE);
 			}
 		});
         recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter);
+
+		getSwipeRefreshLayout().setBackgroundColor(Color.WHITE);
     }
 
     @Override

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="60dp">
+       <ImageView 
+           android:id="@+id/content_type"
+           android:layout_width="50dp"
+           android:layout_height="match_parent"
+	       android:layout_marginLeft="25dp"
+           android:scaleType="centerInside"
+           android:tint="#0F9D58"
+           android:src="@drawable/ic_expand_less_white_48dp"/>
+       <TextView 
+           android:id="@+id/content_name"
+	       android:layout_width="0dp"
+	       android:layout_height="match_parent"
+	       android:layout_weight="1"
+	       android:gravity="center_vertical"
+	       android:paddingLeft="20dp"
+           android:singleLine="true"
+           android:text="Repositorys"
+           android:textStyle="bold"
+           android:textColor="#0F9D58"
+           android:textSize="18sp"/>
+</LinearLayout>

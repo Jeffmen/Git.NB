@@ -99,23 +99,24 @@ public class ReposListActivity  extends BaseSwipeActivity implements RetrofitNet
 			}
 		});
         adapter.setOnLoadMoreClickListener(new ReposListAdapter.OnItemClickListener() {
-			
+
 			@Override
 			public void onItemClick(View view, int position) {
-                if(isLoadingMore){
-	                Log.d(TAG,"ignore manually update!");
-	            } else{
-	             	page++;
-	                isLoadingMore = true;
-	                getRefreshdler().sendEmptyMessage(START_UPDATE);
-	            }
+				if (isLoadingMore) {
+					Log.d(TAG, "ignore manually update!");
+				} else {
+					page++;
+					isLoadingMore = true;
+					getRefreshdler().sendEmptyMessage(START_UPDATE);
+				}
 			}
-		}); 
-        
+		});
+
         recyclerView = (RecyclerView) findViewById(R.id.recylerView);  
         //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
 	}
 	 
     @Override

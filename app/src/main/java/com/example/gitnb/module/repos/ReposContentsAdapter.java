@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -87,7 +88,7 @@ public class ReposContentsAdapter extends RecyclerView.Adapter<ViewHolder>{
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup viewgroup, int viewType) {
 		if(viewType == TYPE_HEADER_VIEW){
-			View v = mInflater.inflate(R.layout.repo_content_list_item,viewgroup,false);
+			View v = mInflater.inflate(R.layout.repo_content_list_head,viewgroup,false);
 			return new HeadView(v);
 		}
 		else{
@@ -102,6 +103,7 @@ public class ReposContentsAdapter extends RecyclerView.Adapter<ViewHolder>{
 		case TYPE_HEADER_VIEW:
 			HeadView headViewHolder = (HeadView) vh;
 			headViewHolder.content_name.setText("Back to the Previous Level");
+			headViewHolder.content_name.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG);
 			break;
 		case TYPE_NOMAL_VIEW:
 			ReposContentView viewHolder = (ReposContentView) vh;

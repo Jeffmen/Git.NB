@@ -42,6 +42,7 @@ public class RepoClient extends RetrofitNetworkAbs{
     		execute(repoService.contents(owner, repo));
     	}
     	else{
+			if(path.equals("/")) path = "";
     		execute(repoService.contents(owner, repo, path));
     	}
 	}

@@ -4,9 +4,11 @@
        android:layout_height="wrap_content">
        <ImageView 
            android:id="@+id/content_type"
-           android:layout_width="wrap_content"
-           android:layout_height="match_parent"
-	       android:layout_marginLeft="25dp"
+           android:layout_width="35dp"
+           android:layout_height="35dp"
+	       android:layout_marginLeft="33dp"
+           android:layout_gravity="center_vertical"
+           android:scaleType="centerInside"
            android:tint="@color/search_gray"
            android:src="@drawable/ic_chevron_right_white_18dp"/>
        <TextView 
@@ -20,4 +22,4 @@
            android:text="Repositorys"
            android:textColor="?android:attr/textColorPrimary"
            android:textSize="16sp"/>
-      </LinearLayout>
+</LinearLayout>

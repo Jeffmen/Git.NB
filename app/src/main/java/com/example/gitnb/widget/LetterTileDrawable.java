@@ -30,7 +30,7 @@ public class LetterTileDrawable extends Drawable {
     private static TypedArray sColors;
     private static int sDefaultColor;
     private static int sTileFontColor;
-    private static float sLetterToTileRatio;
+    private static float sLetterToTileRatio = 0.2f;
     private int DrawableSize = 100;
 
     /** Reusable components to avoid new allocations */
@@ -57,7 +57,7 @@ public class LetterTileDrawable extends Drawable {
             sColors = res.obtainTypedArray(R.array.letter_tile_colors);
             sDefaultColor = res.getColor(R.color.letter_tile_default_color);
             sTileFontColor = res.getColor(R.color.letter_tile_font_color);
-            sLetterToTileRatio = res.getFraction(R.dimen.letter_to_tile_ratio, 1, 1);
+            //sLetterToTileRatio = res.getFraction(R.dimen.letter_to_tile_ratio, 1, 1);
             sPaint.setTypeface(Typeface.create(
                     res.getString(R.string.letter_tile_letter_font_family), Typeface.NORMAL));
             sPaint.setTextAlign(Align.CENTER);

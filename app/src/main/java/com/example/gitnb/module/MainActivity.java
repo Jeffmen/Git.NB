@@ -39,6 +39,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 		pagerAdapter.addFragment(new HotReposFragment(), "HotRepos");
 		pagerAdapter.addFragment(new HotUserFragment(), "HotUser");
 		pager.setAdapter(pagerAdapter);
-		pager.setCurrentItem(4);
+		pager.setCurrentItem(2);
 		pager.setOffscreenPageLimit(4);
 
 		tabs.setupWithViewPager(pager);
@@ -129,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 		setMeDetail();
+        controlFloatButton(pager.getCurrentItem());
     }
 
     @Override  
@@ -148,15 +150,15 @@ public class MainActivity extends AppCompatActivity {
 		TextView me_login = (TextView) findViewById(R.id.me_login);
 		if(me == null){
 			me_login.setText("Login...");
-			me_avatar.setOnClickListener(new OnClickListener(){
+			me_avatar.setOnClickListener(new OnClickListener() {
 
-				@Override
-				public void onClick(View arg0) {
-					Intent intent = new Intent(MainActivity.this, GitHubAuthorizeActivity.class);
-					startActivity(intent);
-				}
-	        	
-	        });
+                @Override
+                public void onClick(View arg0) {
+                    Intent intent = new Intent(MainActivity.this, GitHubAuthorizeActivity.class);
+                    startActivity(intent);
+                }
+
+            });
 		}
 		else{
 			me_login.setText(me.getLogin());
@@ -287,6 +289,13 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 		bouncer.start();
+	}
+
+	@Override
+	public void onBackPressed() {
+		Intent MyIntent = new Intent(Intent.ACTION_MAIN);
+		MyIntent.addCategory(Intent.CATEGORY_HOME);
+		startActivity(MyIntent);
 	}
 
     public class TabPagerAdapter extends FragmentPagerAdapter {
