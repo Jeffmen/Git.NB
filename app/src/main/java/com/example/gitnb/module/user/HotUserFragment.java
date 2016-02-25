@@ -41,7 +41,7 @@ public class HotUserFragment extends BaseFragment implements RetrofitNetworkAbs.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_data_fragment, container, false);
         initSwipeRefreshLayout(view);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         page = 1;
         language = "java";
         adapter = new UserListAdapter(getActivity());

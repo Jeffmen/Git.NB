@@ -53,7 +53,7 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
         Intent intent = getIntent();
         repos = intent.getParcelableExtra(HotReposFragment.REPOS);
         setContentView(R.layout.activity_list_layout);
-        recyclerView = (RecyclerView) findViewById(R.id.recylerView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new ReposContentsAdapter(this);
         recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
         adapter.SetOnItemClickListener(new ReposContentsAdapter.OnItemClickListener() {
@@ -62,7 +62,7 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
 				Content content = adapter.getItem(position);
 				if (content.isDir()) {
 					clickName = content.name;
-					getRefreshdler().sendEmptyMessage(START_UPDATE);
+					getRefreshandler().sendEmptyMessage(START_UPDATE);
 				}
 				if (content.isFile()) {
 					showContent(content);
@@ -87,7 +87,7 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
 							path = path.substring(0, pos);
 					}
 					clickName = "";
-					getRefreshdler().sendEmptyMessage(START_UPDATE);
+					getRefreshandler().sendEmptyMessage(START_UPDATE);
 				}
 			}
 		});
@@ -130,13 +130,13 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
 			public void onOK(ArrayList<Content> ts) {
 				path += clickName + "/";
 				adapter.update(ts);
-				getRefreshdler().sendEmptyMessage(END_UPDATE);
+				getRefreshandler().sendEmptyMessage(END_UPDATE);
 			}
 
 			@Override
 			public void onError(String Message) {
 				MessageUtils.showErrorMessage(ReposContentsListActivity.this, Message);
-				getRefreshdler().sendEmptyMessage(END_ERROR);
+				getRefreshandler().sendEmptyMessage(END_ERROR);
 			}
 			
     	}).contents(repos.getOwner().getLogin(), repos.getName(), path + clickName);

@@ -42,7 +42,7 @@ public class ReceivedEventsFragment extends BaseFragment implements RetrofitNetw
 		me = CurrentUser.get(this.getActivity());
         View view = inflater.inflate(R.layout.list_data_fragment, container, false);
         initSwipeRefreshLayout(view);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         adapter = new EventListAdapter(getActivity());
         adapter.setOnItemClickListener(new EventListAdapter.OnItemClickListener() {
 

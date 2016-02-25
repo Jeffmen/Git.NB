@@ -74,6 +74,7 @@ public class ReposListActivity  extends BaseSwipeActivity implements RetrofitNet
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
 		type = intent.getStringExtra(REPOS_TYPE);
+		page = 1;
         switch(type){
         case REPOS_TYPE_USER:
     		user = (User) intent.getParcelableExtra(HotUserFragment.USER);
@@ -107,12 +108,12 @@ public class ReposListActivity  extends BaseSwipeActivity implements RetrofitNet
 				} else {
 					page++;
 					isLoadingMore = true;
-					getRefreshdler().sendEmptyMessage(START_UPDATE);
+					getRefreshandler().sendEmptyMessage(START_UPDATE);
 				}
 			}
 		});
 
-        recyclerView = (RecyclerView) findViewById(R.id.recylerView);  
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -122,7 +123,6 @@ public class ReposListActivity  extends BaseSwipeActivity implements RetrofitNet
     @Override
     protected void startRefresh(){
     	super.startRefresh();
-    	page = 1;
         switch(type){
 	        case REPOS_TYPE_USER:
 	        	userReposList();
@@ -157,13 +157,13 @@ public class ReposListActivity  extends BaseSwipeActivity implements RetrofitNet
             isLoadingMore = false;
         	adapter.insertAtBack(ts);
     	}
-		getRefreshdler().sendEmptyMessage(END_UPDATE);
+		getRefreshandler().sendEmptyMessage(END_UPDATE);
 	}
 
 	@Override
 	public void onError(String Message) {
 		MessageUtils.showErrorMessage(ReposListActivity.this, Message);
-		getRefreshdler().sendEmptyMessage(END_ERROR);
+		getRefreshandler().sendEmptyMessage(END_ERROR);
 	}
 	
 	private void userReposList(){
@@ -188,13 +188,13 @@ public class ReposListActivity  extends BaseSwipeActivity implements RetrofitNet
 		            isLoadingMore = false;
 		        	adapter.insertAtBack((ArrayList<Repository>)ts.repositories);
 		    	}
-				getRefreshdler().sendEmptyMessage(END_UPDATE);
+				getRefreshandler().sendEmptyMessage(END_UPDATE);
 			}
 
 			@Override
 			public void onError(String Message) {
 				MessageUtils.showErrorMessage(ReposListActivity.this, Message);
-				getRefreshdler().sendEmptyMessage(END_ERROR);
+				getRefreshandler().sendEmptyMessage(END_ERROR);
 			}
 		}).trendingShowCase(showCase.slug);
 	}

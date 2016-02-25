@@ -26,7 +26,7 @@
             android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="45dp"
+                android:layout_height="65dp"
                 android:layout_weight="2"
                 android:gravity="center">
 
@@ -68,14 +68,15 @@
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
-            android:orientation="vertical"
             android:id="@+id/expandableContent"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewContent"
             android:layout_marginStart="@dimen/card_padding"
             android:layout_marginEnd="@dimen/card_padding" />
         <RelativeLayout
+            android:id="@+id/more"
             android:layout_width="fill_parent"
             android:layout_height="45.0dip"
             android:layout_below="@id/expandableContent"

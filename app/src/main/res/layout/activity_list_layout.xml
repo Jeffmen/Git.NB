@@ -12,11 +12,39 @@
 	    android:layout_height="match_parent"
 		android:background="@color/transparent_gray"
 	    android:orientation="vertical">
-	        <android.support.v7.widget.RecyclerView
-	         android:id="@+id/recylerView"
-	         android:layout_width="match_parent"
-	         android:layout_height="match_parent"
-	         android:footerDividersEnabled="false"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <android.support.v7.widget.RecyclerView
+             android:id="@+id/recyclerView"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:footerDividersEnabled="false"/>
+            <LinearLayout
+                android:id="@+id/emptyView"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="fitCenter"
+                    android:layout_marginTop="120dp"
+                    android:tint="@android:color/white"
+                    android:src="@drawable/ic_git_gray_240" />
+                <TextView
+                    android:id="@+id/notice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:text="No data"/>
+
+            </LinearLayout>
+        </LinearLayout>
 	</android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

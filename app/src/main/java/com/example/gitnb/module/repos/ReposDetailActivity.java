@@ -152,6 +152,8 @@ public class ReposDetailActivity extends BaseSwipeActivity{
     	TextView contributor = (TextView) findViewById(R.id.contributor);
     	TextView source = (TextView) findViewById(R.id.source);
     	TextView events = (TextView) findViewById(R.id.events);
+
+		stargazers.setText("Stargazers(" + repos.getStargazers_count() + ")");
     	stargazers.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -236,13 +238,13 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 			public void onOK(Repository ts) {
 				repos = ts;
 		        checkIfRepoIsStarred();
-		        getRefreshdler().sendEmptyMessage(END_UPDATE);
+                getRefreshandler().sendEmptyMessage(END_UPDATE);
 			}
 
 			@Override
 			public void onError(String Message) {
 				MessageUtils.showErrorMessage(ReposDetailActivity.this, Message);
-				getRefreshdler().sendEmptyMessage(END_ERROR);
+                getRefreshandler().sendEmptyMessage(END_ERROR);
 			}
 			
     	}).request(repos.getUrl(), Repository.class);

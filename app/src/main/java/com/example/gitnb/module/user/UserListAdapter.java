@@ -1,6 +1,7 @@
 package com.example.gitnb.module.user;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.content.Context;
 import android.content.Intent;
@@ -51,6 +52,7 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
     private String searchText = "";
 	private ArrayList openPosition;
 	private int maxContentWidth;
+	private int fun = 0;
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -58,6 +60,7 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
     
     public UserListAdapter(Context context) {
     	mContext = context;
+		fun = new Random().nextInt(100);
     	mInflater = LayoutInflater.from(mContext);
 		openPosition = new ArrayList();
 		maxContentWidth = (int)(mContext.getResources().getDisplayMetrics().widthPixels
@@ -191,7 +194,15 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			if(user != null){
 			    viewHolder.ivAvatar.setImageURI(Uri.parse(user.getAvatar_url()));
 				viewHolder.tvLogin.setText(user.getLogin());
-				initExpendContentView(viewHolder, user, position);
+				if(position == fun){
+					viewHolder.expandableContent.setVisibility(View.VISIBLE);
+					viewHolder.more.setVisibility(View.VISIBLE);
+					initExpendContentView(viewHolder, user, position);
+				}
+				else{
+					viewHolder.expandableContent.setVisibility(View.GONE);
+					viewHolder.more.setVisibility(View.GONE);
+				}
 			}
 			viewHolder.tvRank.setText(String.valueOf(isShowSearch?position:position+1)+".");
 			break;
@@ -240,8 +251,10 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
 		public Button buttonLearnMore;
 		public ImageButton buttonSettings;
 		public final LinearLayout expandableContent;
+		public final RelativeLayout more;
 		public UserView(View view) {
 			super(view);
+			more  = (RelativeLayout) view.findViewById(R.id.more);
 			expandableContent = (LinearLayout) view.findViewById(R.id.expandableContent);
 			buttonLearnMore = (Button) view.findViewById(R.id.buttonLearnMore);
 			buttonLike = (ImageButton) view.findViewById(R.id.buttonLike);

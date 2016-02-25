@@ -34,7 +34,7 @@ public class LanguageActivity  extends AppCompatActivity {
         }
         setContentView(R.layout.activity_language);
         item_space = Utils.dpToPx(this, ITEM_SPACE);
-        recyclerView = (RecyclerView) findViewById(R.id.recylerView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new LanguageAdapter(this);
         adapter.SetOnItemClickListener(new LanguageAdapter.OnItemClickListener() {
 			

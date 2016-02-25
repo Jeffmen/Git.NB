@@ -127,13 +127,13 @@ public class OrganizationDetailActivity extends BaseSwipeActivity{
 			@Override
 			public void onOK(Organization ts) {
 				orgs = ts;
-		        getRefreshdler().sendEmptyMessage(END_UPDATE);
+				getRefreshandler().sendEmptyMessage(END_UPDATE);
 			}
 
 			@Override
 			public void onError(String Message) {
 				MessageUtils.showErrorMessage(OrganizationDetailActivity.this, Message);
-				getRefreshdler().sendEmptyMessage(END_ERROR);
+				getRefreshandler().sendEmptyMessage(END_ERROR);
 			}
 			
     	}).orgs(orgs.login);

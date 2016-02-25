@@ -2,6 +2,7 @@ package com.example.gitnb.module.user;
 
 import java.util.ArrayList;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
@@ -78,6 +79,7 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
 		type = intent.getStringExtra(USER_TYPE);
+		page = 1;
         switch(type){
 	        case USER_TYPE_STARGZER:
 	        case USER_TYPE_CONTRIBUTOR:
@@ -114,12 +116,12 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
 	            } else{
 	             	page++;
 	                isLoadingMore = true;
-	                getRefreshdler().sendEmptyMessage(START_UPDATE);
+                    getRefreshandler().sendEmptyMessage(START_UPDATE);
 	            }
 			}
 		}); 
         
-        recyclerView = (RecyclerView) findViewById(R.id.recylerView);  
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -128,10 +130,9 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
     @Override
     protected void startRefresh(){
     	super.startRefresh();
-    	page = 1;
         switch(type){
 	        case USER_TYPE_STARGZER:
-	        	getStargzers();
+	        	getStargazers();
 	        	break;
 	        case USER_TYPE_CONTRIBUTOR:
 	            getContributors();
@@ -163,19 +164,25 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
 	@Override
 	public void onOK(ArrayList<User> ts) {   	
 		if(page == 1){
-        	adapter.update(ts);
+			if(ts.size() == 0){
+                recyclerView.setVisibility(View.GONE);
+                findViewById(R.id.emptyView).setVisibility(View.VISIBLE);
+			}
+			else {
+				adapter.update(ts);
+			}
     	}
     	else{
             isLoadingMore = false;
         	adapter.insertAtBack(ts);
     	}
-		getRefreshdler().sendEmptyMessage(END_UPDATE);
+        getRefreshandler().sendEmptyMessage(END_UPDATE);
 	}
 
 	@Override
 	public void onError(String Message) {
 		MessageUtils.showErrorMessage(UserListActivity.this, Message);
-		getRefreshdler().sendEmptyMessage(END_ERROR);
+        getRefreshandler().sendEmptyMessage(END_ERROR);
 	}
 	
 	private void getContributors(){
@@ -183,7 +190,7 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
 		  .contributors(repos.getOwner().getLogin(), repos.getName(), page);
 	}
 	
-	private void getStargzers(){
+	private void getStargazers(){
 		RepoClient.getNewInstance().setNetworkListener(this)
 		  .stargazers(repos.getOwner().getLogin(), repos.getName(), page);
 	}

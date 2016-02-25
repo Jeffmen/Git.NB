@@ -88,13 +88,10 @@ public abstract class BaseSwipeActivity  extends SwipeBackActivity {
         }
     }
     
-    public Handler getRefreshdler(){
+    public Handler getRefreshandler(){
     	return refreshHandler;
     }
-    
-    public SwipeRefreshLayout getSwipeRefreshLayout(){
-    	return mSwipeRefreshLayout;
-    }
+
     
     abstract protected void setTitle(TextView view);
     
@@ -126,19 +123,19 @@ public abstract class BaseSwipeActivity  extends SwipeBackActivity {
         }
     }
 
-    public SwipeRefreshLayout getSwiperRefreshLayout(){
+    public SwipeRefreshLayout getSwipeRefreshLayout(){
         return mSwipeRefreshLayout;
     }
     
     protected void startRefresh(){
-		Utils.setRefreshing(getSwiperRefreshLayout(), true);
+		Utils.setRefreshing(getSwipeRefreshLayout(), true);
     }
     
     protected void endRefresh(){
-		Utils.setRefreshing(getSwiperRefreshLayout(), false);
+		Utils.setRefreshing(getSwipeRefreshLayout(), false);
     }
     
     protected void endError(){
-		Utils.setRefreshing(getSwiperRefreshLayout(), false);
+		Utils.setRefreshing(getSwipeRefreshLayout(), false);
     }
 }

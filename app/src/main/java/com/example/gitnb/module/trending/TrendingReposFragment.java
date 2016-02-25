@@ -37,7 +37,7 @@ public class TrendingReposFragment extends BaseFragment implements RetrofitNetwo
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_data_fragment, container, false);
         initSwipeRefreshLayout(view);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         adapter = new TrendingReposAdapter(getActivity());
         //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
         adapter.SetOnItemClickListener(new TrendingReposAdapter.OnItemClickListener() {

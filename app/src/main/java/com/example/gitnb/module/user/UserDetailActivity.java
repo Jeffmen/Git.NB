@@ -105,10 +105,10 @@ public class UserDetailActivity extends BaseSwipeActivity{
     	TextView organizations = (TextView) findViewById(R.id.organizations);
     	TextView followers = (TextView) findViewById(R.id.followers);
     	TextView following = (TextView) findViewById(R.id.following);
-    	TextView repositorys = (TextView) findViewById(R.id.repositorys);
+    	TextView repositories = (TextView) findViewById(R.id.repositorys);
 
     	events.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(UserDetailActivity.this, EventListActivity.class);
@@ -120,7 +120,7 @@ public class UserDetailActivity extends BaseSwipeActivity{
 			}
 		});
     	organizations.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(UserDetailActivity.this, OrganizationListActivity.class);
@@ -131,8 +131,9 @@ public class UserDetailActivity extends BaseSwipeActivity{
 				startActivity(intent);
 			}
 		});
+		followers.setText("Followers(" + user.getFollowers() + ")");
     	followers.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(UserDetailActivity.this, UserListActivity.class);
@@ -143,8 +144,9 @@ public class UserDetailActivity extends BaseSwipeActivity{
 				startActivity(intent);
 			}
 		});
+		following.setText("Following(" + user.getFollowing() + ")");
     	following.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(UserDetailActivity.this, UserListActivity.class);
@@ -155,7 +157,8 @@ public class UserDetailActivity extends BaseSwipeActivity{
 				startActivity(intent);
 			}
 		});
-    	repositorys.setOnClickListener(new View.OnClickListener() {
+		repositories.setText("Repositories(" + user.getPublic_repos() + ")");
+		repositories.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -193,14 +196,14 @@ public class UserDetailActivity extends BaseSwipeActivity{
 
 			@Override
 			public void onOK(User ts) {
-				user = (User) ts;
-				getRefreshdler().sendEmptyMessage(END_UPDATE);
+				user = ts;
+                getRefreshandler().sendEmptyMessage(END_UPDATE);
 			}
 
 			@Override
 			public void onError(String Message) {
 				MessageUtils.showErrorMessage(UserDetailActivity.this, Message);
-				getRefreshdler().sendEmptyMessage(END_ERROR);
+                getRefreshandler().sendEmptyMessage(END_ERROR);
 			}
 			
     	}).getSingleUser(user.getLogin());
