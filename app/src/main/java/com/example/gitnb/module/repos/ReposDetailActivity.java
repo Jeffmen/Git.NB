@@ -13,17 +13,22 @@ import com.example.gitnb.module.user.UserDetailActivity;
 import com.example.gitnb.module.user.UserListActivity;
 import com.example.gitnb.utils.MessageUtils;
 import com.example.gitnb.utils.Utils;
-import com.example.gitnb.widget.FlipImageView;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.kyleduo.switchbutton.SwitchButton;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 public class ReposDetailActivity extends BaseSwipeActivity{
@@ -31,9 +36,10 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 	private String TAG = "ReposDetailActivity";
 	public static String CONTENT_URL = "content_url";
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	private FloatingActionButton faButton;
     private LinearLayout main;
 	private Repository repos;
-    private SwitchButton swithBt;
+	private boolean isStar = false;
 	
     protected void setTitle(TextView view){
         if(repos != null && !repos.getName().isEmpty()){
@@ -52,21 +58,48 @@ public class ReposDetailActivity extends BaseSwipeActivity{
         main = (LinearLayout) findViewById(R.id.main);
         main.setVisibility(View.GONE);
 
-        swithBt = (SwitchButton) findViewById(R.id.switch_bt);
-		swithBt.setOnClickListener(new View.OnClickListener() {
+		faButton = (FloatingActionButton) findViewById(R.id.faButton);
+		faButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
-			public void onClick(View arg0) {
-				swithBt.setEnabled(false);
-				if(swithBt.isChecked()){
+			public void onClick(View v) {
+
+				if (isStar) {
+					unStarRepo();
+				} else {
 					starRepo();
 				}
+			}
+		});
+	}
+
+	private void showStar(boolean value){
+		this.isStar = value;
+		AnimatorSet bouncer = new AnimatorSet();
+		ObjectAnimator alpha = ObjectAnimator.ofFloat(faButton, "alpha", 0.0f, 1.0f);
+		ObjectAnimator scaleX = ObjectAnimator.ofFloat(faButton, "scaleX", 0.0f, 1.0f);
+		ObjectAnimator scaleY = ObjectAnimator.ofFloat(faButton, "scaleY", 0.0f, 1.0f);
+		bouncer.play(alpha).with(scaleX).with(scaleY);
+		bouncer.setDuration(500);
+		bouncer.addListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationStart(Animator animation) {
+				faButton.setVisibility(View.VISIBLE);
+				if(isStar) {
+					ColorStateList colorRed = ColorStateList.valueOf(getResources().getColor(R.color.orange_yellow));
+					faButton.setBackgroundTintList(colorRed);
+					faButton.setImageResource(R.drawable.ic_star_white_36dp);
+					//ColorStateList colorWhite = ColorStateList.valueOf(Color.WHITE);
+					//faButton.setImageTintList(colorWhite);
+				}
 				else{
-					unStarRepo();
+					ColorStateList colorStateList = ColorStateList.valueOf(Color.WHITE);
+					ViewCompat.setBackgroundTintList(faButton, colorStateList);
+					faButton.setImageResource(R.drawable.ic_star_yellow_36dp);
 				}
 			}
-
 		});
+		bouncer.start();
 	}
     
     private void setRepository(){
@@ -238,13 +271,13 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 			public void onOK(Repository ts) {
 				repos = ts;
 		        checkIfRepoIsStarred();
-                getRefreshandler().sendEmptyMessage(END_UPDATE);
+				getRefreshHandler().sendEmptyMessage(END_UPDATE);
 			}
 
 			@Override
 			public void onError(String Message) {
 				MessageUtils.showErrorMessage(ReposDetailActivity.this, Message);
-                getRefreshandler().sendEmptyMessage(END_ERROR);
+				getRefreshHandler().sendEmptyMessage(END_ERROR);
 			}
 			
     	}).request(repos.getUrl(), Repository.class);
@@ -255,16 +288,15 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 
 			@Override
 			public void onOK(Object ts) {
-		        swithBt.setVisibility(View.VISIBLE);
-				swithBt.setChecked(true);
+				showStar(true);
 			}
 
 			@Override
 			public void onError(String Message) {
-		        swithBt.setVisibility(View.VISIBLE);
+				showStar(false);
 			}
-			
-    	}).checkIfRepoIsStarred(repos.getOwner().getLogin(), repos.getName());
+
+		}).checkIfRepoIsStarred(repos.getOwner().getLogin(), repos.getName());
 	}
 	
 	private void starRepo(){
@@ -274,15 +306,14 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 
 			@Override
 			public void onOK(Object ts) {
-				swithBt.setChecked(true);
 				snackbar.dismiss();
-				swithBt.setEnabled(true);
+				showStar(true);
+
 			}
 
 			@Override
 			public void onError(String Message) {
 				snackbar.dismiss();
-				swithBt.setEnabled(true);
 				MessageUtils.showErrorMessage(ReposDetailActivity.this, Message);
 			}
 			
@@ -296,15 +327,13 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 
 			@Override
 			public void onOK(Object ts) {
-				swithBt.setChecked(false);
 				snackbar.dismiss();
-				swithBt.setEnabled(true);
+				showStar(false);
 			}
 
 			@Override
 			public void onError(String Message) {
 				snackbar.dismiss();
-				swithBt.setEnabled(true);
 				MessageUtils.showErrorMessage(ReposDetailActivity.this, Message);
 			}
 			

@@ -14,10 +14,18 @@ import com.example.gitnb.utils.Utils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.kyleduo.switchbutton.SwitchButton;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
@@ -30,8 +38,9 @@ public class UserDetailActivity extends BaseSwipeActivity{
 	private String TAG = "UserDetailActivity";
 	public static String AVATAR_URL = "avatar_url";
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	private FloatingActionButton faButton;
     private LinearLayout main;
-    private SwitchButton swithBt;
+	private boolean isFollow = false;
 	private User user;
 	
     protected void setTitle(TextView view){
@@ -50,24 +59,50 @@ public class UserDetailActivity extends BaseSwipeActivity{
         setContentView(R.layout.activity_user_detail);
         main = (LinearLayout) findViewById(R.id.main);
         main.setVisibility(View.GONE);
-      
-        swithBt = (SwitchButton) findViewById(R.id.switch_bt);
-		swithBt.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+
+		faButton = (FloatingActionButton) findViewById(R.id.faButton);
+		faButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				swithBt.setEnabled(false);
-				if(isChecked){
+			public void onClick(View v) {
+				if (isFollow) {
+					unFollowUser();
+				} else {
 					followUser();
 				}
-				else{
-					unFollowUser();
-				}
 			}
-
 		});
     }
-    
+
+	private void showFollow(boolean value){
+		this.isFollow = value;
+		AnimatorSet bouncer = new AnimatorSet();
+		ObjectAnimator alpha = ObjectAnimator.ofFloat(faButton, "alpha", 0.0f, 1.0f);
+		ObjectAnimator scaleX = ObjectAnimator.ofFloat(faButton, "scaleX", 0.0f, 1.0f);
+		ObjectAnimator scaleY = ObjectAnimator.ofFloat(faButton, "scaleY", 0.0f, 1.0f);
+		bouncer.play(alpha).with(scaleX).with(scaleY);
+		bouncer.setDuration(500);
+		bouncer.addListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationStart(Animator animation) {
+				faButton.setVisibility(View.VISIBLE);
+				if(isFollow) {
+					ColorStateList colorRed = ColorStateList.valueOf(getResources().getColor(R.color.orange_yellow));
+					faButton.setBackgroundTintList(colorRed);
+					faButton.setImageResource(R.drawable.ic_like_off_white);
+					//ColorStateList colorWhite = ColorStateList.valueOf(Color.WHITE);
+					//faButton.setImageTintList(colorWhite);
+				}
+				else{
+					ColorStateList colorStateList = ColorStateList.valueOf(Color.WHITE);
+					ViewCompat.setBackgroundTintList(faButton, colorStateList);
+					faButton.setImageResource(R.drawable.ic_like_on_yellow);
+				}
+			}
+		});
+		bouncer.start();
+	}
+
     private void setUserInfo(){
 		TextView user_name = (TextView) findViewById(R.id.user_name);
 		TextView user_company = (TextView) findViewById(R.id.user_company);
@@ -197,13 +232,13 @@ public class UserDetailActivity extends BaseSwipeActivity{
 			@Override
 			public void onOK(User ts) {
 				user = ts;
-                getRefreshandler().sendEmptyMessage(END_UPDATE);
+				getRefreshHandler().sendEmptyMessage(END_UPDATE);
 			}
 
 			@Override
 			public void onError(String Message) {
 				MessageUtils.showErrorMessage(UserDetailActivity.this, Message);
-                getRefreshandler().sendEmptyMessage(END_ERROR);
+				getRefreshHandler().sendEmptyMessage(END_ERROR);
 			}
 			
     	}).getSingleUser(user.getLogin());
@@ -214,13 +249,12 @@ public class UserDetailActivity extends BaseSwipeActivity{
 
 			@Override
 			public void onOK(Object ts) {
-		        swithBt.setVisibility(View.VISIBLE);
-				swithBt.setChecked(true);
+				showFollow(true);
 			}
 
 			@Override
 			public void onError(String Message) {
-		        swithBt.setVisibility(View.VISIBLE);
+				showFollow(false);
 			}
 			
     	}).checkFollowing(user.getLogin());
@@ -234,14 +268,13 @@ public class UserDetailActivity extends BaseSwipeActivity{
 			@Override
 			public void onOK(Object ts) {
 				snackbar.dismiss();
-				swithBt.setEnabled(true);
+				showFollow(true);
 				//Snackbar.make(getSwipeRefreshLayout(), "Already Followed", Snackbar.LENGTH_LONG).show();
 			}
 
 			@Override
 			public void onError(String Message) {
 				snackbar.dismiss();
-				swithBt.setEnabled(true);
 				MessageUtils.showErrorMessage(UserDetailActivity.this, Message);
 			}
 			
@@ -256,14 +289,13 @@ public class UserDetailActivity extends BaseSwipeActivity{
 			@Override
 			public void onOK(Object ts) {
 				snackbar.dismiss();
-				swithBt.setEnabled(true);
+				showFollow(false);
 				//Snackbar.make(getSwipeRefreshLayout(), "Already unFollowed", Snackbar.LENGTH_LONG).show();
 			}
 
 			@Override
 			public void onError(String Message) {
 				snackbar.dismiss();
-				swithBt.setEnabled(true);
 				MessageUtils.showErrorMessage(UserDetailActivity.this, Message);
 			}
 			

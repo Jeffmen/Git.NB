@@ -77,7 +77,7 @@ public class OrganizationListActivity  extends BaseSwipeActivity implements Retr
 	            } else{
 	             	page++;
 	                isLoadingMore = true;
-					getRefreshandler().sendEmptyMessage(START_UPDATE);
+					getRefreshHandler().sendEmptyMessage(START_UPDATE);
 	            }
 			}
 		}); 
@@ -120,13 +120,13 @@ public class OrganizationListActivity  extends BaseSwipeActivity implements Retr
             isLoadingMore = false;
         	adapter.insertAtBack(ts);
     	}
-		getRefreshandler().sendEmptyMessage(END_UPDATE);
+		getRefreshHandler().sendEmptyMessage(END_UPDATE);
 	}
 
 	@Override
 	public void onError(String Message) {
 		MessageUtils.showErrorMessage(OrganizationListActivity.this, Message);
-		getRefreshandler().sendEmptyMessage(END_ERROR);
+		getRefreshHandler().sendEmptyMessage(END_ERROR);
 	}
 
 	private void getOrganizations(){

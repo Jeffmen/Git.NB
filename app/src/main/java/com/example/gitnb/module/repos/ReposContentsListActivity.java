@@ -62,7 +62,7 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
 				Content content = adapter.getItem(position);
 				if (content.isDir()) {
 					clickName = content.name;
-					getRefreshandler().sendEmptyMessage(START_UPDATE);
+					getRefreshHandler().sendEmptyMessage(START_UPDATE);
 				}
 				if (content.isFile()) {
 					showContent(content);
@@ -87,7 +87,7 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
 							path = path.substring(0, pos);
 					}
 					clickName = "";
-					getRefreshandler().sendEmptyMessage(START_UPDATE);
+					getRefreshHandler().sendEmptyMessage(START_UPDATE);
 				}
 			}
 		});
@@ -130,13 +130,13 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
 			public void onOK(ArrayList<Content> ts) {
 				path += clickName + "/";
 				adapter.update(ts);
-				getRefreshandler().sendEmptyMessage(END_UPDATE);
+				getRefreshHandler().sendEmptyMessage(END_UPDATE);
 			}
 
 			@Override
 			public void onError(String Message) {
 				MessageUtils.showErrorMessage(ReposContentsListActivity.this, Message);
-				getRefreshandler().sendEmptyMessage(END_ERROR);
+				getRefreshHandler().sendEmptyMessage(END_ERROR);
 			}
 			
     	}).contents(repos.getOwner().getLogin(), repos.getName(), path + clickName);

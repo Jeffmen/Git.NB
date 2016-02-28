@@ -108,7 +108,7 @@ public class ReposListActivity  extends BaseSwipeActivity implements RetrofitNet
 				} else {
 					page++;
 					isLoadingMore = true;
-					getRefreshandler().sendEmptyMessage(START_UPDATE);
+					getRefreshHandler().sendEmptyMessage(START_UPDATE);
 				}
 			}
 		});
@@ -151,19 +151,25 @@ public class ReposListActivity  extends BaseSwipeActivity implements RetrofitNet
 	@Override
 	public void onOK(ArrayList<Repository> ts) {   	
 		if(page == 1){
-        	adapter.update(ts);
+			if(ts.size() == 0){
+				recyclerView.setVisibility(View.GONE);
+				findViewById(R.id.emptyView).setVisibility(View.VISIBLE);
+			}
+			else {
+				adapter.update(ts);
+			}
     	}
     	else{
             isLoadingMore = false;
         	adapter.insertAtBack(ts);
     	}
-		getRefreshandler().sendEmptyMessage(END_UPDATE);
+		getRefreshHandler().sendEmptyMessage(END_UPDATE);
 	}
 
 	@Override
 	public void onError(String Message) {
 		MessageUtils.showErrorMessage(ReposListActivity.this, Message);
-		getRefreshandler().sendEmptyMessage(END_ERROR);
+		getRefreshHandler().sendEmptyMessage(END_ERROR);
 	}
 	
 	private void userReposList(){
@@ -188,13 +194,13 @@ public class ReposListActivity  extends BaseSwipeActivity implements RetrofitNet
 		            isLoadingMore = false;
 		        	adapter.insertAtBack((ArrayList<Repository>)ts.repositories);
 		    	}
-				getRefreshandler().sendEmptyMessage(END_UPDATE);
+				getRefreshHandler().sendEmptyMessage(END_UPDATE);
 			}
 
 			@Override
 			public void onError(String Message) {
 				MessageUtils.showErrorMessage(ReposListActivity.this, Message);
-				getRefreshandler().sendEmptyMessage(END_ERROR);
+				getRefreshHandler().sendEmptyMessage(END_ERROR);
 			}
 		}).trendingShowCase(showCase.slug);
 	}

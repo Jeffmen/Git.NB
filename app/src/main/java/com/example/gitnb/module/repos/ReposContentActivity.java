@@ -99,13 +99,13 @@ public class ReposContentActivity extends BaseSwipeActivity {
 			@Override
 			public void onOK(Content ts) {
 				content = ts;
-                getRefreshandler().sendEmptyMessage(END_UPDATE);
+                getRefreshHandler().sendEmptyMessage(END_UPDATE);
 			}
 
 			@Override
 			public void onError(String Message) {
 				MessageUtils.showErrorMessage(ReposContentActivity.this, Message);
-                getRefreshandler().sendEmptyMessage(END_ERROR);
+                getRefreshHandler().sendEmptyMessage(END_ERROR);
 			}
 			
     	}).request(url, Content.class);

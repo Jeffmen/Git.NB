@@ -25,7 +25,7 @@ import com.example.gitnb.module.viewholder.HorizontalDividerItemDecoration;
 import com.example.gitnb.utils.MessageUtils;
 
 public class EventListActivity  extends BaseSwipeActivity implements RetrofitNetworkAbs.NetworkListener<ArrayList<Event>>{
-	private String TAG = "ReposEventsActivity";
+	private String TAG = "EventListActivity";
 	public static final String EVENT_TYPE = "event_type";
 	public static final String EVENT_TYPE_REPOS = "Events_REPOS";
 	public static final String EVENT_TYPE_USER = "Events_USER";
@@ -105,7 +105,7 @@ public class EventListActivity  extends BaseSwipeActivity implements RetrofitNet
 	            } else{
 	             	page++;
 	                isLoadingMore = true;
-					getRefreshandler().sendEmptyMessage(START_UPDATE);
+					getRefreshHandler().sendEmptyMessage(START_UPDATE);
 	            }
 			}
 		}); 
@@ -148,19 +148,25 @@ public class EventListActivity  extends BaseSwipeActivity implements RetrofitNet
 	@Override
 	public void onOK(ArrayList<Event> ts) {   	
 		if(page == 1){
-        	adapter.update(ts);
+			if(ts.size() == 0){
+				recyclerView.setVisibility(View.GONE);
+				findViewById(R.id.emptyView).setVisibility(View.VISIBLE);
+			}
+			else {
+				adapter.update(ts);
+			}
     	}
     	else{
             isLoadingMore = false;
         	adapter.insertAtBack(ts);
     	}
-		getRefreshandler().sendEmptyMessage(END_UPDATE);
+		getRefreshHandler().sendEmptyMessage(END_UPDATE);
 	}
 
 	@Override
 	public void onError(String Message) {
 		MessageUtils.showErrorMessage(EventListActivity.this, Message);
-		getRefreshandler().sendEmptyMessage(END_ERROR);
+		getRefreshHandler().sendEmptyMessage(END_ERROR);
 	}
 	
 	private void getReposEvents(){

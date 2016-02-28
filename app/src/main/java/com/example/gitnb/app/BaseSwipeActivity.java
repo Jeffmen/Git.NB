@@ -88,7 +88,7 @@ public abstract class BaseSwipeActivity  extends SwipeBackActivity {
         }
     }
     
-    public Handler getRefreshandler(){
+    public Handler getRefreshHandler(){
     	return refreshHandler;
     }
 
