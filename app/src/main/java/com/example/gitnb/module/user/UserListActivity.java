@@ -183,6 +183,10 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
 	public void onError(String Message) {
 		MessageUtils.showErrorMessage(UserListActivity.this, Message);
 		getRefreshHandler().sendEmptyMessage(END_ERROR);
+		if(Message.equals("Not Found")){
+			recyclerView.setVisibility(View.GONE);
+			findViewById(R.id.emptyView).setVisibility(View.VISIBLE);
+		}
 	}
 	
 	private void getContributors(){

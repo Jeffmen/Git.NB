@@ -9,7 +9,6 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -29,7 +28,7 @@ import com.example.gitnb.model.User;
 import com.example.gitnb.utils.CurrentUser;
 import com.example.gitnb.R;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends Activity {
 
     public static final String VIDEO_NAME = "welcome_video.mp4";
     private static int FOR_ANTHORIZE = 300;

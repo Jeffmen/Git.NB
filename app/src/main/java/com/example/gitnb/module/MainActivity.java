@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
 									CurrentUser.detete(MainActivity.this);
 									me = null;
 									finish();
-									Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+									Intent intent = new Intent(MainActivity.this, Welcome2Activity.class);
 									startActivity(intent);
 								}
 							})

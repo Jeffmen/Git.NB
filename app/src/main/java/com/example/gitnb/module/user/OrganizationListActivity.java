@@ -114,7 +114,13 @@ public class OrganizationListActivity  extends BaseSwipeActivity implements Retr
 	@Override
 	public void onOK(ArrayList<Organization> ts) {   	
 		if(page == 1){
-        	adapter.update(ts);
+			if(ts.size() == 0){
+				recyclerView.setVisibility(View.GONE);
+				findViewById(R.id.emptyView).setVisibility(View.VISIBLE);
+			}
+			else {
+				adapter.update(ts);
+			}
     	}
     	else{
             isLoadingMore = false;
