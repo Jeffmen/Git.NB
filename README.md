@@ -5,7 +5,7 @@ A android app client for Github.
 
 ##效果图
 
-![image](https://raw.githubusercontent.com/Jeffmen/Git.NB/master/apk/Screenshot.png)
+![image](https://raw.githubusercontent.com/Jeffmen/Git.NB/master/apk/Screenshot12.jpg)
 
 ##关于项目
 这是我的第一个写的比较完整的开源项目，material design风格, [apk下载](https://raw.githubusercontent.com/Jeffmen/Git.NB/master/apk/app-release.apk)。GitNB这个名字的意思，就是用APP关注Git上牛B的大牛们，慢慢地学习让Git的开源项目，让自己也能成为大牛。哈哈。。。。
