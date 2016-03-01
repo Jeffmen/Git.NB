@@ -12,7 +12,7 @@ A android app client for Github.
 
 一开始是用Eclipse上开发，后来移到Android studio上，如果想看Eclipse版本的，请点[GitNB](https://github.com/Jeffmen/GitNB)，代码没有这个新，移过来就没有更新了.
 
-如果发现有任何问题和建议，随时欢迎Email或者开Issues
+如果发现有任何问题和建议，随时欢迎Email或者开Issues, 如果有版权问题，立即删除。
 
 ###使用的开源技术
 1，网络端使用非常牛叉非常好用的[Retrofit2.0](https://github.com/square/retrofit)
