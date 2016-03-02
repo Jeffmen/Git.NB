@@ -4,7 +4,7 @@
         <!-- toolbar（actionbar）颜色 -->  
         <item name="colorPrimary">@android:color/transparent</item>
         <!-- 状态栏颜色 -->  
-        <item name="colorPrimaryDark">@color/transparent_dark_gray</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <!-- 窗口的背景颜色 -->  
         <item name="android:windowBackground">@android:color/white</item>  
         <!-- 底部导航栏颜色 -->  
@@ -14,6 +14,10 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowFullscreen">false</item>
         <item name="colorControlNormal">#c5c5c5</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="colorControlHighlight">?colorAccent</item>
@@ -21,7 +25,8 @@
     
 	<style name="ClubToolbar" parent="Widget.AppCompat.Toolbar">  
 	        <item name="contentInsetStart">0dp</item><!-- 设置该属性解决空白部分-->  
-	</style>	 
+	</style>
+
 	<style name="ImageloadingDialogStyle" parent="android:Theme.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowFrame">@null</item><!--无边框-->

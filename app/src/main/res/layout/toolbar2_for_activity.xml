@@ -5,16 +5,16 @@
 	 android:layout_width="match_parent"
 	 android:layout_height="wrap_content"
 	 android:background="@color/orange_yellow">
-	
-	<LinearLayout 
-	    android:orientation="vertical"  
+
+	<LinearLayout
+	    android:orientation="vertical"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content">
-		<View 
-		    android:orientation="vertical"  
-		    android:layout_width="match_parent"  
-		    android:layout_height="25dp"> 
-		</View> 
+		<View
+		    android:orientation="vertical"
+		    android:layout_width="match_parent"
+		    android:layout_height="25dp">
+		</View>
 		<android.support.v7.widget.Toolbar
 		    android:id="@+id/toolbar"  
 		    android:layout_width="match_parent"  

@@ -35,8 +35,7 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
 		USER_FOLLOWER,
 		USER_FOLLOWING,
 		USER_REPOSITORY
-	}    
-	
+	}
 
 	@Override
 	protected void setTitle(TextView view) {
