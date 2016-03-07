@@ -2,52 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
     android:orientation="horizontal" >
-    
+        
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:padding="10dp">
-        
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="right">
+        android:layout_weight="1"
+        android:gravity="right">
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/loading_gif"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:gravity="center"
-                android:singleLine="true"
-    			fresco:actualImageScaleType="focusCrop"
-                fresco:placeholderImage="@drawable/ic_git_gray_240"
-                fresco:roundedCornerRadius="10dp"
-			    fresco:roundingBorderWidth="1dp"/>
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/loading_gif"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:gravity="center"
+            android:singleLine="true"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:placeholderImage="@drawable/ic_git_gray_240"
+            fresco:roundedCornerRadius="10dp"
+            fresco:roundingBorderWidth="1dp"/>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:layout_marginLeft="15dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/loading_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:text="@string/loading_more"
-                    android:textSize="16sp" />
-
-        </LinearLayout>
     </LinearLayout>
-        
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:layout_marginLeft="30dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/loading_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="?android:attr/textColorPrimary"
+                android:text="@string/loading_more"
+                android:textSize="16sp" />
+
+    </LinearLayout>
 
 </LinearLayout>
