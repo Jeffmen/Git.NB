@@ -3,14 +3,13 @@ package com.example.gitnb.module.trending;
 import java.util.ArrayList;
 
 import com.example.gitnb.R;
-import com.example.gitnb.api.RetrofitNetworkAbs;
-import com.example.gitnb.api.TrendingClient;
 import com.example.gitnb.app.BaseFragment;
+import com.example.gitnb.model.Repository;
 import com.example.gitnb.model.ShowCase;
-import com.example.gitnb.module.MainActivity.UpdateLanguageListener;
+import com.example.gitnb.module.MainFragment;
+import com.example.gitnb.module.repos.ReposDetailActivity;
 import com.example.gitnb.module.repos.ReposListActivity;
-import com.example.gitnb.module.viewholder.HorizontalDividerItemDecoration;
-import com.example.gitnb.utils.MessageUtils;
+import com.example.gitnb.module.search.HotReposFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,8 +22,11 @@ import android.view.animation.OvershootInterpolator;
 
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-public class ShowCaseFragment extends BaseFragment implements RetrofitNetworkAbs.NetworkListener<ArrayList<ShowCase>>, UpdateLanguageListener{
+public class ShowCaseFragment extends BaseFragment implements MainFragment.TabClickListener{
 	private String TAG = "TrendingReposFragment";
     private boolean isAlreadyLoadData = false;
 	public static String SHOWCASE = "showcase_key";
@@ -34,31 +36,11 @@ public class ShowCaseFragment extends BaseFragment implements RetrofitNetworkAbs
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_data_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_data, container, false);
         initSwipeRefreshLayout(view);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        adapter = new ShowCaseAdapter(getActivity());
-        //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
-        adapter.SetOnItemClickListener(new ShowCaseAdapter.OnItemClickListener() {
-			
-			@Override
-			public void onItemClick(View view, int position) {
-
-				Intent intent = new Intent(getActivity(), ReposListActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putParcelable(SHOWCASE, adapter.getItem(position));
-				intent.putExtras(bundle);
-				intent.putExtra(ReposListActivity.REPOS_TYPE, ReposListActivity.REPOS_TYPE_SHOWCASE);
-				startActivity(intent);
-			}
-		});
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
-		ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(adapter);
-		SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
-		slideInAdapter.setDuration(300);
-		slideInAdapter.setInterpolator(new OvershootInterpolator());
-		recyclerView.setAdapter(slideInAdapter);
 
         return view;
     }
@@ -75,41 +57,60 @@ public class ShowCaseFragment extends BaseFragment implements RetrofitNetworkAbs
 	}
 	
 	@Override
-    protected void startRefresh(){
+	public void startRefresh(){
 		super.startRefresh();
-        requeseShowCase();
+		requestShowCase();
     }
+	private void updateAdapter(ArrayList<ShowCase> ts){
+		if(adapter == null) {
+			adapter = new ShowCaseAdapter(getActivity());
+			adapter.SetOnItemClickListener(new ShowCaseAdapter.OnItemClickListener() {
 
-	@Override
-    protected void endRefresh(){
-    	super.endRefresh();
-    }
-
-	@Override
-    protected void endError(){
-    	super.endError();
-    }
-	
-	@Override
-	public void onOK(ArrayList<ShowCase> list) {  
-    	adapter.update(list);
-    	endRefresh();
+				@Override
+				public void onItemClick(View view, int position) {
+					Intent intent = new Intent(getActivity(), ReposListActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putParcelable(SHOWCASE, adapter.getItem(position));
+					intent.putExtras(bundle);
+					intent.putExtra(ReposListActivity.REPOS_TYPE, ReposListActivity.REPOS_TYPE_SHOWCASE);
+					startActivity(intent);
+				}
+			});
+			ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(adapter);
+			SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+			slideInAdapter.setDuration(300);
+			slideInAdapter.setInterpolator(new OvershootInterpolator());
+			recyclerView.setAdapter(slideInAdapter);
+			recyclerView.scheduleLayoutAnimation();
+		}
+		adapter.update(ts);
 	}
 
-	@Override
-	public void onError(String Message) {
-		endError();
-		MessageUtils.showErrorMessage(getActivity(), Message);
+	public void onOK(ArrayList<ShowCase> list) {
+		updateAdapter(list);
+		endRefresh();
 	}
-	
-    private void requeseShowCase(){
-    	TrendingClient.getNewInstance().setNetworkListener(this).trendingShowCase();
-    }
 
-	@Override
-	public Void updateLanguage(String language) {
-		return null;
-	}
+    private void requestShowCase(){
+        getApiService().trendingShowCase()
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Observer<ArrayList<ShowCase>>() {
+					@Override
+					public void onNext(ArrayList<ShowCase> result) {
+						onOK(result);
+					}
+
+					@Override
+					public void onCompleted() {
+					}
+
+					@Override
+					public void onError(Throwable error) {
+						endError(error.getMessage());
+					}
+				});
+    }
 
 	@Override
 	public Void moveToUp() {

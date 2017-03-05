@@ -10,38 +10,44 @@
 	android:layout_marginRight="10dp"
 	android:layout_marginLeft="10dp"
     android:minHeight="40dp"
-	card_view:cardBackgroundColor="@color/miky_white" 
-	card_view:cardElevation="5dp"
+	android:foreground="?attr/selectableItemBackground"
+	card_view:cardElevation="@dimen/list_item_elevation"
 	card_view:cardPreventCornerOverlap="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 	    android:orientation="horizontal"
+		android:background="@drawable/list_item_border"
 		android:padding="10dp">
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_gravity="center">
 
-                <TextView
-                    android:id="@+id/repos_rank"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-	                android:layout_gravity="center"/>
+			<TextView
+				android:id="@+id/repos_rank"
+				android:layout_width="match_parent"
+				android:layout_height="20dp"
+				android:gravity="center"/>
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:orientation="vertical"
+				android:gravity="center">
 	            <com.facebook.drawee.view.SimpleDraweeView
 	                android:id="@+id/user_avatar"
 	                android:layout_width="30dp"
 	                android:layout_height="30dp"
-	                android:layout_gravity="center"
+					android:layout_gravity="center"
 	    			fresco:actualImageScaleType="focusCrop"
 	                fresco:placeholderImage="@drawable/ic_git_gray_240"
 	                fresco:roundedCornerRadius="10dp"
 				    fresco:roundingBorderWidth="1dp"/>
-
+			</LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -62,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
 				    android:textStyle="bold"
-                    android:singleLine="true"
+					android:maxLines="1"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="14sp" />
 	
@@ -71,7 +77,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:singleLine="true"
+                    android:maxLines="1"
 	                android:textColor="#758a99"
                     android:textSize="12sp" />
                 
@@ -85,8 +91,8 @@
 	                    android:id="@+id/repos_fork"
 	                    android:layout_width="wrap_content"
 	                    android:layout_height="wrap_content"
-	                    android:singleLine="true"
-	                    android:textColor="#758a99"
+						android:maxLines="1"
+						android:textColor="#cccccc"
 	                    android:textSize="12sp" />
 	
 	                <TextView
@@ -94,7 +100,7 @@
 	                    android:layout_width="wrap_content"
 	                    android:layout_height="wrap_content"
 	                    android:layout_marginLeft="15dp"
-	                    android:singleLine="true"
+						android:maxLines="1"
 	                    android:textColor="?android:attr/textColorPrimary"
 	                    android:textSize="12sp" />
 	
@@ -103,9 +109,10 @@
 	                    android:layout_width="wrap_content"
 	                    android:layout_height="wrap_content"
 	                    android:layout_marginLeft="15dp"
-	                    android:singleLine="true"
-	                    android:ellipsize="end" 
-	                    android:textColor="?android:attr/textColorPrimary"
+	                    android:maxLines="1"
+	                    android:ellipsize="end"
+						android:visibility="gone"
+						android:textColor="#cccccc"
 	                    android:textSize="12sp" />
 	        </LinearLayout>
 	        <LinearLayout
@@ -118,7 +125,7 @@
 	                    android:id="@+id/repos_description"
 	                    android:layout_width="match_parent"
 	                    android:layout_height="match_parent"
-	                    android:textColor="?android:attr/textColorPrimary"
+						android:textColor="#758a99"
 	                    android:textSize="12sp" />
 	
 	        </LinearLayout>

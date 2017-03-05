@@ -1,121 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
     android:baselineAligned="false"
-	android:background="#88EDEDED">
+	android:orientation="vertical">
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="100dp"
-	    android:baselineAligned="false"
-	    android:background="@drawable/view_border">
-		
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        android:background="@drawable/view_border">
+        <TextView
+            android:id="@+id/repos_updated"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textColor="#758a99"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/repos_homepage"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:autoLink="all"
+            android:ellipsize="end"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/repos_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="35dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="13dp"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:divider="@drawable/vertical_line"
+        android:showDividers = "middle"
+        android:weightSum="2"
+        android:background="@drawable/view_border">
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="5"
-        	android:layout_marginTop="10dp"
-        	android:layout_marginBottom="7dp"
-            android:gravity="center"
-            android:orientation="vertical">
-	        <LinearLayout
-	            android:layout_width="fill_parent"
-	            android:layout_height="0dp"
-	            android:layout_weight="3"
-	            android:orientation="horizontal">
-	
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:divider="@drawable/horizontal_line_57"
+            android:showDividers = "middle">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="17dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="25dp"
+                    android:tint="@color/search_gray"
+                    android:text="{fe-state}"/>
                 <TextView
-                    android:id="@+id/repos_name"
+                    android:id="@+id/type"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:text="Public"
+                    android:textColor="#758a99"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="17dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="25dp"
+                    android:text="{fe-star}"/>
+                <TextView
+                    android:id="@+id/stars"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-				    android:textStyle="bold"
-                    android:singleLine="true"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="14sp" />
-	
+                    android:gravity="center_vertical"
+                    android:background="@drawable/red_button_border"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"/>
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="2dp"
+                    android:text="Stars"
+                    android:textColor="#758a99"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="17dp"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="/"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="14sp" />
-                
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="25dp"
+                    android:tint="@color/search_gray"
+                    android:text="{fe-date}"/>
                 <TextView
-                    android:id="@+id/repos_owner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-				    android:textStyle="bold"
-                    android:singleLine="true"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="14sp" />
-	        </LinearLayout>
-	        <LinearLayout
-	            android:layout_width="fill_parent"
-	            android:layout_height="0dp"
-	            android:layout_weight="3"
-	            android:orientation="horizontal">
-	
-	                <TextView
-	                    android:id="@+id/repos_updated"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-	                    android:singleLine="true"
-	                    android:textColor="#758a99"
-	                    android:textSize="12sp" />
-	
-	                <TextView
-	                    android:id="@+id/repos_homepage"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-			    		android:layout_marginLeft="15dp"
-	                    android:singleLine="true"
-	                    android:autoLink="all" 
-	                    android:ellipsize="end" 
-	                    android:textColor="?android:attr/textColorPrimary"
-	                    android:textSize="12sp" />
-	        </LinearLayout>
-	        <LinearLayout
-	            android:layout_width="fill_parent"
-	            android:layout_height="0dp"
-	            android:layout_weight="5"
-	            android:orientation="horizontal">
-	
-	                <TextView
-	                    android:id="@+id/repos_description"
-	                    android:layout_width="match_parent"
-	                    android:layout_height="match_parent"
-                        android:layout_marginLeft="15dp"
-	                    android:maxLines="2"
-	                    android:textColor="?android:attr/textColorPrimary"
-	                    android:textSize="12sp" />
-	
-	        </LinearLayout>
+                    android:id="@+id/created_date"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:text="created_date"
+                    android:textColor="#758a99"
+                    android:textSize="12sp"/>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
-
-	            <com.facebook.drawee.view.SimpleDraweeView
-	                android:id="@+id/user_avatar"
-	                android:layout_width="50dp"
-	                android:layout_height="50dp"
-	                android:layout_marginTop="15dp"
-	    			fresco:actualImageScaleType="focusCrop"
-	                fresco:placeholderImage="@drawable/ic_git_gray_240"
-	                fresco:roundedCornerRadius="10dp"
-				    fresco:roundingBorderWidth="1dp"/>
-
+            android:divider="@drawable/horizontal_line"
+            android:showDividers = "middle">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="17dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="25dp"
+                    android:tint="@color/search_gray"
+                    android:text="{fe-language}"/>
+                <TextView
+                    android:id="@+id/language"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:maxLines="1"
+                    android:autoLink="all"
+                    android:text="language"
+                    android:textColor="#758a99"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="17dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="25dp"
+                    android:text="{fe-fork}"/>
+                <TextView
+                    android:id="@+id/forks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/red_button_border"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="2dp"
+                    android:text="Forks"
+                    android:textColor="#758a99"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="17dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="25dp"
+                    android:tint="@color/search_gray"
+                    android:text="{fe-size}"/>
+                <TextView
+                    android:id="@+id/size"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:text="size"
+                    android:textColor="#758a99"
+                    android:textSize="12sp"/>
+            </LinearLayout>
         </LinearLayout>
-	</LinearLayout>
-        
+    </LinearLayout>
 </LinearLayout>

@@ -5,97 +5,83 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.gitnb.R;
-import com.example.gitnb.api.RepoClient;
-import com.example.gitnb.api.RetrofitNetworkAbs;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.model.Content;
 import com.example.gitnb.model.Repository;
+import com.example.gitnb.module.search.HotReposFragment;
 import com.example.gitnb.module.viewholder.HorizontalDividerItemDecoration;
-import com.example.gitnb.utils.MessageUtils;
+
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ReposContentsListActivity extends BaseSwipeActivity {
 	public static String CONTENT = "content";
-    private LinearLayoutManager mLayoutManager;
     private ReposContentsAdapter adapter;
-    private RecyclerView recyclerView;
+	private RecyclerView pathRecyclerView;
+	private ReposPathAdapter pathAdapter;
+	private RecyclerView recyclerView;
 	private Repository repos;
-    private String path = "";
-    private String clickName = "";
-    
-	public enum TYPE{
-		REPOS_CONTENT,
-		REPOS_CONTRIBUTOR,
-		USER_FOLLOWER,
-		USER_FOLLOWING,
-		USER_REPOSITORY
-	}
-
-	@Override
-	protected void setTitle(TextView view) {
-        if(repos != null && !repos.getName().isEmpty()){
-        	view.setText(repos.getName());
-        }else{
-        	view.setText("NULL");
-        }
-	}
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         repos = intent.getParcelableExtra(HotReposFragment.REPOS);
-        setContentView(R.layout.activity_list_layout);
+        setContentView(R.layout.activity_repos_content_list);
+        setUserBackground(repos.getOwner().getAvatar_url());
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new ReposContentsAdapter(this);
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
         adapter.SetOnItemClickListener(new ReposContentsAdapter.OnItemClickListener() {
-			@Override
-			public void onItemClick(View view, int position) {
-				Content content = adapter.getItem(position);
-				if (content.isDir()) {
-					clickName = content.name;
-					getRefreshHandler().sendEmptyMessage(START_UPDATE);
-				}
-				if (content.isFile()) {
-					showContent(content);
-				}
-			}
-		});
-        adapter.SetOnHeadClickListener(new ReposContentsAdapter.OnItemClickListener() {
-			@Override
-			public void onItemClick(View view, int position) {
-				if (path.isEmpty() || path.equals("/")) {
-					Snackbar.make(getSwipeRefreshLayout(), "Already to root ...", Snackbar.LENGTH_LONG).show();
-				} else {
-					int pos;
-					if (path != null && !path.isEmpty()) {
-						pos = path.lastIndexOf("/");
-						if (pos >= 0)
-							path = path.substring(0, pos);
-					}
-					if (path != null && !path.isEmpty()) {
-						pos = path.lastIndexOf("/");
-						if (pos >= 0)
-							path = path.substring(0, pos);
-					}
-					clickName = "";
-					getRefreshHandler().sendEmptyMessage(START_UPDATE);
-				}
-			}
-		});
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
-        mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
+            @Override
+            public void onItemClick(View view, int position) {
+                Content content = adapter.getItem(position);
+                if (content.isDir()) {
+                    pathAdapter.insertAtBack(content.name);
+                    pathRecyclerView.smoothScrollToPosition(pathAdapter.getItemCount()-1);
+                    startRefresh();
+                }
+                if (content.isFile()) {
+                    showContent(content);
+                }
+            }
+        });
+        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).showLastDivider().build());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+		pathRecyclerView = (RecyclerView) findViewById(R.id.pathRecyclerView);
+		pathAdapter = new ReposPathAdapter(this, repos.getName());
+        pathAdapter.SetOnItemClickListener(new ReposPathAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                startRefresh();
+            }
+        });
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+		pathRecyclerView.setLayoutManager(layoutManager);
+        pathRecyclerView.setItemAnimator(new SlideInRightAnimator());
+        pathRecyclerView.setAdapter(pathAdapter);
+
 		getSwipeRefreshLayout().setBackgroundColor(Color.WHITE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (pathAdapter != null && pathAdapter.isRoot()) {
+            pathAdapter.goPrevious();
+            startRefresh();
+        }else{
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -104,41 +90,45 @@ public class ReposContentsListActivity extends BaseSwipeActivity {
     	requestContents();
     }
 
-    @Override
-    protected void endRefresh(){
-    	super.endRefresh();
-    }
+	public void onOK(ArrayList<Content> ts){
+        if(ts.size() == 0){
+            recyclerView.setVisibility(View.GONE);
+            findViewById(R.id.emptyView).setVisibility(View.VISIBLE);
+        }
+        else {
+            adapter.update(ts);
+        }
+        endRefresh();
+	}
 
-    @Override
-    protected void endError(){
-    	super.endError();
-    }
-    
     private void showContent(Content content){
 		Intent intent = new Intent(ReposContentsListActivity.this, ReposContentActivity.class);
 		Bundle bundle = new Bundle();
+        bundle.putParcelable(HotReposFragment.REPOS, repos);
 		bundle.putParcelable(CONTENT, content);
 		intent.putExtras(bundle);
 		startActivity(intent);
     }
     
     private void requestContents(){
-    	RepoClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<ArrayList<Content>>() {
+        getApiService().contents(repos.getOwner().getLogin(), repos.getName(), pathAdapter.getPathString())
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Observer<ArrayList<Content>>() {
+					@Override
+					public void onNext(ArrayList<Content> result) {
+						onOK(result);
+					}
 
-			@Override
-			public void onOK(ArrayList<Content> ts) {
-				path += clickName + "/";
-				adapter.update(ts);
-				getRefreshHandler().sendEmptyMessage(END_UPDATE);
-			}
+					@Override
+					public void onCompleted() {
+					}
 
-			@Override
-			public void onError(String Message) {
-				MessageUtils.showErrorMessage(ReposContentsListActivity.this, Message);
-				getRefreshHandler().sendEmptyMessage(END_ERROR);
-			}
-			
-    	}).contents(repos.getOwner().getLogin(), repos.getName(), path + clickName);
+					@Override
+					public void onError(Throwable error) {
+						endError(error.getMessage());
+					}
+				});
     }
     
 }

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+	android:layout_marginTop="6dp"
+	android:layout_marginBottom="6dp"
+	android:layout_marginRight="10dp"
+	android:layout_marginLeft="10dp"
+    android:minHeight="40dp"
+    android:foreground="?attr/selectableItemBackground"
+	card_view:cardElevation="@dimen/list_item_elevation"
+	card_view:cardPreventCornerOverlap="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+        android:background="@drawable/list_item_border"
+        android:padding="10dp">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/issue_rank"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/user_avatar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    fresco:actualImageScaleType="focusCrop"
+                    fresco:placeholderImage="@drawable/ic_git_gray_240"
+                    fresco:roundedCornerRadius="10dp"
+                    fresco:roundingBorderWidth="1dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:gravity="center"
+            android:orientation="vertical">
+			<TextView
+				android:id="@+id/title"
+				android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+				android:textColor="?android:attr/textColorPrimary"
+				android:textSize="14sp" />
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical"
+                android:divider="@drawable/vertical_line_5">
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="20dp"
+                    android:orientation="horizontal">
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:text="{fe-state}"/>
+                    <TextView
+                        android:id="@+id/state"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:textColor="#758a99"
+                        android:textSize="12sp" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:text="{fe-comment}"/>
+                    <TextView
+                        android:id="@+id/comments"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_weight="4"
+                        android:maxLines="1"
+                        android:textColor="#758a99"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="20dp"
+                    android:orientation="horizontal">
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:text="{fe-assignee}"/>
+                    <TextView
+                        android:id="@+id/assignee"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_weight="4"
+                        android:maxLines="1"
+                        android:textColor="#758a99"
+                        android:textSize="12sp" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:text="{fe-date}"/>
+                    <TextView
+                        android:id="@+id/updated_at"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_weight="4"
+                        android:maxLines="1"
+                        android:textColor="#758a99"
+                        android:textSize="12sp" />
+                </LinearLayout>
+	        </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

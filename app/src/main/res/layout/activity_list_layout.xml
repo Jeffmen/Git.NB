@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-	<include layout="@layout/toolbar2_for_activity" />
+	<include layout="@layout/toolbar_for_activity" />
+
 	<FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,12 +16,16 @@
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/transparent_gray"
+            android:background="@color/content_background"
             android:orientation="vertical">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:clipToPadding="false"
+                android:layoutAnimation="@anim/layout_animation"
                 android:footerDividersEnabled="false"/>
         </android.support.v4.widget.SwipeRefreshLayout>
         <LinearLayout

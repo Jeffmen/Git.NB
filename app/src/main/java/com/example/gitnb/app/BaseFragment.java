@@ -1,6 +1,9 @@
 package com.example.gitnb.app;
 
 import com.example.gitnb.R;
+import com.example.gitnb.api.rxjava.ApiRxJavaClient;
+import com.example.gitnb.api.rxjava.ApiRxJavaService;
+import com.example.gitnb.utils.MessageUtils;
 import com.example.gitnb.utils.Utils;
 
 import android.support.v4.app.Fragment;
@@ -9,7 +12,13 @@ import android.view.View;
 
 public class BaseFragment extends Fragment{
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ApiRxJavaService apiRxJavaService;
 	protected int page = 1;
+
+    public static BaseFragment newInstance() {
+        BaseFragment mainFragment = new BaseFragment();
+        return mainFragment;
+    }
 
     public void initSwipeRefreshLayout(View view) {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
@@ -27,19 +36,27 @@ public class BaseFragment extends Fragment{
         });
     }
 
-    public SwipeRefreshLayout getSwiperRefreshLayout(){
+    public SwipeRefreshLayout getSwipeRefreshLayout(){
         return mSwipeRefreshLayout;
     }
 
-    protected void startRefresh(){
-		Utils.setRefreshing(getSwiperRefreshLayout(), true);
+    public ApiRxJavaService getApiService(){
+        if(apiRxJavaService == null){
+            apiRxJavaService = ApiRxJavaClient.getNewInstance().getService();
+        }
+        return apiRxJavaService;
     }
-    
-    protected void endRefresh(){
-		Utils.setRefreshing(getSwiperRefreshLayout(), false);
+
+    public void startRefresh(){
+		Utils.setRefreshing(getSwipeRefreshLayout(), true);
     }
-    
-    protected void endError(){
-		Utils.setRefreshing(getSwiperRefreshLayout(), false);
+
+    public void endRefresh(){
+		Utils.setRefreshing(getSwipeRefreshLayout(), false);
+    }
+
+    public void endError(String errorMessage){
+        Utils.setRefreshing(getSwipeRefreshLayout(), false);
+        MessageUtils.showErrorMessage(getActivity(), errorMessage);
     }
 }

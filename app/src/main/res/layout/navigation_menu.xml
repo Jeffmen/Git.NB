@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <group
+        android:checkableBehavior="single"
+        android:title="Home items">
+
+        <item
+            android:id="@+id/nav_showcase"
+            android:icon="@drawable/ic_chevron_right_white_18dp"
+            android:title="@string/showcase_title" />
+
+        <item
+            android:id="@+id/nav_news"
+            android:icon="@drawable/ic_chevron_right_white_18dp"
+            android:title="@string/news_title" />
+
+        <item
+            android:id="@+id/nav_trending"
+            android:checked="true"
+            android:icon="@drawable/ic_chevron_right_white_18dp"
+            android:title="@string/trending_title" />
+
+        <item
+            android:id="@+id/nav_notification"
+            android:icon="@drawable/ic_chevron_right_white_18dp"
+            android:title="@string/notification_title"
+            app:actionLayout="@layout/unread_notice"/>
+
+        <item
+            android:id="@+id/nav_star"
+            android:icon="@drawable/ic_chevron_right_white_18dp"
+            android:title="@string/star_title" />
+
+    </group>
+
+    <item android:title="Sub items">
+
+        <menu>
+
+            <item
+                android:id="@+id/sub_exit"
+                android:icon="@drawable/ic_chevron_right_white_18dp"
+                android:title="Sign out" />
+
+            <item
+                android:id="@+id/sub_about"
+                android:icon="@drawable/ic_chevron_right_white_18dp"
+                android:title="About" />
+        </menu>
+    </item>
+
+</menu>

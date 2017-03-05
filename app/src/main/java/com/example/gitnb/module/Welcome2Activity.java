@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.example.gitnb.R;
+import com.example.gitnb.api.GitHub;
 import com.example.gitnb.model.User;
 import com.example.gitnb.utils.CurrentUser;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -34,8 +37,7 @@ import java.io.InputStream;
 
 public class Welcome2Activity extends Activity{
 
-    public static final String VIDEO_NAME = "welcome_video.mp4";
-    private static int FOR_ANTHORIZE = 300;
+    private static int FOR_AUTHORIZE = 300;
     private boolean alreadyJump = false;
     private SimpleDraweeView gifView;
     private ObjectAnimator anim;
@@ -46,25 +48,36 @@ public class Welcome2Activity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		me = CurrentUser.get(Welcome2Activity.this);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        SharedPreferences read = getSharedPreferences(GitHub.NAME, Context.MODE_PRIVATE);
+        boolean first_time = read.getBoolean("first_time", true);
+        if(first_time){
+            me = CurrentUser.getInstance().getMe();
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                getWindow().setFlags(
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            }
+            setContentView(R.layout.welcome2);
+
+            findView();
+            initView();
+
+            playGif();
+            playAnim();
+
+            SharedPreferences.Editor editor = read.edit();
+            editor.putBoolean("first_time", false);
+            editor.commit();
         }
-        setContentView(R.layout.welcome2);
-
-        findView();
-        initView();
-
-        playGif();
-        playAnim();
+        else{
+            jumpToManiActivity();
+        }
     }
 
     @Override  
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { 
-        if (requestCode == FOR_ANTHORIZE && resultCode == RESULT_OK) { 
+        if (requestCode == FOR_AUTHORIZE && resultCode == RESULT_OK) {
 			jumpToManiActivity();
         }
     }
@@ -94,7 +107,7 @@ public class Welcome2Activity extends Activity{
 				@Override
 				public void onClick(View arg0) {
 					Intent intent = new Intent(Welcome2Activity.this, GitHubAuthorizeActivity.class);
-					startActivityForResult(intent, FOR_ANTHORIZE);
+					startActivityForResult(intent, FOR_AUTHORIZE);
 				}
 	        	
 	        });

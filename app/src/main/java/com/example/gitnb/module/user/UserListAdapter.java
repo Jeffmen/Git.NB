@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +25,9 @@ import android.widget.TextView;
 
 import com.example.gitnb.R;
 import com.example.gitnb.model.User;
-import com.example.gitnb.module.custom.ExpandAnimation;
+import com.example.gitnb.module.custom.animation.ExpandAnimation;
 import com.example.gitnb.module.repos.ReposListActivity;
+import com.example.gitnb.module.search.HotUserFragment;
 import com.example.gitnb.module.viewholder.LoadMoreViewHolder;
 import com.example.gitnb.module.viewholder.SearchViewHolder;
 import com.example.gitnb.module.viewholder.UserViewHolder;
@@ -39,7 +39,7 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
 	private Context mContext;
     private static final int TYPE_HEADER_VIEW = 2;
     private static final int TYPE_FOOTER_VIEW = 1;
-    private static final int TYPE_NOMAL_VIEW = 0;
+    private static final int TYPE_NORMAL_VIEW = 0;
     private static final int PAGE_COUNT = 30;
     protected final LayoutInflater mInflater;
     private ArrayList<User> mUsers;
@@ -75,6 +75,10 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
     public void setShowSearch(boolean value){
     	this.isShowSearch = value;
     }
+
+	public boolean getShowSearch(){
+		return this.isShowSearch;
+	}
     
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
@@ -157,7 +161,7 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
     	else if (isShowLoadMore && getItemCount() - 1 == position) { // footer
     		return TYPE_FOOTER_VIEW;
     	}
-    	return TYPE_NOMAL_VIEW;
+    	return TYPE_NORMAL_VIEW;
     }
 
 	@Override
@@ -188,7 +192,7 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
 	                .build();
 			loadMoreViewHolder.loading_gif.setController(draweeController);
 			break;
-		case TYPE_NOMAL_VIEW:
+		case TYPE_NORMAL_VIEW:
 			UserView viewHolder = (UserView) vh;
 			User user = getItem(position);
 			if(user != null){
@@ -290,7 +294,7 @@ public class UserListAdapter extends RecyclerView.Adapter<ViewHolder>{
 					Bundle bundle = new Bundle();
 					bundle.putParcelable(HotUserFragment.USER, getItem(getAdapterPosition()));
 					intent.putExtras(bundle);
-					intent.putExtra(ReposListActivity.REPOS_TYPE, ReposListActivity.REPOS_TYPE_USER);
+					intent.putExtra(ReposListActivity.REPOS_TYPE, ReposListActivity.REPOS_TYPE_USER_REPOS);
 					mContext.startActivity(intent);
 				}
 			});

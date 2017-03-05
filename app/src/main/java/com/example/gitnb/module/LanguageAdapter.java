@@ -69,7 +69,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<ViewHolder>{
 		titleIcon.setIsCircular(true);
 		titleIcon.setContactDetails(getItemName(position), position);
 	    viewHolder.language.setImageDrawable(titleIcon);
-	    //setAnimation(vh.itemView, position);
+	    setAnimation(vh.itemView, position);
 	}
 
 	@Override

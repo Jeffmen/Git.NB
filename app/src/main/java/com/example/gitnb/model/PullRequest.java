@@ -77,7 +77,7 @@ public class PullRequest extends Issue{
 
     public boolean merged;
 
-    public Boolean mergeable;
+    public boolean mergeable;
 
     public String patch_url;
 

@@ -17,7 +17,7 @@
 	       android:layout_weight="1"
 	       android:gravity="center_vertical"
 	       android:paddingLeft="20dp"
-           android:singleLine="true"
+           android:maxLines="1"
            android:text="Repositorys"
            android:textStyle="bold"
            android:textColor="#0F9D58"

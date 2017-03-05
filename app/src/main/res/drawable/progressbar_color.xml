@@ -5,7 +5,7 @@
     <item android:id="@android:id/background">
         <shape>
 	        <size 
-	            android:height="5dp"/>
+	            android:height="3dp"/>
             <solid android:color="@android:color/white" />
         </shape>
     </item>
@@ -14,7 +14,7 @@
         <clip>
             <shape>
 		        <size 
-		            android:height="5dp"/>
+		            android:height="3dp"/>
                 <solid android:color="@android:color/black" />
             </shape>
         </clip>

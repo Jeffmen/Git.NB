@@ -23,7 +23,8 @@ public class MessageUtils {
                 Intent intent = new Intent(cxt, GitHubAuthorizeActivity.class);
                 cxt.startActivity(intent);
             } else {
-                if (cxt instanceof BaseSwipeActivity) {
+                if (cxt instanceof BaseSwipeActivity &&
+                        ((BaseSwipeActivity)cxt).getSwipeRefreshLayout() != null) {
                     Snackbar.make(((BaseSwipeActivity)cxt).getSwipeRefreshLayout(), errorString, Snackbar.LENGTH_SHORT).show();
                 }
                 else{

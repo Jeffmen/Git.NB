@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:opacity="opaque">
+    <!-- 背景颜色，在上图中该颜色为黑色 -->
+    <item android:drawable="@android:color/white"/>
+    <!-- 黑色背景上的其他图片元素，比如 一个居中显示的 logo 图标-->
+
+    <item android:bottom="120dp">
+        <bitmap
+            android:tint="@color/orange_yellow"
+            android:src="@drawable/ic_git_white_80"
+            android:gravity="bottom"/>
+    </item>
+</layer-list>
+

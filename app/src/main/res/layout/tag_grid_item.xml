@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:background="@drawable/tag_button_background"
+	android:id="@+id/tag_btn"
+	android:minHeight="25dp"
+	android:paddingTop="5dp"
+	android:paddingBottom="5dp"
+	android:paddingLeft="12dp"
+	android:paddingRight="12dp"
+	android:gravity="center"
+	android:text="language"
+	android:minWidth="30dp"
+	android:textAllCaps="false"
+	android:typeface="normal"
+	android:textColor="?android:attr/textColorPrimary">
+</Button>

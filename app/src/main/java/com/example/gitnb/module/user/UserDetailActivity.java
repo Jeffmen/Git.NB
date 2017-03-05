@@ -1,18 +1,24 @@
 package com.example.gitnb.module.user;
 
-import java.text.SimpleDateFormat;
-
 import com.example.gitnb.R;
-import com.example.gitnb.api.RetrofitNetworkAbs;
-import com.example.gitnb.api.UsersClient;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.model.User;
+import com.example.gitnb.module.custom.processor.BlurPostprocessor;
+import com.example.gitnb.module.custom.processor.MaskPostprocessor;
 import com.example.gitnb.module.repos.EventListActivity;
 import com.example.gitnb.module.repos.ReposListActivity;
-import com.example.gitnb.utils.MessageUtils;
-import com.example.gitnb.utils.Utils;
+import com.example.gitnb.module.search.HotUserFragment;
+import com.example.gitnb.wxapi.WeiXin;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.kyleduo.switchbutton.SwitchButton;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -20,27 +26,43 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class UserDetailActivity extends BaseSwipeActivity{
+import java.lang.reflect.Field;
 
-	private String TAG = "UserDetailActivity";
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.OnMenuItemClickListener {
+
+	private String TAG = UserDetailActivity.class.getName();
 	public static String AVATAR_URL = "avatar_url";
-	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private UserOperationAdapter operationAdapter;
+    private SimpleDraweeView user_background;
 	private FloatingActionButton faButton;
-    private LinearLayout main;
+    private SimpleDraweeView user_avatar;
+	private RecyclerView recyclerView;
 	private boolean isFollow = false;
+    private IWXAPI api;
 	private User user;
 	
     protected void setTitle(TextView view){
@@ -55,26 +77,171 @@ public class UserDetailActivity extends BaseSwipeActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        user = (User) intent.getParcelableExtra(HotUserFragment.USER);
+        user = intent.getParcelableExtra(HotUserFragment.USER);
         setContentView(R.layout.activity_user_detail);
-        main = (LinearLayout) findViewById(R.id.main);
-        main.setVisibility(View.GONE);
+        user_avatar = (SimpleDraweeView)findViewById(R.id.user_avatar);
+
+		operationAdapter = new UserOperationAdapter(this, null);
+		operationAdapter.setOnItemClickListener(new UserOperationAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                jumpToActivity(position);
+            }
+        });
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(operationAdapter);
 
 		faButton = (FloatingActionButton) findViewById(R.id.faButton);
 		faButton.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                if (isFollow) {
+                    unFollowUser();
+                } else {
+                    followUser();
+                }
+            }
+        });
+
+		user_avatar = (SimpleDraweeView)findViewById(R.id.user_avatar);
+		user_avatar.setImageURI(Uri.parse(user.getAvatar_url()));
+        initUserBackground();
+
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                //The Refresh must be only active when the offset is zero :
+                getSwipeRefreshLayout().setEnabled(verticalOffset == 0);
+
+                float alpha = Math.abs(verticalOffset / (appBarLayout.getHeight() -
+                        getToolbar().getHeight()
+                        - getResources().getDimension(R.dimen.system_ui_height)));
+                user_avatar.setAlpha(1 - alpha);
+            }
+        });
+        api = WXAPIFactory.createWXAPI(this, WeiXin.AppID, true);
+        api.registerApp(WeiXin.AppID);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+//		if(isFollow) {
+//			menu.findItem(R.id.menu_item_unfollow).setVisible(true);
+//			menu.findItem(R.id.menu_item_follow).setVisible(false);
+//		}
+//		else{
+//			menu.findItem(R.id.menu_item_follow).setVisible(true);
+//			menu.findItem(R.id.menu_item_unfollow).setVisible(false);
+//		}
+		MenuItem more = menu.findItem(R.id.menu_item_more);
+		more.getActionView().setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
+				PopupMenu popupMenu = new PopupMenu(UserDetailActivity.this, v);
+				popupMenu.setOnMenuItemClickListener(UserDetailActivity.this);
+				popupMenu.inflate(R.menu.user_detail_menu);
+				if(isFollow) {
+					popupMenu.getMenu().findItem(R.id.menu_item_follow).setVisible(false);
+					//popupMenu.getMenu().findItem(R.id.menu_item_unfollow).setVisible(true);
+				}
+				else{
+					//popupMenu.getMenu().findItem(R.id.menu_item_follow).setVisible(true);
+					popupMenu.getMenu().findItem(R.id.menu_item_unfollow).setVisible(false);
+				}
+				//popupMenu.getMenu().findItem(R.id.menu_item_share).setVisible(true);
+				/*
+				try {
+					Field field = popupMenu.getClass().getDeclaredField("mPopup");
+					field.setAccessible(true);
+					MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+					mHelper.setForceShowIcon(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}*/
+				popupMenu.show();
+			}
+		});
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.menu_item_follow:
 				if (isFollow) {
 					unFollowUser();
 				} else {
 					followUser();
 				}
-			}
-		});
+				break;
+			case R.id.menu_item_share:
+				PopupMenu popupMenu = new PopupMenu(this, item.getActionView());
+				popupMenu.setOnMenuItemClickListener(this);
+				popupMenu.inflate(R.menu.repos_detail_menu);
+				popupMenu.show();
+//				final Intent intent = new Intent(Intent.ACTION_SEND);
+//				intent.setType("text/plain")
+//				.putExtra(Intent.EXTRA_TEXT, user.getName());
+//				startActivity(intent);
+//				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void toolBarColorChange(int color){
+		//mCollapsingToolbarLayout.setContentScrimColor(color);
+	}
+
+	public boolean onMenuItemClick(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.menu_item_follow:
+				if (isFollow) {
+					unFollowUser();
+				} else {
+					followUser();
+				}
+				return true;
+			case R.id.menu_item_share:
+				share2weixin(1);
+				return true;
+		}
+		return false;
+	}
+
+    private void initUserBackground(){
+		mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
+		mCollapsingToolbarLayout.setTitle(user.getLogin());
+
+		//mCollapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);//设置还没收缩时状态下字体颜色
+		//mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);//设置收缩后Toolbar上字体的颜色
+		//mCollapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ToolbarTitleAppearance);
+		//mCollapsingToolbarLayout.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+		user_background = (SimpleDraweeView)findViewById(R.id.user_background);
+		//user_background.setImageURI(Uri.parse(user.getAvatar_url()));
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(user.getAvatar_url()))
+                .setPostprocessor(new BlurPostprocessor(this))
+                .build();
+
+        PipelineDraweeController controller = (PipelineDraweeController)
+                Fresco.newDraweeControllerBuilder()
+                        .setImageRequest(request)
+                        .setOldController(user_background.getController())
+                        .build();
+        user_background.setController(controller);
     }
 
-	private void showFollow(boolean value){
+	private void showFollowButton(boolean value){
 		this.isFollow = value;
 		AnimatorSet bouncer = new AnimatorSet();
 		ObjectAnimator alpha = ObjectAnimator.ofFloat(faButton, "alpha", 0.0f, 1.0f);
@@ -101,205 +268,190 @@ public class UserDetailActivity extends BaseSwipeActivity{
 			}
 		});
 		bouncer.start();
+		invalidateOptionsMenu();
 	}
 
-    private void setUserInfo(){
-		TextView user_name = (TextView) findViewById(R.id.user_name);
-		TextView user_company = (TextView) findViewById(R.id.user_company);
-		TextView user_location = (TextView) findViewById(R.id.user_location);
-		TextView user_created_date = (TextView) findViewById(R.id.user_created_date);
-		TextView user_blog = (TextView) findViewById(R.id.user_blog);
-		TextView user_email = (TextView) findViewById(R.id.user_email);
-		SimpleDraweeView user_avatar = (SimpleDraweeView) findViewById(R.id.user_avatar);
-		
-		if(user!=null){
-			user_name.setText(user.getName());
-			user_location.setText(user.getLocation());
-			user_avatar.setImageURI(Uri.parse(user.getAvatar_url()));
-			user_email.setText(user.getEmail());
-			user_created_date.setText(format.format(Utils.getDate(user.getCreated_at())));
-			user_blog.setText(user.getBlog());
-			user_company.setText(user.getCompany());
-			if(user.getCompany() == null || user.getCompany().isEmpty()){
-				user_company.setVisibility(View.VISIBLE);
-			}
-		}			
-		
-		user_avatar.setOnClickListener(new OnClickListener(){
+	private void jumpToActivity(int position){
+		Intent intent = null;
+		Bundle bundle = new Bundle();
 
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent(UserDetailActivity.this, ImageShowerActivity.class);
-				intent.putExtra(UserDetailActivity.AVATAR_URL, user.getAvatar_url());
-				startActivity(intent);
-			}
-        	
-        });
-		
-    	TextView events = (TextView) findViewById(R.id.events);
-    	TextView organizations = (TextView) findViewById(R.id.organizations);
-    	TextView followers = (TextView) findViewById(R.id.followers);
-    	TextView following = (TextView) findViewById(R.id.following);
-    	TextView repositories = (TextView) findViewById(R.id.repositorys);
-
-    	events.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(UserDetailActivity.this, EventListActivity.class);
-				Bundle bundle = new Bundle();
+		switch(operationAdapter.getItemViewType(position)) {
+			case UserOperationAdapter.TYPE_EVENTS_VIEW:
+				intent = new Intent(UserDetailActivity.this, EventListActivity.class);
 				bundle.putParcelable(HotUserFragment.USER, user);
 				intent.putExtras(bundle);
 				intent.putExtra(EventListActivity.EVENT_TYPE, EventListActivity.EVENT_TYPE_USER);
-				startActivity(intent);
-			}
-		});
-    	organizations.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(UserDetailActivity.this, OrganizationListActivity.class);
-				Bundle bundle = new Bundle();
+				break;
+			case UserOperationAdapter.TYPE_ORGANIZATIONS_VIEW:
+				intent = new Intent(UserDetailActivity.this, OrganizationListActivity.class);
 				bundle.putParcelable(HotUserFragment.USER, user);
 				intent.putExtras(bundle);
 				intent.putExtra(OrganizationListActivity.ORGANIZATION_TYPE, OrganizationListActivity.ORGANIZATION_TYPE_USER);
-				startActivity(intent);
-			}
-		});
-		followers.setText("Followers(" + user.getFollowers() + ")");
-    	followers.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(UserDetailActivity.this, UserListActivity.class);
-				Bundle bundle = new Bundle();
+				break;
+			case UserOperationAdapter.TYPE_STARRED_VIEW:
+				intent = new Intent(UserDetailActivity.this, ReposListActivity.class);
+				bundle.putParcelable(HotUserFragment.USER, user);
+				intent.putExtras(bundle);
+				intent.putExtra(ReposListActivity.REPOS_TYPE, ReposListActivity.REPOS_TYPE_USER_STARRED);
+				break;
+			case UserOperationAdapter.TYPE_FOLLOWERS_VIEW:
+				intent = new Intent(UserDetailActivity.this, UserListActivity.class);
 				bundle.putParcelable(HotUserFragment.USER, user);
 				intent.putExtras(bundle);
 				intent.putExtra(UserListActivity.USER_TYPE, UserListActivity.USER_TYPE_FOLLOWER);
-				startActivity(intent);
-			}
-		});
-		following.setText("Following(" + user.getFollowing() + ")");
-    	following.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(UserDetailActivity.this, UserListActivity.class);
-				Bundle bundle = new Bundle();
+				break;
+			case UserOperationAdapter.TYPE_FOLLOWING_VIEW:
+				intent = new Intent(UserDetailActivity.this, UserListActivity.class);
 				bundle.putParcelable(HotUserFragment.USER, user);
 				intent.putExtras(bundle);
 				intent.putExtra(UserListActivity.USER_TYPE, UserListActivity.USER_TYPE_FOLLOWING);
-				startActivity(intent);
-			}
-		});
-		repositories.setText("Repositories(" + user.getPublic_repos() + ")");
-		repositories.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(UserDetailActivity.this, ReposListActivity.class);
-				Bundle bundle = new Bundle();
+				break;
+			case UserOperationAdapter.TYPE_REPOSITORIES_VIEW:
+				intent = new Intent(UserDetailActivity.this, ReposListActivity.class);
 				bundle.putParcelable(HotUserFragment.USER, user);
 				intent.putExtras(bundle);
-				intent.putExtra(ReposListActivity.REPOS_TYPE, ReposListActivity.REPOS_TYPE_USER);
-				startActivity(intent);
-			}
-		});
-    }
-    
+				intent.putExtra(ReposListActivity.REPOS_TYPE, ReposListActivity.REPOS_TYPE_USER_REPOS);
+				break;
+		}
+		startActivity(intent);
+	}
+
 	@Override
     protected void startRefresh(){
 		super.startRefresh();
-        getSingleUser();
-        checkFollowing();
-    }
+		getSingleUser();
+		checkFollowing();
+	}
 
 	@Override
     protected void endRefresh(){
 		super.endRefresh();
-        setUserInfo();
-        main.setVisibility(View.VISIBLE);
+        TextView title_name = (TextView)findViewById(R.id.title_name);
+        title_name.setText(user.getName());
+		operationAdapter.updateUser(user);
+        recyclerView.setVisibility(View.VISIBLE);
+	}
+
+    private void share2weixin(int flag) {
+        if (!api.isWXAppInstalled()) {
+            Toast.makeText(UserDetailActivity.this, "您还未安装微信客户端",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        WXWebpageObject webPage = new WXWebpageObject();
+		webPage.webpageUrl = user.getHtml_url();
+        WXMediaMessage msg = new WXMediaMessage(webPage);
+
+        msg.title = user.getLogin();
+        msg.description = user.getName();
+        msg.setThumbImage(convertViewToBitmap(user_avatar));
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = String.valueOf(System.currentTimeMillis());
+        req.message = msg;
+        req.scene = SendMessageToWX.Req.WXSceneTimeline;
+        api.sendReq(req);
     }
 
-	@Override
-    protected void endError(){
-		super.endError();
-    }
-    
 	private void getSingleUser(){
-    	UsersClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<User>() {
+		getApiService().getSingleUser(user.getLogin())
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Observer<User>() {
+					@Override
+					public void onNext(User result) {
+						user = result;
+						endRefresh();
+					}
 
-			@Override
-			public void onOK(User ts) {
-				user = ts;
-				getRefreshHandler().sendEmptyMessage(END_UPDATE);
-			}
+					@Override
+					public void onCompleted() {
+					}
 
-			@Override
-			public void onError(String Message) {
-				MessageUtils.showErrorMessage(UserDetailActivity.this, Message);
-				getRefreshHandler().sendEmptyMessage(END_ERROR);
-			}
-			
-    	}).getSingleUser(user.getLogin());
+					@Override
+					public void onError(Throwable error) {
+						endError(error.getMessage());
+					}
+				});
 	} 
 	
 	private void checkFollowing(){
-    	UsersClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<Object>() {
+		getApiService().checkFollowing(user.getLogin())
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Observer<Object>() {
+					@Override
+					public void onNext(Object result) {
+						showFollowButton(true);
+					}
 
-			@Override
-			public void onOK(Object ts) {
-				showFollow(true);
-			}
+					@Override
+					public void onCompleted() {
+					}
 
-			@Override
-			public void onError(String Message) {
-				showFollow(false);
-			}
-			
-    	}).checkFollowing(user.getLogin());
+					@Override
+					public void onError(Throwable error) {
+						showFollowButton(false);
+					}
+				});
 	}
 	
 	private void followUser(){
 		final Snackbar snackbar = Snackbar.make(getSwipeRefreshLayout(), "Following ...", Snackbar.LENGTH_INDEFINITE);
 		snackbar.show();
-    	UsersClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<Object>() {
+		getApiService().followUser(user.getLogin())
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Observer<Object>() {
+					@Override
+					public void onNext(Object result) {
+						snackbar.dismiss();
+						showFollowButton(true);
+					}
 
-			@Override
-			public void onOK(Object ts) {
-				snackbar.dismiss();
-				showFollow(true);
-				//Snackbar.make(getSwipeRefreshLayout(), "Already Followed", Snackbar.LENGTH_LONG).show();
-			}
+					@Override
+					public void onCompleted() {
+					}
 
-			@Override
-			public void onError(String Message) {
-				snackbar.dismiss();
-				MessageUtils.showErrorMessage(UserDetailActivity.this, Message);
-			}
-			
-    	}).followUser(user.getLogin());
+					@Override
+					public void onError(Throwable error) {
+						snackbar.dismiss();
+						endError(error.getMessage());
+					}
+				});
 	}	
 	
 	private void unFollowUser(){
 		final Snackbar snackbar = Snackbar.make(getSwipeRefreshLayout(), "UnFollowing ...", Snackbar.LENGTH_INDEFINITE);
 		snackbar.show();
-    	UsersClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<Object>() {
+		getApiService().unfollowUser(user.getLogin())
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Observer<Object>() {
+					@Override
+					public void onNext(Object result) {
+						snackbar.dismiss();
+						showFollowButton(false);
+					}
 
-			@Override
-			public void onOK(Object ts) {
-				snackbar.dismiss();
-				showFollow(false);
-				//Snackbar.make(getSwipeRefreshLayout(), "Already unFollowed", Snackbar.LENGTH_LONG).show();
-			}
+					@Override
+					public void onCompleted() {
+					}
 
-			@Override
-			public void onError(String Message) {
-				snackbar.dismiss();
-				MessageUtils.showErrorMessage(UserDetailActivity.this, Message);
-			}
-			
-    	}).unFollowUser(user.getLogin());
+					@Override
+					public void onError(Throwable error) {
+						snackbar.dismiss();
+						endError(error.getMessage());
+					}
+				});
 	}
-    
+
+	public static Bitmap convertViewToBitmap(View view){
+//		view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//				View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//		view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+		view.buildDrawingCache();
+		Bitmap bitmap = view.getDrawingCache();
+		return bitmap;
+	}
 }

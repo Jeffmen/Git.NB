@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -24,7 +25,8 @@ import android.view.ViewGroup;
 
 import com.example.gitnb.R;
 import com.example.gitnb.model.Event;
-import com.example.gitnb.module.user.HotUserFragment;
+import com.example.gitnb.module.search.HotReposFragment;
+import com.example.gitnb.module.search.HotUserFragment;
 import com.example.gitnb.module.user.UserDetailActivity;
 import com.example.gitnb.module.viewholder.EventViewHolder;
 import com.example.gitnb.module.viewholder.LoadMoreViewHolder;
@@ -183,36 +185,7 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			EventView viewHolder = (EventView) vh;
 			Event item = getItem(position);
 			if(item != null){
-				viewHolder.type_img.setBackgroundResource(R.drawable.ic_chevron_right_white_18dp);
-				int minute = Utils.fromNow(item.created_at);
-				int hours = minute/60;
-				int days = hours/24;
-				int months = days/30;
-				int years = months/12;
-				if(years == 1){
-					viewHolder.created_date.setText(years+" year ago");
-				}
-				else if(years > 1){
-					viewHolder.created_date.setText(years+" years ago");
-				}
-				else if(months == 1){
-					viewHolder.created_date.setText(months+" month ago");
-				}
-				else if(months > 1){
-					viewHolder.created_date.setText(months+" months ago");
-				}
-				else if(days == 1){
-					viewHolder.created_date.setText(days+" day ago");
-				}
-				else if(days > 1){
-					viewHolder.created_date.setText(days+" days ago");
-				}
-				else if(hours > 1){
-					viewHolder.created_date.setText(hours + " hours ago");
-				}
-				else{
-					viewHolder.created_date.setText(minute + " minutes ago");
-				}
+				viewHolder.created_date.setText(Utils.getTimeFromNow(item.created_at));
 				//viewHolder.event_user.setText(item.actor.getLogin());
 				//viewHolder.description.setText(item.payload.issue.title);
 				//viewHolder.event_type.setText(getTypeString(item.getType()));
@@ -225,7 +198,7 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			break;
 		case TYPE_HEADER_VIEW:
 			SearchView searchHolder = (SearchView) vh;
-			if(searchText != null && !searchText.isEmpty()){
+			if(!TextUtils.isEmpty(searchText)){
 				searchHolder.search_text.setText(searchText.toCharArray(), 0, searchText.length());
 				searchHolder.clear_button.setVisibility(View.VISIBLE);
 			}
@@ -242,21 +215,25 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
         viewHolder.event_user.setText(createUserSpan(item.actor.getLogin(), position));
 		switch (item.type) {
 		case WatchEvent:
+			viewHolder.type_img.setText("{fe-star}");
 			viewHolder.event_user.append(" starred ");
 			viewHolder.event_user.append(createReposSpan(item.repo.getName(), position));
 			viewHolder.description.setText("");
 			break;
 		case CreateEvent:
+			viewHolder.type_img.setText("{fe-repos}");
 			viewHolder.event_user.append(" created repository ");
 			viewHolder.event_user.append(createReposSpan(item.repo.getName(), position));
 			viewHolder.description.setText("");
 			break;
 		case CommitCommentEvent:
+			viewHolder.type_img.setText("{fe-comment}");
 			viewHolder.event_user.append(" commented on ");
 			viewHolder.event_user.append(createReposSpan(item.repo.getName(), position));
 			viewHolder.description.setText(item.payload.comment.body);
 			break;
 		case ForkEvent:
+			viewHolder.type_img.setText("{fe-fork}");
 			viewHolder.event_user.append(" forked ");
 			viewHolder.event_user.append(createReposSpan(item.repo.getName(), position));
 			viewHolder.event_user.append(" to ");
@@ -264,12 +241,14 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			viewHolder.description.setText("");
 			break;
 		case GollumEvent:
+			viewHolder.type_img.setText("{fe-repos}");
 			viewHolder.event_user.append(" created wiki page on ");
 			viewHolder.event_user.append(createReposSpan(item.repo.getName(), position));
 			viewHolder.description.setText("");
 			//viewHolder.description.setText(item.payload.pages.get(0).html_url
 			break;
 		case IssueCommentEvent:
+			viewHolder.type_img.setText("{fe-comment}");
 			viewHolder.event_user.append(" commented on issue ");
 			viewHolder.event_user.append("#" + String.valueOf(item.payload.issue.number));
 			viewHolder.event_user.append(" in ");
@@ -277,11 +256,13 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			viewHolder.description.setText(item.payload.comment.body);
 			break;
 		case IssuesEvent:
+			viewHolder.type_img.setText("{fe-issue}");
 			viewHolder.event_user.append(" " + item.payload.action + " issue ");
 			viewHolder.event_user.append(createReposSpan(item.repo.getName(), position));
 			viewHolder.description.setText(item.payload.issue.title);
 			break;
 		case MemberEvent:
+			viewHolder.type_img.setText("{fe-contributor}");
 			viewHolder.event_user.append(" added ");
 			viewHolder.event_user.append(createUserSpan(item.payload.member.getLogin(), position));
 			viewHolder.event_user.append(" as collaborator to ");
@@ -289,6 +270,7 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			viewHolder.description.setText("");
 			break;
 		case MembershipEvent:
+			viewHolder.type_img.setText("{fe-contributor}");
 			viewHolder.event_user.append(" " + item.payload.action + " ");
 			viewHolder.event_user.append(createUserSpan(item.payload.member.getLogin(), position));
 			viewHolder.event_user.append(" to ");
@@ -296,23 +278,27 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			viewHolder.description.setText("");
 			break;
 		case PublicEvent:
+			viewHolder.type_img.setText("{fe-repos}");
 			viewHolder.event_user.append(" public ");
 			viewHolder.event_user.append(createReposSpan(item.repo.getName(), position));
 			viewHolder.description.setText("");
 			//showText += " public "+ item.payload.repository.getName();
 			break;
 		case PullRequestEvent:
+			viewHolder.type_img.setText("{fe-repos}");
 			viewHolder.event_user.append(" " + item.payload.action + " pull request ");
 			viewHolder.event_user.append(String.valueOf(item.payload.pull_request.number));
 			viewHolder.event_user.append(" " + createReposSpan(item.repo.getName(), position));
 			viewHolder.description.setText(item.payload.pull_request.title);
 			break;
 		case PullRequestReviewCommentEvent:
+			viewHolder.type_img.setText("{fe-comment}");
 			viewHolder.event_user.append(" commented on pull request in ");
 			viewHolder.event_user.append(createReposSpan(item.repo.getName(), position));
 			viewHolder.description.setText(item.payload.comment.body);
 			break;
 		case PushEvent:
+			viewHolder.type_img.setText("{fe-repos}");
 			viewHolder.event_user.append(" pushed to ");
 			viewHolder.event_user.append(item.payload.ref);
 			viewHolder.event_user.append(" at ");
@@ -322,21 +308,25 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
 		case StatusEvent:
 			break;
 		case TeamAddEvent:
+			viewHolder.type_img.setText("{fe-contributor}");
 			viewHolder.event_user.append(" is added " + item.payload.team.name + " to " );
 			viewHolder.event_user.append(createReposSpan(item.repo.getName(), position));
 			viewHolder.description.setText("");
 			break;
 		case DeleteEvent:
+			viewHolder.type_img.setText("{fe-repos}");
 			viewHolder.event_user.append(" deleted ");
 			viewHolder.event_user.append(createReposSpan(item.repo.getName(), position));
 			viewHolder.description.setText("");
 			break;
 		case ReleaseEvent:
+			viewHolder.type_img.setText("{fe-repos}");
 			viewHolder.event_user.append(" released ");
 			viewHolder.event_user.append(item.payload.release.body);
 			viewHolder.description.setText("");
 			break;
 		default:
+			viewHolder.type_img.setText("{fe-star}");
 			viewHolder.event_user.append(" starred ");
 			viewHolder.event_user.append(createReposSpan(item.repo.getName(), position));
 			viewHolder.description.setText("");
@@ -404,6 +394,16 @@ public class EventListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			super(view);
             view.setOnClickListener(this);
 			event_user.setMovementMethod(LinkMovementMethod.getInstance());
+			user_avatar.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(mContext, UserDetailActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putParcelable(HotUserFragment.USER, getItem(getLayoutPosition()).actor);
+					intent.putExtras(bundle);
+					mContext.startActivity(intent);
+				}
+			});
 		}
 	
 		@Override

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="all_language_name">
+        <item>All</item>
         <item>JavaScript</item>
         <item>Java</item>
         <item>PHP</item>
@@ -16,9 +17,9 @@
         <item>HTML</item>
         <item>Scala</item>
         <item>Go</item>
-        <item>Cancel</item>
     </string-array>    
     <string-array name="all_language_value">
+        <item></item>
         <item>javascript</item>
         <item>java</item>
         <item>php</item>
@@ -34,6 +35,14 @@
         <item>html</item>
         <item>scala</item>
         <item>go</item>
-        <item></item>
+    </string-array>
+    <string-array name="search_type">
+        <item>User</item>
+        <item>Repos</item>
+    </string-array>
+    <string-array name="since_type">
+        <item>daily</item>
+        <item>weekly</item>
+        <item>monthly</item>
     </string-array>
 </resources>

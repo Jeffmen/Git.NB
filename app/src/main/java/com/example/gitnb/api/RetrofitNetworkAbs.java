@@ -55,7 +55,7 @@ public abstract class RetrofitNetworkAbs {
             String mess = response.message();
             if(mess.equals("Unauthorized") && networkListener instanceof BaseFragment){
             	Activity context = ((BaseFragment)networkListener).getActivity();
-				CurrentUser.detete(context);
+				CurrentUser.getInstance().delete();
                 sureToAuthorize(context);
                 networkListener.onError("Please refresh again");
             }

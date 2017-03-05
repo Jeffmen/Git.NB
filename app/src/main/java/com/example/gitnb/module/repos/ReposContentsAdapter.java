@@ -18,10 +18,8 @@ import com.example.gitnb.module.viewholder.RepoContentViewHolder;
 public class ReposContentsAdapter extends RecyclerView.Adapter<ViewHolder>{
 
 	private Context mContext;
-    private static final int TYPE_HEADER_VIEW = 2;
-    private static final int TYPE_NOMAL_VIEW = 0;
+    private static final int TYPE_NORMAL_VIEW = 0;
     private OnItemClickListener mItemClickListener;
-    private OnItemClickListener headClickListener;
     protected final LayoutInflater mInflater;
     private ArrayList<Content> mContents;
     
@@ -38,16 +36,25 @@ public class ReposContentsAdapter extends RecyclerView.Adapter<ViewHolder>{
     public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
-    
-    public void SetOnHeadClickListener(final OnItemClickListener mItemClickListener) {
-        this.headClickListener = mItemClickListener;
-    }
-    
-	public Content getItem(int position) {
-		if(position == 0){
-			return null;
+	public void update(ArrayList<Content> data){
+		mContents= data;
+		Collections.sort(mContents);
+		reset();
+	}
+
+	public void insertAtBack(ArrayList<Content> data){
+		if (data != null && data.size() > 0){
+			mContents.addAll(data);
 		}
-		return mContents == null ? null : mContents.get(position-1);
+		reset();
+	}
+
+	public void reset(){
+		notifyDataSetChanged();
+	}
+
+	public Content getItem(int position) {
+		return mContents == null ? null : mContents.get(position);
 	}
 
 	@Override
@@ -55,86 +62,36 @@ public class ReposContentsAdapter extends RecyclerView.Adapter<ViewHolder>{
 		return position;
 	}
     
-    public void update(ArrayList<Content> data){
-    	mContents= data;
-    	Collections.sort(mContents);
-    	reset();
-    }
-    
-    public void insertAtBack(ArrayList<Content> data){
-        if (data != null && data.size() > 0){
-        	mContents.addAll(data);
-        }
-    	reset();
-    }
-
-    public void reset(){
-        notifyDataSetChanged();
-    }
-    
 	@Override
 	public int getItemCount() {
-		return mContents == null ? 1 : mContents.size()+1;
+		return mContents == null ? 0 : mContents.size();
 	}
 	
     @Override
     public int getItemViewType(int position) {
-    	if(position == 0){
-    		return TYPE_HEADER_VIEW;
-    	}
-    	return TYPE_NOMAL_VIEW;
+    	return TYPE_NORMAL_VIEW;
     }
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup viewgroup, int viewType) {
-		if(viewType == TYPE_HEADER_VIEW){
-			View v = mInflater.inflate(R.layout.repo_content_list_head,viewgroup,false);
-			return new HeadView(v);
-		}
-		else{
-			View v = mInflater.inflate(R.layout.repo_content_list_item,viewgroup,false);
-			return new ReposContentView(v);
-		}
+		View v = mInflater.inflate(R.layout.repo_content_list_item,viewgroup,false);
+		return new ReposContentView(v);
 	}
 	  
 	@Override
 	public void onBindViewHolder(ViewHolder vh, int position) {		
 		switch(getItemViewType(position)){
-		case TYPE_HEADER_VIEW:
-			HeadView headViewHolder = (HeadView) vh;
-			headViewHolder.content_name.setText("Back to the Previous Level");
-			headViewHolder.content_name.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG);
-			break;
-		case TYPE_NOMAL_VIEW:
+		case TYPE_NORMAL_VIEW:
 			ReposContentView viewHolder = (ReposContentView) vh;
 			Content content = getItem(position);
-			if(content != null){
-			    viewHolder.content_name.setText(content.name);
-			    if(content.isDir())
-			    	viewHolder.content_type.setImageResource(R.drawable.ic_folder_open_white_48dp);
-			    if(content.isFile())
-			    	viewHolder.content_type.setImageResource(R.drawable.ic_attachment_white_48dp);
+			viewHolder.content_name.setText(content.name);
+			if(content.isDir()) {
+				viewHolder.content_type.setText("{fe-folder}");
 			}
-			else{
-			    viewHolder.content_name.setText("Back to the Previous Level");
+			else if(content.isFile()) {
+				viewHolder.content_type.setText("{fe-file}");
 			}
 			break;
-		}
-	}
-	
-	private class HeadView extends RepoContentViewHolder{
-		
-		public HeadView(View view) {
-			super(view);		
-			content_name.setText("Back to the Previous Level");			
-			content_name.setOnClickListener(new View.OnClickListener(){
-				@Override
-				public void onClick(View v) {
-			        if (headClickListener != null) {
-			        	headClickListener.onItemClick(v, getLayoutPosition());
-			        }
-				}
-			});
 		}
 	}
 	
@@ -142,7 +99,7 @@ public class ReposContentsAdapter extends RecyclerView.Adapter<ViewHolder>{
 		
 		public ReposContentView(View view) {
 			super(view);		
-			content_name.setOnClickListener(new View.OnClickListener(){
+			view.setOnClickListener(new View.OnClickListener(){
 				@Override
 				public void onClick(View v) {
 			        if (mItemClickListener != null) {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="transparent_gray">#48323232</color>
+    <color name="transparent_gray">#28323232</color>
     <color name="transparent_dark_gray">#68323232</color>
     <color name="search_gray">#EAEAEA</color>
-    <color name="miky_white">#FCFCFC</color>
+    <color name="milk_white">#FCFCFC</color>
     <color name="sky_blue">#FCFCFC</color>
     <color name="orange_yellow">#FF9100</color>
     <color name="contacts_accent_color">#FFFFFF</color>
@@ -16,7 +16,7 @@
     <color name="md_white_1000">#ffffff</color>
     <color name="letter_tile_default_color">#cccccc</color>
     <color name="letter_tile_font_color">#ffffff</color>
-    <color name="account_line">#A6A6A6</color>
+    <color name="account_line">@color/grey300</color>
     <array name="letter_tile_colors">
         <item>#DB4437</item>
         <item>#E91E63</item>
@@ -33,4 +33,12 @@
     <color name="dark_red">#ff990000</color>
     <color name="card_background">#fffafafa</color>
     <color name="vodafone_red">#ffe60000</color>
+    <color name="html_color">#0F9D58</color>
+    <color name="colorPrimaryLight">@color/orange_yellow</color>
+    <color name="grey200">#eeeeee</color>
+    <color name="grey300">#e0e0e0</color>
+    <color name="white10">#2fffffff</color>
+    <color name="gray_background">#A8FF9100</color>
+    <color name="content_background">#f7f7f7</color>
+    <color name="shadow">#cc222222</color>
 </resources>

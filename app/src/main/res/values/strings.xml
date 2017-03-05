@@ -3,7 +3,38 @@
 
     <string name="app_name">Git.NB</string>
     <string name="action_settings">Settings</string>
+    <string name="action__weixin_share">WeiXin</string>
+    <string name="action_weibo_share">WeiBo</string>
     <string name="loading_more">Loading more...</string>
     <string name="letter_tile_letter_font_family">sans-serif-light</string>
+    <string name="events_title">Events</string>
+    <string name="organizations_title">Organizations</string>
+    <string name="starred_title">Starred</string>
+    <string name="followers_title">Followers</string>
+    <string name="following_title">Following</string>
+    <string name="repositories_title">Repositories</string>
+    <string name="stargazers_title">Stargazers</string>
+    <string name="read_me_title">Read me</string>
+    <string name="contributors_title">Contributors</string>
+    <string name="sources_title">Sources</string>
+    <string name="issue_title">Issue</string>
+    <string name="star_title">Star</string>
+    <string name="notification_title">Notification</string>
+    <string name="explore_title">Explore</string>
+    <string name="search_title">Search</string>
+    <string name="news_title">News</string>
+    <string name="showcase_title">ShowCase</string>
+    <string name="trending_title">Trending</string>
+    <string name="menu_fork_title">Fork</string>
+    <string name="menu_star_title">Star</string>
+    <string name="menu_unstar_title">Unstar</string>
+    <string name="menu_follow_title">Follow</string>
+    <string name="menu_unfollow_title">Unfollow</string>
+    <string name="menu_share_title">Share</string>
+    <string name="menu_add_issue_title">Add Issue</string>
+    <string name="menu_edit_issue_title">Edit Issue</string>
+    <string name="menu_close_issue_title">Close Issue</string>
+    <string name="menu_add_comment_title">Add Comment</string>
+    <string name="delete_comment_tips">Are you sure delete this comment?</string>
 
 </resources>

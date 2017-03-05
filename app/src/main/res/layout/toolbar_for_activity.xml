@@ -1,38 +1,58 @@
-<?xml version="1.0" encoding="utf-8"?>  
-	<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"  
-         xmlns:app="http://schemas.android.com/apk/res-auto"
-	     android:layout_width="match_parent"
-	     android:layout_height="80dp"
-	     android:elevation="10dp">
-		
-		<LinearLayout 
-		    android:orientation="vertical"  
-		    android:layout_width="match_parent"  
-		    android:layout_height="match_parent"> 
-		    <ImageView
-		        android:id="@+id/title_bg"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-	            android:gravity="center" 
-	            android:layout_gravity="center"
-		        android:scaleType="fitXY"
-		        android:src="@drawable/title_bg_autumn">
-		    </ImageView>
-		</LinearLayout> 
-		    
-		<LinearLayout 
-		    android:orientation="vertical"  
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:background="@color/transparent_gray"> 
-		    
-			<LinearLayout 
-			    android:orientation="vertical"  
-			    android:layout_width="match_parent"  
-			    android:layout_height="25dp"> 
-			</LinearLayout> 
-			
-			<include layout="@layout/toolbar" />
-			
-		</LinearLayout> 
-    </FrameLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.AppBarLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/appBarLayout"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:elevation="@dimen/toolbar_elevation"
+	app:elevation="@dimen/toolbar_elevation">
+
+	<android.support.design.widget.CollapsingToolbarLayout
+		android:id="@+id/collapsing_toolbar_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:contentScrim="@android:color/transparent"
+		app:collapsedTitleGravity="left"
+		app:expandedTitleTextAppearance="@style/ToolbarTitleAppearance"
+		app:expandedTitleMarginEnd="4dp"
+		app:expandedTitleMarginStart="4dp"
+		app:expandedTitleGravity="center_horizontal|bottom"
+		app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+		<com.facebook.drawee.view.SimpleDraweeView
+			android:id="@+id/user_background"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:ellipsize="end"
+			android:fitsSystemWindows="true"
+			app:actualImageScaleType="focusCrop"
+			app:placeholderImage="@drawable/ic_git_gray_240"/>
+
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/toolbar"
+			android:layout_marginTop="@dimen/system_ui_height"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			app:popupTheme="@style/ToolbarPopupTheme"
+			app:theme="@style/AppTheme.ToolbarTheme">
+				<TextView
+					android:id="@+id/title"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:singleLine="true"
+					android:ellipsize="marquee"
+					android:gravity="center_vertical"
+					android:marqueeRepeatLimit="marquee_forever"
+					android:textColor="@android:color/white"
+					android:textSize="20sp"
+					android:scrollHorizontally="true"
+					android:focusable="true"
+					android:focusableInTouchMode="true"
+					android:freezesText="true"/>
+		</android.support.v7.widget.Toolbar>
+
+	</android.support.design.widget.CollapsingToolbarLayout>
+
+</android.support.design.widget.AppBarLayout>

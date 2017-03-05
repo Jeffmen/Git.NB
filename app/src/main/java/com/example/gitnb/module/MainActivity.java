@@ -1,156 +1,257 @@
 package com.example.gitnb.module;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.example.gitnb.R;
+import com.example.gitnb.api.GitHub;
+import com.example.gitnb.api.rxjava.ApiRxJavaClient;
+import com.example.gitnb.model.Notification;
 import com.example.gitnb.model.User;
-import com.example.gitnb.module.repos.EventListActivity;
-import com.example.gitnb.module.repos.HotReposFragment;
+import com.example.gitnb.module.custom.RedPointDrawable;
+import com.example.gitnb.module.custom.processor.BlurPostprocessor;
+import com.example.gitnb.module.notification.NotificationActivity;
+import com.example.gitnb.module.notification.ReceivedEventsFragment;
+import com.example.gitnb.module.notification.TabPagerAdapter;
 import com.example.gitnb.module.repos.ReposListActivity;
+import com.example.gitnb.module.search.HotUserFragment;
+import com.example.gitnb.module.search.SearchActivity;
 import com.example.gitnb.module.trending.ShowCaseFragment;
 import com.example.gitnb.module.trending.TrendingReposFragment;
-import com.example.gitnb.module.user.HotUserFragment;
-import com.example.gitnb.module.user.OrganizationListActivity;
-import com.example.gitnb.module.user.ReceivedEventsFragment;
-import com.example.gitnb.module.user.UserListActivity;
+import com.example.gitnb.module.user.UserDetailActivity;
 import com.example.gitnb.utils.CurrentUser;
+import com.example.gitnb.utils.Utils;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.IdRes;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.view.KeyEvent;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.FrameLayout;
+import android.view.ViewAnimationUtils;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class MainActivity extends AppCompatActivity {
-    private static int FOR_LANGUAGE = 200;
-	private FloatingActionButton faButton;
+    private Map<Integer,Integer> mFragmentNameByDrawerId = new HashMap<>();
+	private NavigationView navigationView;
     private TabPagerAdapter pagerAdapter;
-    private DrawerLayout drawerlayout;
-    private CoordinatorLayout layout;
-	private DisplayMetrics dm;
+    private DrawerLayout drawerLayout;
     private ViewPager pager;
-	private TabLayout tabs;
+    private TabLayout tabs;
+    private ImageView menu;
+    private ImageView search;
     private User me;
-	
-    public interface UpdateLanguageListener{
-    	Void updateLanguage(String language);
-		Void moveToUp();
-    }
-    /*
-    @Override
-    protected View.OnClickListener getNavigationOnClickListener(){
-    	return new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				drawerlayout.openDrawer(Gravity.LEFT);
-			}
-		};
-    }*/
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-        	getWindow().setStatusBarColor(getResources().getColor((R.color.orange_yellow)));
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            //window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_main);
-		dm = getResources().getDisplayMetrics();
-		pager = (ViewPager) findViewById(R.id.pager);
-		tabs = (TabLayout) findViewById(R.id.tabs);
-		me = CurrentUser.get(MainActivity.this);
-		drawerlayout = (DrawerLayout) findViewById(R.id.drawerlayout);
-		pagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
-		pagerAdapter.addFragment(new ShowCaseFragment(), "ShowCase");
-		pagerAdapter.addFragment(new TrendingReposFragment(), "Trending");
-		if(me != null){
-			pagerAdapter.addFragment(new ReceivedEventsFragment(), "News");
-		}
-		pagerAdapter.addFragment(new HotReposFragment(), "HotRepos");
-		pagerAdapter.addFragment(new HotUserFragment(), "HotUser");
-		pager.setAdapter(pagerAdapter);
-		pager.setCurrentItem(2);
-		pager.setOffscreenPageLimit(4);
 
-		tabs.setupWithViewPager(pager);
-		tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-		tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-			@Override
-			public void onTabSelected(TabLayout.Tab tab) {
-				controlFloatButton(tab.getPosition());
-				pager.setCurrentItem(tab.getPosition());
-			}
-
-			@Override
-			public void onTabUnselected(TabLayout.Tab tab) {
-
-			}
-
-			@Override
-			public void onTabReselected(TabLayout.Tab tab) {
-				UpdateLanguageListener languageListener = (UpdateLanguageListener) pagerAdapter.getItem(pager.getCurrentItem());
-				languageListener.moveToUp();
-			}
-		});
-		//tabs.setSelectedTabIndicatorColor(Color.WHITE);
-		//tabs.setTabTextColors(getResources().getColor(R.color.transparent_dark_gray), Color.WHITE);
-		//tabs.setOnPageChangeListener(new PageListener());
-
-		layout = (CoordinatorLayout) findViewById(R.id.layout);
-		faButton = (FloatingActionButton) findViewById(R.id.faButton);
-		faButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, LanguageActivity.class);
-				startActivityForResult(intent, FOR_LANGUAGE);
-			}
-		});
-		setMeDetail();
-        controlFloatButton(pager.getCurrentItem());
-    }
-
-    @Override  
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) { 
-
-        if (requestCode == FOR_LANGUAGE && resultCode == RESULT_OK) { 
-        	String language = data.getStringExtra(LanguageActivity.LANGUAGE_KEY);
-        	UpdateLanguageListener languageListener = (UpdateLanguageListener) pagerAdapter.getItem(pager.getCurrentItem());
-        	languageListener.updateLanguage(language);
+        me = CurrentUser.getInstance().getMe();
+        if(me == null){
+            Intent intent = new Intent(MainActivity.this, GitHubAuthorizeActivity.class);
+            startActivity(intent);
+            finish();
+            return;
         }
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        search = (ImageView) findViewById(R.id.search);
+        pager = (ViewPager) findViewById(R.id.pager);
+        tabs = (TabLayout) findViewById(R.id.tabs);
+        menu = (ImageView) findViewById(R.id.menu);
+
+        menu.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+        search.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+//        ImageView titleImage = (ImageView)findViewById(R.id.title_background_image);
+//        ColorMatrix colorMatrix = new ColorMatrix();
+//        colorMatrix.setSaturation(0);
+//        ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
+//        titleImage.setColorFilter(colorFilter);
+
+        SimpleDraweeView titleImage = (SimpleDraweeView)findViewById(R.id.title_background_image);
+        Uri uri = Uri.parse("res://" + getPackageName() + "/" + R.drawable.title_bg_autumn);
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setPostprocessor(new BlurPostprocessor(MainActivity.this))
+                .build();
+        PipelineDraweeController controller = (PipelineDraweeController)
+                Fresco.newDraweeControllerBuilder()
+                        .setImageRequest(request)
+                        .setOldController(titleImage.getController())
+                        .build();
+        titleImage.setController(controller);
+
+        initTabs();
+        initDrawerMap();
+        initNavigationView();
+
+
+        drawerLayout.setVisibility(View.INVISIBLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            drawerLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    drawerLayout.setVisibility(View.VISIBLE);
+                    float hypot = (float) Math.hypot(drawerLayout.getHeight(), drawerLayout.getWidth());
+                    Animator animator = ViewAnimationUtils
+                            .createCircularReveal(drawerLayout, drawerLayout.getWidth()/2,
+                                    drawerLayout.getHeight()-Utils.dpToPx(MainActivity.this, 50), 0, hypot);
+                    animator.setDuration(800);
+                    animator.start();
+                }
+            });
+        }
+        getNotifications();
     }
-    
-    private void setMeDetail(){
-		SimpleDraweeView me_avatar = (SimpleDraweeView) findViewById(R.id.me_avatar);
-		FrameLayout bg_frame = (FrameLayout) findViewById(R.id.bg_frame);
-		bg_frame.setOnClickListener(null);
-		TextView me_login = (TextView) findViewById(R.id.me_login);
-		if(me == null){
-			me_login.setText("Login...");
-			me_avatar.setOnClickListener(new OnClickListener() {
+
+    private void initDrawerMap() {
+        mFragmentNameByDrawerId.put(R.id.nav_showcase, 0);
+        mFragmentNameByDrawerId.put(R.id.nav_news, 1);
+        mFragmentNameByDrawerId.put(R.id.nav_trending, 2);
+    }
+
+    private void initTabs(){
+        pagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragment(new ShowCaseFragment(), "ShowCase");
+        pagerAdapter.addFragment(new ReceivedEventsFragment(), "News");
+        //pagerAdapter.addFragment(new NotificationsFragment(), "Notifications");
+        pagerAdapter.addFragment(new TrendingReposFragment(), "Trending");
+        pager.setAdapter(pagerAdapter);
+        pager.setCurrentItem(1);
+        pager.setOffscreenPageLimit(3);
+
+        tabs.setupWithViewPager(pager);
+        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                //controlFloatButton(tab.getPosition());
+                pager.setCurrentItem(tab.getPosition());
+                navigationView.getMenu().getItem(tab.getPosition()).setChecked(true);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                MainFragment.TabClickListener tabClickListener = (MainFragment.TabClickListener)
+                        pagerAdapter.getItem(pager.getCurrentItem());
+                tabClickListener.moveToUp();
+            }
+        });
+    }
+
+    private void initNavigationView() {
+        navigationView = (NavigationView) findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.nav_star) {
+                    Intent intent = new Intent(MainActivity.this, ReposListActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(HotUserFragment.USER, me);
+                    intent.putExtras(bundle);
+                    intent.putExtra(ReposListActivity.REPOS_TYPE, ReposListActivity.REPOS_TYPE_USER_STARRED);
+                    startActivity(intent);
+                } else if (menuItem.getItemId() == R.id.nav_notification) {
+                    Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+                    startActivity(intent);
+                } else if (menuItem.getItemId() == R.id.sub_exit) {
+                    Dialog dialog = new AlertDialog.Builder(MainActivity.this).setTitle("Caution")
+                            .setMessage("Are you sure to sign out?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    CurrentUser.getInstance().delete();
+                                    me = null;
+                                    SharedPreferences read = getSharedPreferences(GitHub.NAME, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = read.edit();
+                                    editor.putBoolean("first_time", true);
+                                    editor.commit();
+                                    finish();
+                                    Intent intent = new Intent(MainActivity.this, Welcome3Activity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .setCancelable(false).create();
+                    dialog.show();
+                } else if (menuItem.getItemId() == R.id.sub_about) {
+                    Intent intent = new Intent(MainActivity.this, ReposListActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(HotUserFragment.USER, me);
+                    intent.putExtras(bundle);
+                    intent.putExtra(ReposListActivity.REPOS_TYPE, ReposListActivity.REPOS_TYPE_USER_STARRED);
+                    startActivity(intent);
+                } else {
+                    menuItem.setChecked(true);
+                    pager.setCurrentItem(mFragmentNameByDrawerId.get(menuItem.getItemId()));
+                    drawerLayout.closeDrawers();
+                }
+                return true;
+            }
+        });
+        View headView = navigationView.getHeaderView(0);
+        SimpleDraweeView me_background = (SimpleDraweeView) headView.findViewById(R.id.me_background);
+        SimpleDraweeView me_avatar = (SimpleDraweeView) headView.findViewById(R.id.me_avatar);
+        TextView me_login = (TextView) headView.findViewById(R.id.me_login);
+        if(me == null){
+            me_login.setText("Login...");
+            me_avatar.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View arg0) {
@@ -159,173 +260,98 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             });
-		}
-		else{
-			me_login.setText(me.getLogin());
-			me_login.setOnClickListener(null);
-			me_avatar.setImageURI(Uri.parse(me.getAvatar_url()));
-			me_avatar.setOnClickListener(null);    	
-			
-			TextView events = (TextView) findViewById(R.id.events);
-	    	TextView organizations = (TextView) findViewById(R.id.organizations);
-	    	TextView followers = (TextView) findViewById(R.id.followers);
-	    	TextView following = (TextView) findViewById(R.id.following);
-	    	TextView repositorys = (TextView) findViewById(R.id.repositorys);
-	    	TextView sign_out = (TextView) findViewById(R.id.sign_out);
+        }
+        else {
+            me_login.setText(me.getLogin());
+            me_login.setOnClickListener(null);
 
-	    	events.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(MainActivity.this, EventListActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putParcelable(HotUserFragment.USER, me);
-					intent.putExtras(bundle);
-					intent.putExtra(EventListActivity.EVENT_TYPE, EventListActivity.EVENT_TYPE_USER);
-					startActivity(intent);
-				}
-			});
-	    	organizations.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(MainActivity.this, OrganizationListActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putParcelable(HotUserFragment.USER, me);
-					intent.putExtras(bundle);
-					intent.putExtra(OrganizationListActivity.ORGANIZATION_TYPE, OrganizationListActivity.ORGANIZATION_TYPE_USER);
-					startActivity(intent);
-				}
-			});
-	    	followers.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(MainActivity.this, UserListActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putParcelable(HotUserFragment.USER, me);
-					intent.putExtras(bundle);
-					intent.putExtra(UserListActivity.USER_TYPE, UserListActivity.USER_TYPE_FOLLOWER);
-					startActivity(intent);
-				}
-			});
-	    	following.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(MainActivity.this, UserListActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putParcelable(HotUserFragment.USER, me);
-					intent.putExtras(bundle);
-					intent.putExtra(UserListActivity.USER_TYPE, UserListActivity.USER_TYPE_FOLLOWING);
-					startActivity(intent);
-				}
-			});
-	    	repositorys.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(MainActivity.this, ReposListActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putParcelable(HotUserFragment.USER, me);
-					intent.putExtras(bundle);
-					intent.putExtra(ReposListActivity.REPOS_TYPE, ReposListActivity.REPOS_TYPE_USER);
-					startActivity(intent);
-				}
-			});
-	    	sign_out.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {				
-					Dialog dialog = new AlertDialog.Builder(MainActivity.this).setTitle("Caution")
-							.setMessage("Are you sure to sign out?")
-							.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									CurrentUser.detete(MainActivity.this);
-									me = null;
-									finish();
-									Intent intent = new Intent(MainActivity.this, Welcome2Activity.class);
-									startActivity(intent);
-								}
-							})
-							.setNegativeButton("N0", null)
-							.setCancelable(false).create();
-					dialog.show();
-				}
-			});
-		}
+            me_avatar.setImageURI(Uri.parse(me.getAvatar_url()));
+            me_avatar.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View arg0) {
+                    Intent intent = new Intent(MainActivity.this, UserDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(HotUserFragment.USER, me);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+
+            });
+
+            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(me.getAvatar_url()))
+                    .setPostprocessor(new BlurPostprocessor(MainActivity.this))
+                    .build();
+
+            PipelineDraweeController controller = (PipelineDraweeController)
+                    Fresco.newDraweeControllerBuilder()
+                            .setImageRequest(request)
+                            .setOldController(me_background.getController())
+                            .build();
+            me_background.setController(controller);
+        }
+	}
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getNotifications();
     }
 
-	private void controlFloatButton(int position){
-		if(position == 0|| position==2){
-			faButtonAni(false);
-		}
-		else{
-			faButtonAni(true);
-		}
-	}
+    @Override
+    public void onBackPressed() {
+        Intent MyIntent = new Intent(Intent.ACTION_MAIN);
+        MyIntent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(MyIntent);
+    }
 
-	public void faButtonAni(final boolean visiable){
-		AnimatorSet bouncer = new AnimatorSet();
-		ObjectAnimator alpha = ObjectAnimator.ofFloat(faButton, "alpha", visiable?1.0f:0.0f);
-		ObjectAnimator scaleX = ObjectAnimator.ofFloat(faButton, "scaleX", visiable?1.0f:0.0f);
-		ObjectAnimator scaleY = ObjectAnimator.ofFloat(faButton, "scaleY", visiable?1.0f:0.0f);
-		bouncer.play(alpha).with(scaleX).with(scaleY);
-		bouncer.setDuration(500);
-		bouncer.addListener(new AnimatorListenerAdapter() {
-			@Override
-			public void onAnimationStart(Animator animation) {
-				if (visiable) {
-					faButton.setVisibility(View.VISIBLE);
-				}
-			}
+    public void updateRedPoint(){
+        RedPointDrawable redPointDrawable1 = RedPointDrawable.wrap(this, menu.getDrawable());
+        redPointDrawable1.setGravity(Gravity.RIGHT);
+        menu.setImageDrawable(redPointDrawable1);
+        /*
+        Menu menu = navigationView.getMenu();
+        int size = menu.size();
+        for (int i = 0; i < size; i++) {
+            MenuItem item = menu.getItem(i);
+            if (item.getItemId() == R.id.nav_notification) {
+                RedPointDrawable redPointDrawable = RedPointDrawable.wrap(this, item.getIcon());
+                redPointDrawable.setGravity(Gravity.RIGHT);
+                item.setIcon(redPointDrawable);
+            }
+        }*/
+    }
 
-			@Override
-			public void onAnimationEnd(Animator animation) {
-				if (!visiable) {
-					faButton.setVisibility(View.INVISIBLE);
-				}
-			}
-		});
-		bouncer.start();
-	}
-
-	@Override
-	public void onBackPressed() {
-		Intent MyIntent = new Intent(Intent.ACTION_MAIN);
-		MyIntent.addCategory(Intent.CATEGORY_HOME);
-		startActivity(MyIntent);
-	}
-
-    public class TabPagerAdapter extends FragmentPagerAdapter {
-
-        private final List<Fragment> mFragments = new ArrayList<Fragment>();
-        private final List<String> mFragmentTitles = new ArrayList<String>();
-
-        public TabPagerAdapter(FragmentManager fm) {
-            super(fm);
+    private void setMenuCounter(@IdRes int itemId, int count) {
+        TextView view = (TextView) navigationView.getMenu().findItem(itemId)
+                .getActionView().findViewById(R.id.msg);
+        if(count > 0) {
+            updateRedPoint();
+            view.setText(String.valueOf(count > 99 ? 99 : count));
         }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragments.add(fragment);
-            mFragmentTitles.add(title);
+        else{
+            view.setVisibility(View.GONE);
         }
+    }
 
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
+    public void getNotifications(){
+        ApiRxJavaClient.getNewInstance().getService().getNotifications()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ArrayList<Notification>>() {
+                    @Override
+                    public void onNext(ArrayList<Notification> result) {
+                        setMenuCounter(R.id.nav_notification, result.size());
+                    }
 
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
+                    @Override
+                    public void onCompleted() {
+                    }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
-        }
+                    @Override
+                    public void onError(Throwable error) {
 
-	}
+                    }
+                });
+    }
 }

@@ -11,7 +11,7 @@
                 <attr name="pstsScrollOffset" format="dimension" />
                 <attr name="pstsTabBackground" format="reference" />
                 <attr name="pstsShouldExpand" format="boolean" />
-        <attr name="pstsTextAllCaps" format="boolean" />
+                <attr name="pstsTextAllCaps" format="boolean" />
         </declare-styleable>
 
         <attr name="speed" format="dimension" />
@@ -21,5 +21,52 @@
                 <attr name="speed"/>
                 <attr name="src"/>
                 <attr name="shadowColor" format="color"/>
+        </declare-styleable>
+
+        <declare-styleable name="Follow">
+                <attr name="target" format="reference"/>
+        </declare-styleable>
+        <declare-styleable name="TagListView">
+                <attr name="lineSpacing" format="dimension" />
+                <attr name="tagSpacing" format="dimension" />
+                <!-- 是否是固定布局 -->
+                <attr name="isFixed" format="boolean" />
+                <attr name="columnSize" format="integer" />
+        </declare-styleable>
+        <declare-styleable name="TriangleLabelView">
+
+                <attr name="backgroundColor" format="color" />
+                <attr name="primaryTextColor" format="color" />
+                <attr name="secondaryTextColor" format="color" />
+
+                <attr name="primaryText" format="string" />
+                <attr name="secondaryText" format="string" />
+
+                <attr name="primaryTextSize" format="dimension" />
+                <attr name="secondaryTextSize" format="dimension" />
+
+                <attr name="labelTopPadding" format="dimension" />
+                <attr name="labelCenterPadding" format="dimension" />
+                <attr name="labelBottomPadding" format="dimension" />
+
+                <attr name="primaryTextStyle">
+                        <enum name="normal" value="0" />
+                        <enum name="italic" value="1" />
+                        <enum name="bold" value="2" />
+                </attr>
+
+                <attr name="secondaryTextStyle">
+                        <enum name="normal" value="0" />
+                        <enum name="italic" value="1" />
+                        <enum name="bold" value="2" />
+                </attr>
+
+                <attr name="corner">
+                        <enum name="leftTop" value="1" />
+                        <enum name="rightTop" value="2" />
+                        <enum name="leftBottom" value="3" />
+                        <enum name="rightBottom" value="4" />
+                </attr>
+
         </declare-styleable>
 </resources>

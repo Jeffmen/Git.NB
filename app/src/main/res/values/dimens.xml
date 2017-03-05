@@ -8,5 +8,13 @@
     <dimen name="card_padding">13.0dip</dimen>
     <dimen name="card_padding_horizontal">10.0dip</dimen>
     <dimen name="card_padding_vertical">6.0dip</dimen>
+    <dimen name="system_ui_height">25dp</dimen>
+    <dimen name="toolbar_height">46dp</dimen>
+    <dimen name="toolbar_and_status_height">71dp</dimen>
+    <dimen name="list_item_elevation">0dp</dimen>
+    <dimen name="toolbar_elevation">0dp</dimen>
+    <dimen name="red_point_radius_small">4dp</dimen>
+    <dimen name="font_space_width">12dp</dimen>
+
 
 </resources>

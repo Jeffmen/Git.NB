@@ -4,7 +4,8 @@ import java.text.SimpleDateFormat;
 
 import com.example.gitnb.R;
 import com.example.gitnb.api.RetrofitNetworkAbs;
-import com.example.gitnb.api.UsersClient;
+import com.example.gitnb.api.client.UsersClient;
+import com.example.gitnb.api.rxjava.ApiRxJavaClient;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.model.Organization;
 import com.example.gitnb.module.repos.EventListActivity;
@@ -20,14 +21,16 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class OrganizationDetailActivity extends BaseSwipeActivity{
 
-	private String TAG = "OrganizationDetailActivity";
+	private String TAG = OrganizationDetailActivity.class.getName();
 	public static String ORGS = "orgs";
-	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     private LinearLayout main;
 	private Organization orgs;
-    private Switch swithBt;
 	
     protected void setTitle(TextView view){
         if(orgs != null && !orgs.login.isEmpty()){
@@ -41,13 +44,10 @@ public class OrganizationDetailActivity extends BaseSwipeActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        orgs = (Organization) intent.getParcelableExtra(ORGS);
+        orgs = intent.getParcelableExtra(ORGS);
         setContentView(R.layout.activity_organization_detail);
         main = (LinearLayout) findViewById(R.id.main);
         main.setVisibility(View.GONE);
-
-        swithBt = (Switch) findViewById(R.id.switch_bt);  
-        swithBt.setVisibility(View.GONE);
     }
     
     private void setOrganization(){
@@ -115,27 +115,26 @@ public class OrganizationDetailActivity extends BaseSwipeActivity{
         main.setVisibility(View.VISIBLE);
         setOrganization();
     }
-
-    @Override
-    protected void endError(){
-    	super.endError();
-    }
     
     private void getOrganizationInfo(){
-    	UsersClient.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener<Organization>() {
+        getApiService().orgs(orgs.login)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Organization>() {
+                    @Override
+                    public void onNext(Organization result) {
+                        orgs = result;
+                        endRefresh();
+                    }
 
-			@Override
-			public void onOK(Organization ts) {
-				orgs = ts;
-				getRefreshHandler().sendEmptyMessage(END_UPDATE);
-			}
+                    @Override
+                    public void onCompleted() {
+                    }
 
-			@Override
-			public void onError(String Message) {
-				MessageUtils.showErrorMessage(OrganizationDetailActivity.this, Message);
-				getRefreshHandler().sendEmptyMessage(END_ERROR);
-			}
-			
-    	}).orgs(orgs.login);
+                    @Override
+                    public void onError(Throwable error) {
+                        endError(error.getMessage());
+                    }
+                });
     }
 }

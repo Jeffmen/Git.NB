@@ -20,6 +20,7 @@ import com.example.gitnb.model.Repository;
 import com.example.gitnb.module.viewholder.LoadMoreViewHolder;
 import com.example.gitnb.module.viewholder.ReposViewHolder;
 import com.example.gitnb.module.viewholder.SearchViewHolder;
+import com.example.gitnb.utils.Utils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 
@@ -56,6 +57,10 @@ public class ReposListAdapter extends RecyclerView.Adapter<ViewHolder>{
     public void setShowSearch(boolean value){
     	this.isShowSearch = value;
     }
+
+	public boolean getShowSearch(){
+		return this.isShowSearch;
+	}
     
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
@@ -173,17 +178,17 @@ public class ReposListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			Repository item = getItem(position);
 			if(item != null){
 				viewHolder.repos_name.setText(item.getName());
-				viewHolder.repos_star.setText("Star:"+item.getStargazers_count());
+				viewHolder.repos_star.setText("Star:"+ Utils.getSoftValue(item.getStargazers_count()));
 				viewHolder.repos_fork.setText("owner:"+item.getOwner().getLogin());
 				viewHolder.repos_language.setText(item.getLanguage());
 				viewHolder.repos_homepage.setText(item.getHomepage());
 				viewHolder.repos_discription.setText(item.getDescription());
+				viewHolder.user_avatar.setVisibility(View.VISIBLE);
+				if(item.getOwner() != null){
+					viewHolder.user_avatar.setImageURI(Uri.parse(item.getOwner().getAvatar_url()));
+				}
+				viewHolder.repos_rank.setText(String.valueOf(isShowSearch?position:position+1)+".");
 			}
-			viewHolder.user_avatar.setVisibility(View.VISIBLE);
-			if(item.getOwner() != null){
-			    viewHolder.user_avatar.setImageURI(Uri.parse(item.getOwner().getAvatar_url()));
-			}
-			viewHolder.repos_rank.setText(String.valueOf(isShowSearch?position:position+1)+".");
 			break;
 		case TYPE_HEADER_VIEW:
 			SearchView searchHolder = (SearchView) vh;

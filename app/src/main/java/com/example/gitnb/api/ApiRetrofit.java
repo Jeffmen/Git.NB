@@ -1,85 +1,70 @@
 package com.example.gitnb.api;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class ApiRetrofit{
-//https://api.github.com/user?access_token=51ee597f1442fdc47df77121d05b343cc249a74e
+public class ApiRetrofit implements Interceptor{
 
-    static final int CONNECT_TIMEOUT_MILLIS = 30 * 1000;
-    static final int READ_TIMEOUT_MILLIS = 30 * 1000;
-	
-    public static OkHttpClient getOkClient() {
-        OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-        client.setReadTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-        //ignore https certificate validation
-        SSLContext context = null;
-        TrustManager[] trustManagers = new TrustManager[] { new FakeX509TrustManager() };
-        try {
-            context = SSLContext.getInstance("TLS");
-            context.init(null, trustManagers, new SecureRandom());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        }
-        client.setSslSocketFactory(context.getSocketFactory());
-        HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
-        client.setHostnameVerifier(new HostnameVerifier() {
+    private static ApiRetrofit apiRetrofit;
+    private Retrofit retrofit;
 
-			@Override
-			public boolean verify(String arg0, SSLSession arg1) {
-				return true;
-			}
-        });
-        client.interceptors().add(new Interceptor(){
-
-			@Override
-			public Response intercept(Chain chain) throws IOException {
-		        Request request = chain.request().newBuilder()
-		        		.header("Accept", "application/vnd.github.v3+json")
-				        .addHeader("User-Agent", "GtiNB")
-				        .addHeader("Authorization", "token " + GitHub.getInstance().getToken())
-		                .build();
-		        return chain.proceed(request);
-			}
-        });
-        return client;
-    }
-    
     public static Retrofit getRetrofit(){
-    	Gson gson = new GsonBuilder()
-    	.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-    	.create();
-        Retrofit retrofit = new Retrofit.Builder()
-         	.baseUrl(getBaseUrl())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(getOkClient()).build();
-        return retrofit;
+        if(apiRetrofit == null){
+            synchronized(ApiRetrofit.class){
+                if(apiRetrofit == null){
+                    apiRetrofit = new ApiRetrofit();
+                }
+            }
+        }
+        return apiRetrofit.retrofit;
     }
-    
 
-	public static String getBaseUrl() {
-		return GitHub.API_URL;
-	}
+    private ApiRetrofit(){
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .create();
+        retrofit = new Retrofit.Builder()
+                .baseUrl(getBaseUrl())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .client(new TrustOkHttpClient(this)).build();
+    }
+
+    public static String getBaseUrl() {
+        return GitHub.API_URL;
+    }
+
+    @Override
+    public Response intercept(Interceptor.Chain chain) throws IOException {
+        Request request = chain.request().newBuilder()
+                .header("Accept", "application/vnd.github.v3+json")
+                .addHeader("User-Agent", "Git.NB")
+                .addHeader("Authorization", "token " + GitHub.getInstance().getToken())
+                //.addHeader("Last-Modified", getLastModified())
+                //.addHeader("X-Poll-Interval", "60")
+                .build();
+        Response response = chain.proceed(request);
+        return response;
+    }
+
+    private String getLastModified(){
+        Calendar cd = Calendar.getInstance();
+        cd.add(Calendar.DAY_OF_YEAR, -1);
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy HH:mm:ss 'GMT'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT")); // 设置时区为GMT
+        return sdf.format(cd.getTime());
+    }
 }

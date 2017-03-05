@@ -2,9 +2,13 @@ package com.example.gitnb.module.user;
 
 import java.util.ArrayList;
 
-import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 import android.content.Intent;
 import android.view.View;
@@ -12,18 +16,23 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.gitnb.R;
-import com.example.gitnb.api.RepoClient;
-import com.example.gitnb.api.RetrofitNetworkAbs;
-import com.example.gitnb.api.UsersClient;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.model.Organization;
 import com.example.gitnb.model.Repository;
 import com.example.gitnb.model.User;
-import com.example.gitnb.module.repos.HotReposFragment;
-import com.example.gitnb.module.viewholder.HorizontalDividerItemDecoration;
-import com.example.gitnb.utils.MessageUtils;
+import com.example.gitnb.module.repos.ReposDetailActivity;
+import com.example.gitnb.module.repos.ReposListActivity;
+import com.example.gitnb.module.repos.ReposListAdapter;
+import com.example.gitnb.module.search.HotReposFragment;
+import com.example.gitnb.module.search.HotUserFragment;
 
-public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetworkAbs.NetworkListener<ArrayList<User>>{
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+public class UserListActivity  extends BaseSwipeActivity{
 	private String TAG = "UserListActivity";
 	public static final String USER_TYPE = "user_type";
 	public static final String USER_TYPE_STARGZER = "Stargzer";
@@ -40,7 +49,23 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
 	private String type;
 	private int page = 1;
 
-	
+
+	private Observer<ArrayList<User>> observer = new Observer<ArrayList<User>>() {
+		@Override
+		public void onNext(ArrayList<User> result) {
+			onOK(result);
+		}
+
+		@Override
+		public void onCompleted() {
+		}
+
+		@Override
+		public void onError(Throwable error) {
+			endError(error.getMessage());
+		}
+	};
+
 	@Override
 	protected void setTitle(TextView view) {
         if(repos != null && !repos.getName().isEmpty()){
@@ -52,6 +77,7 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
 		        	view.setText(repos.getName() + " / " + USER_TYPE_CONTRIBUTOR);
 		        	break;
             }
+			setUserBackground(repos.getOwner().getAvatar_url());
         }
         else if(user != null && !user.getLogin().isEmpty()){
             switch(type){
@@ -62,6 +88,7 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
 		        	view.setText(user.getLogin() + " / " + USER_TYPE_FOLLOWING);
 		        	break;
             }
+			setUserBackground(user.getAvatar_url());
         }
         else if(orgs != null && !orgs.login.isEmpty()){
             switch(type){
@@ -69,9 +96,11 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
 		        	view.setText(orgs.login + " / " + USER_TYPE_MEMBER);
 		        	break;
             }
+			setUserBackground(orgs.avatar_url);
         }else{
         	view.setText("NULL");
         }
+		view.setSelected(true);
 	}
 	
 	 @Override
@@ -95,38 +124,17 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
 	    }
         
 		this.setContentView(R.layout.activity_list_layout);
-		
-        adapter = new UserListAdapter(this);
-        adapter.setOnItemClickListener(new UserListAdapter.OnItemClickListener() {
-			@Override
-			public void onItemClick(View view, int position) {
-				Intent intent = new Intent(UserListActivity.this, UserDetailActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putParcelable(HotUserFragment.USER, adapter.getItem(position));
-				intent.putExtras(bundle);
-				startActivity(intent);
-			}
-		});
-        adapter.setOnLoadMoreClickListener(new UserListAdapter.OnItemClickListener() {
-			
-			@Override
-			public void onItemClick(View view, int position) {
-                if(isLoadingMore){
-	                Log.d(TAG,"ignore manually update!");
-	            } else{
-	             	page++;
-	                isLoadingMore = true;
-					getRefreshHandler().sendEmptyMessage(START_UPDATE);
-	            }
-			}
-		}); 
         
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
 	}
-	 
+
+	@Override
+	public void onEnterAnimationComplete() {
+		super.onEnterAnimationComplete();
+	}
+
     @Override
     protected void startRefresh(){
     	super.startRefresh();
@@ -156,61 +164,111 @@ public class UserListActivity  extends BaseSwipeActivity implements RetrofitNetw
     }
 
     @Override
-    protected void endError(){
-    	super.endError();
+    protected void endError(String Message){
+    	super.endError(Message);
         isLoadingMore = false;
-    }
-    
-	@Override
-	public void onOK(ArrayList<User> ts) {   	
-		if(page == 1){
-			if(ts.size() == 0){
-                recyclerView.setVisibility(View.GONE);
-                findViewById(R.id.emptyView).setVisibility(View.VISIBLE);
-			}
-			else {
-				adapter.update(ts);
-			}
-    	}
-    	else{
-            isLoadingMore = false;
-        	adapter.insertAtBack(ts);
-    	}
-		getRefreshHandler().sendEmptyMessage(END_UPDATE);
-	}
-
-	@Override
-	public void onError(String Message) {
-		MessageUtils.showErrorMessage(UserListActivity.this, Message);
-		getRefreshHandler().sendEmptyMessage(END_ERROR);
 		if(Message.equals("Not Found")){
 			recyclerView.setVisibility(View.GONE);
 			findViewById(R.id.emptyView).setVisibility(View.VISIBLE);
 		}
+    }
+
+	private void updateAdapter(ArrayList<User> ts){
+		if(adapter == null) {
+			adapter = new UserListAdapter(this);
+			adapter.update(ts);
+			adapter.setOnItemClickListener(new UserListAdapter.OnItemClickListener() {
+				@Override
+				public void onItemClick(View view, int position) {
+					Intent intent = new Intent(UserListActivity.this, UserDetailActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putParcelable(HotUserFragment.USER, adapter.getItem(position));
+					intent.putExtras(bundle);
+					startActivity(intent);
+				}
+			});
+			adapter.setOnLoadMoreClickListener(new UserListAdapter.OnItemClickListener() {
+
+				@Override
+				public void onItemClick(View view, int position) {
+					if(isLoadingMore){
+						Log.d(TAG,"ignore manually update!");
+					} else{
+						page++;
+						isLoadingMore = true;
+						startRefresh();
+					}
+				}
+			});
+
+			ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(adapter);
+			SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+			slideInAdapter.setDuration(300);
+			slideInAdapter.setInterpolator(new OvershootInterpolator());
+			recyclerView.setAdapter(slideInAdapter);
+
+			LayoutAnimationController layoutAnimationController = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation);
+			layoutAnimationController.setInterpolator(new AccelerateInterpolator());
+			layoutAnimationController.setDelay(0.5f);
+			layoutAnimationController.setOrder(LayoutAnimationController.ORDER_NORMAL);
+			recyclerView.setLayoutAnimation(layoutAnimationController);
+			recyclerView.scheduleLayoutAnimation();
+			recyclerView.startLayoutAnimation();
+		}
+		else{
+			if(page == 1){
+				adapter.update(ts);
+			}
+			else{
+				isLoadingMore = false;
+				adapter.insertAtBack(ts);
+			}
+		}
+	}
+
+	private void onOK(ArrayList<User> ts) {
+		if(ts.size() == 0){
+			recyclerView.setVisibility(View.GONE);
+			findViewById(R.id.emptyView).setVisibility(View.VISIBLE);
+		}
+		else {
+			updateAdapter(ts);
+		}
+		endRefresh();
 	}
 	
 	private void getContributors(){
-		RepoClient.getNewInstance().setNetworkListener(this)
-		  .contributors(repos.getOwner().getLogin(), repos.getName(), page);
+		getApiService().contributors(repos.getOwner().getLogin(), repos.getName(), page)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(observer);
 	}
 	
 	private void getStargazers(){
-		RepoClient.getNewInstance().setNetworkListener(this)
-		  .stargazers(repos.getOwner().getLogin(), repos.getName(), page);
+		getApiService().stargazers(repos.getOwner().getLogin(), repos.getName(), page)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(observer);
 	}
 
 	private void getFollowers(){
-		UsersClient.getNewInstance().setNetworkListener(this)
-		  .followers(user.getLogin(), page);
+		getApiService().followers(user.getLogin(), page)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(observer);
 	}
 	
 	private void getFollowing(){
-		UsersClient.getNewInstance().setNetworkListener(this)
-		  .following(user.getLogin(), page);
+		getApiService().following(user.getLogin(), page)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(observer);
 	}
 	
 	private void getMembers(){
-		UsersClient.getNewInstance().setNetworkListener(this)
-		  .members(orgs.login, page);
+		getApiService().members(orgs.login, page)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(observer);
 	}
 }

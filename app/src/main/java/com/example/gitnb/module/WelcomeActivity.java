@@ -42,7 +42,7 @@ public class WelcomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		me = CurrentUser.get(WelcomeActivity.this);
+        me = CurrentUser.getInstance().getMe();
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().setFlags(
@@ -56,7 +56,7 @@ public class WelcomeActivity extends Activity {
 
         File videoFile = getFileStreamPath(VIDEO_NAME);
         if (!videoFile.exists()) {
-            videoFile = copyVideoFile();
+//            videoFile = copyVideoFile();
         }
 
         playVideo(videoFile);
@@ -139,27 +139,27 @@ public class WelcomeActivity extends Activity {
     	}
     }
 
-    @NonNull
-    private File copyVideoFile() {
-        File videoFile;
-        try {
-            FileOutputStream fos = openFileOutput(VIDEO_NAME, MODE_PRIVATE);
-            InputStream in = getResources().openRawResource(R.raw.welcome_video);
-            byte[] buff = new byte[1024];
-            int len = 0;
-            while ((len = in.read(buff)) != -1) {
-                fos.write(buff, 0, len);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        videoFile = getFileStreamPath(VIDEO_NAME);
-        if (!videoFile.exists())
-            throw new RuntimeException("video file has problem, are you sure you have welcome_video.mp4 in res/raw folder?");
-        return videoFile;
-    }
+//    @NonNull
+//    private File copyVideoFile() {
+//        File videoFile;
+//        try {
+//            FileOutputStream fos = openFileOutput(VIDEO_NAME, MODE_PRIVATE);
+//            InputStream in = getResources().openRawResource(R.raw.welcome_video);
+//            byte[] buff = new byte[1024];
+//            int len = 0;
+//            while ((len = in.read(buff)) != -1) {
+//                fos.write(buff, 0, len);
+//            }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        videoFile = getFileStreamPath(VIDEO_NAME);
+//        if (!videoFile.exists())
+//            throw new RuntimeException("video file has problem, are you sure you have welcome_video.mp4 in res/raw folder?");
+//        return videoFile;
+//    }
 
     @Override
     protected void onDestroy() {

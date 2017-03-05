@@ -7,15 +7,16 @@
 	android:layout_marginBottom="6dp"
 	android:layout_marginRight="10dp"
 	android:layout_marginLeft="10dp"
-	card_view:cardElevation="5dp"
+	card_view:cardElevation="@dimen/list_item_elevation"
 	card_view:cardCornerRadius="10dp"
 	card_view:cardPreventCornerOverlap="true">
     <FrameLayout
         android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+		android:background="@drawable/searchview_corner"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 		<LinearLayout 
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
@@ -36,8 +37,9 @@
 				android:paddingTop="10dp"
 		        android:layout_marginLeft="3dp"
 				android:gravity="center_vertical"
-		        android:singleLine="true"
+		        android:maxLines="1"
                 android:textSize="15sp"
+				android:background="@null"
                 android:inputType="textNoSuggestions">
 		    </EditText>   
 		</LinearLayout>   

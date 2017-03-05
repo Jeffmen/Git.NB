@@ -4,17 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-	<include layout="@layout/toolbar2_for_activity" />
+
+	<include layout="@layout/toolbar_for_activity" />
 	
     <FrameLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent">
         
-	    <com.example.gitnb.widget.ProgressWebView
+	    <com.example.gitnb.module.custom.view.ProgressWebView
 	        android:id="@+id/web_content"
 		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"/>
+		    android:layout_height="match_parent"/>
 	    
 	    <FrameLayout
 	        android:id="@+id/loading_bg"

@@ -10,14 +10,15 @@
 	android:layout_marginBottom="6dp"
 	android:layout_marginRight="10dp"
 	android:layout_marginLeft="10dp"
-	card_view:cardBackgroundColor="@color/miky_white" 
-	card_view:cardElevation="5dp"
+	android:foreground="?attr/selectableItemBackground"
+	card_view:cardElevation="@dimen/list_item_elevation"
 	card_view:cardPreventCornerOverlap="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 	    android:orientation="horizontal"
+		android:background="@drawable/list_item_border"
         android:padding="10dp">
 
         <LinearLayout
@@ -50,25 +51,21 @@
 	            android:layout_height="20dp"
 	            android:gravity="center"
 	            android:orientation="horizontal">
-
-		        <ImageView
-			        android:id="@+id/type_img"
-			        android:layout_width="wrap_content"
-			        android:layout_height="match_parent"
-			        android:layout_marginLeft="8dp"
-		            android:gravity="center" 
-		            android:layout_gravity="center"
-			        android:scaleType="centerInside"
-	                android:tint="@color/search_gray"
-			        android:src="@drawable/ic_search_white_24dp">
-			    </ImageView>
+				<com.joanzapata.iconify.widget.IconTextView
+					android:id="@+id/type_img"
+					android:layout_width="17dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:gravity="center_vertical"
+					android:layout_marginLeft="25dp"
+					android:text="{fe-state}"/>
                 <TextView
                     android:id="@+id/created_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:singleLine="true"
-	                android:textColor="#758a99"
+					android:maxLines="1"
+					android:textColor="#cccccc"
                     android:textSize="12sp" />
                 
 	        </LinearLayout>
@@ -83,7 +80,8 @@
 	                    android:layout_height="wrap_content"
 	                    android:textColor="#758a99"
 	                    android:maxLines="2"
-	                    android:textSize="12sp" />
+	                    android:textSize="12sp"
+						android:background="?attr/selectableItemBackgroundBorderless"/>
 	                
 	        </LinearLayout>	        
 	        <LinearLayout
@@ -97,7 +95,7 @@
 	                    android:layout_width="match_parent"
 	                    android:layout_height="wrap_content"
 	                    android:maxLines="5"
-	                    android:ellipsize="end" 
+	                    android:ellipsize="end"
 	                    android:textColor="?android:attr/textColorPrimary"
 	                    android:textSize="12sp" />
 	
@@ -105,4 +103,7 @@
         </LinearLayout>
     </LinearLayout>
 
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
 </android.support.v7.widget.CardView>

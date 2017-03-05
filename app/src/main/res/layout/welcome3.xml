@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.gitnb.module.custom.view.BubbleView
+        android:id="@+id/bubbleView"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/button_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="35dp"
+        android:visibility="gone"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonLeft"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:background="@drawable/black_button"
+            android:textColor="@android:color/black" />
+        
+    </LinearLayout>
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="300dp">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/G"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:lottie_fileName="Mobilo/G.json"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/icon"
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="-28dp"
+            android:textSize="24sp"
+            android:text="i t {fe-circle spin @color/orange_yellow 6sp}"
+            android:gravity="bottom"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/N"
+            android:layout_width="100dp"
+            android:layout_marginLeft="-27dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:lottie_fileName="Mobilo/N.json"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/B"
+            android:layout_width="100dp"
+            android:layout_marginLeft="-68dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:lottie_fileName="Mobilo/B.json"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
+    </LinearLayout>
+
+    <com.eftimoff.androipathview.PathView
+        android:id="@+id/pathView"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:pathColor="@android:color/white"
+        app:svg="@raw/github"/>
+</RelativeLayout>

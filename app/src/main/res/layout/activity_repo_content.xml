@@ -4,30 +4,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-	<include layout="@layout/toolbar2_for_activity" />
-    
+	<include layout="@layout/toolbar_for_activity" />
+
+	<ScrollView
+        android:id="@+id/text_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+            <TextView
+                android:id="@+id/text_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+				android:visibility="gone"/>
+            <com.example.gitnb.module.custom.view.ProgressWebView
+                android:id="@+id/web_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+				android:background="@color/content_background"/>
+        </LinearLayout>
+    </ScrollView>
+
 	<android.support.v4.widget.SwipeRefreshLayout
 	    android:id="@+id/swipeRefreshLayout"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:orientation="vertical">
-		<ScrollView
-		    android:id="@+id/text_scrollview"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent">
-			<LinearLayout 
-			    android:layout_width="match_parent"
-			    android:layout_height="match_parent"
-			    android:orientation="vertical" >
-			    <TextView 
-			        android:id="@+id/text_content"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"/>
-			    <com.example.gitnb.widget.ProgressWebView
-			        android:id="@+id/web_content"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"/>
-			</LinearLayout>
-		</ScrollView>
-   </android.support.v4.widget.SwipeRefreshLayout>
+	    android:orientation="vertical"></android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

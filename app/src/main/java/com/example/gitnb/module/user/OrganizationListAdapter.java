@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -180,7 +181,7 @@ public class OrganizationListAdapter extends RecyclerView.Adapter<ViewHolder>{
 			break;
 		case TYPE_HEADER_VIEW:
 			SearchView searchHolder = (SearchView) vh;
-			if(searchText != null && !searchText.isEmpty()){
+			if(!TextUtils.isEmpty(searchText)) {
 				searchHolder.search_text.setText(searchText.toCharArray(), 0, searchText.length());
 				searchHolder.clear_button.setVisibility(View.VISIBLE);
 			}

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/content_background">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentScrim="@android:color/transparent"
+            app:collapsedTitleGravity="left"
+            app:expandedTitleTextAppearance="@style/ToolbarTitleAppearance"
+            app:expandedTitleMarginEnd="4dp"
+            app:expandedTitleMarginStart="4dp"
+            app:expandedTitleGravity="center_horizontal|bottom"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/user_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:ellipsize="end"
+                android:fitsSystemWindows="true"
+                app:actualImageScaleType="focusCrop"
+                app:placeholderImage="@drawable/ic_git_gray_240"/>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:layout_marginTop="@dimen/system_ui_height"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:theme="@style/AppTheme.ToolbarTheme">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/searchview_corner">
+
+                        <Spinner
+                            android:id="@+id/searchType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            style="@style/Widget.MyTheme.HeaderBar.Spinner"
+                            android:entries="@array/search_type"/>
+
+                        <TextView
+                            android:id="@+id/searchTri"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/orange_yellow"
+                            android:visibility="gone"
+                            android:text=" ▼ "/>
+
+                        <EditText
+                            android:id="@+id/edit_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:hint="search"
+                            android:textColorHint="@color/grey300"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:background="@null"
+                            android:inputType="textNoSuggestions"/>
+                    </LinearLayout>
+
+                        <com.joanzapata.iconify.widget.IconTextView
+                            android:id="@+id/clear_button"
+                            android:layout_width="30dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginRight="15dp"
+                            android:gravity="center"
+                            android:textSize="20sp"
+                            android:textColor="@color/shadow"
+                            android:layout_gravity="right|center_vertical"
+                            android:text="{fe-clear}"/>
+                    </FrameLayout>
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+
+    <FrameLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/content_background"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <LinearLayout
+        android:id="@+id/languageLL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/half_circus_border"
+        android:padding="8dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_gravity="right|top">
+        <com.example.gitnb.module.custom.view.FitTextView
+            android:id="@+id/language"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@android:color/white"
+            android:text="java"/>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

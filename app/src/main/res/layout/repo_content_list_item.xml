@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content">
-       <ImageView 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content"
+	android:background="?attr/selectableItemBackground">
+       <com.joanzapata.iconify.widget.IconTextView
            android:id="@+id/content_type"
            android:layout_width="35dp"
            android:layout_height="35dp"
-	       android:layout_marginLeft="33dp"
-           android:layout_gravity="center_vertical"
-           android:scaleType="centerInside"
-           android:tint="@color/search_gray"
-           android:src="@drawable/ic_chevron_right_white_18dp"/>
+		   android:gravity="center"
+		   android:textSize="19sp"
+		   android:layout_gravity="center_vertical"
+	       android:layout_marginLeft="33dp"/>
        <TextView 
            android:id="@+id/content_name"
 	       android:layout_width="0dp"
-	       android:layout_height="45dp"
+	       android:layout_height="50dp"
 	       android:layout_weight="1"
 	       android:gravity="center_vertical"
 	       android:paddingLeft="20dp"
-           android:singleLine="true"
-           android:text="Repositorys"
+           android:maxLines="1"
+           android:text="Repositories"
            android:textColor="?android:attr/textColorPrimary"
            android:textSize="16sp"/>
 </LinearLayout>

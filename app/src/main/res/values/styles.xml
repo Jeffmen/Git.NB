@@ -3,14 +3,44 @@
         <item name="colorAccent">@color/orange_yellow</item>
         <!-- toolbar（actionbar）颜色 -->  
         <item name="colorPrimary">@android:color/transparent</item>
-        <!-- 状态栏颜色 -->  
+        <!-- 状态栏颜色 -->
         <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <!-- 窗口的背景颜色 -->  
-        <item name="android:windowBackground">@android:color/white</item>  
+        <item name="android:windowBackground">@android:color/white</item>
         <!-- 底部导航栏颜色 -->  
-        <item name="android:navigationBarColor">@android:color/transparent</item> 
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.DropDownUp</item>
+    <item name="toolbarStyle">@style/ClubToolbar</item>
+    </style>1q
+
+    <style name="MainTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/orange_yellow</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:dropDownListViewStyle">@style/AppDropDownListViewStyle</item>
+        <item name="android:actionBarSize">@dimen/toolbar_height</item>
+        <item name="selectableItemBackground">?android:attr/selectableItemBackground</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+        <item name="spinnerDropDownItemStyle">@style/SpinnerItem.DropDownItem</item>
         <item name="toolbarStyle">@style/ClubToolbar</item>
-    </style> 
+    </style>
+
+    <style name="noAnimMainTheme" parent="MainTheme">
+        <!--<item name="android:windowAnimationStyle">@null</item>-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="AppLauncher" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/app_window_background</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
@@ -18,14 +48,85 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowFullscreen">false</item>
-        <item name="colorControlNormal">#c5c5c5</item>
-        <item name="colorControlActivated">?colorAccent</item>
-        <item name="colorControlHighlight">?colorAccent</item>
+        <item name="android:colorControlNormal">@color/grey200</item>
+        <item name="android:colorControlActivated">?colorAccent</item>
+        <item name="android:colorControlHighlight">@color/grey300</item>
+        <!--Button按钮正常状态颜色-->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:popupMenuStyle">@style/Theme.PopupMenu</item>
     </style>
-    
-	<style name="ClubToolbar" parent="Widget.AppCompat.Toolbar">  
-	        <item name="contentInsetStart">0dp</item><!-- 设置该属性解决空白部分-->  
+
+	<style name="ClubToolbar" parent="Widget.AppCompat.Toolbar">
+	        <item name="contentInsetStart">0dp</item><!-- 设置该属性解决空白部分-->
 	</style>
+
+    <style name="AppTheme.ToolbarTheme"  parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="contentInsetStart">0dp</item><!-- 设置该属性解决空白部分-->
+    </style>
+
+    <style name="ToolbarPopupTheme" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:dropDownListViewStyle">@style/AppDropDownListViewStyle</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <!-- 是否覆盖锚点，默认为true，即盖住Toolbar -->
+        <item name="overlapAnchor">false</item>
+        <!-- 弹出层背景颜色 -->
+        <item name="android:popupBackground">@color/milk_white</item>
+        <!-- 弹出层垂直方向上的偏移，即在竖直方向上距离Toolbar的距离，值为负则会盖住Toolbar -->
+        <item name="android:dropDownVerticalOffset">5dp</item>
+        <!-- 弹出层水平方向上的偏移，即距离屏幕左边的距离，负值会导致右边出现空隙 -->
+        <item name="android:dropDownHorizontalOffset">0dp</item>
+    </style>
+
+    <style name="AppDropDownListViewStyle" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:showDividers">middle</item>
+        <item name="android:divider">@drawable/horizontal_line</item>
+        <item name="android:background">@color/milk_white</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
+    <style name="ActionBarThemeOverlay" parent="">
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="colorControlNormal">@color/orange_yellow</item>
+        <item name="colorControlHighlight">@color/orange_yellow</item>
+    </style>
+
+    <!--设置底部弹出popupWindows的动画-->
+    <style name="anim_popup_bottombar">
+        <item name="android:windowEnterAnimation">@anim/popup_bottombar_in</item>
+        <item name="android:windowExitAnimation">@anim/popup_bottombar_out</item>
+    </style>
+
+    <style name="Widget.MyTheme.HeaderBar.Spinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="android:theme">@style/ActionBarThemeOverlay</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:dropDownVerticalOffset">35dp</item>
+        <item name="android:dropDownWidth">90dp</item>
+        <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
+        <item name="android:popupBackground">@drawable/list_item_border</item>
+    </style>
+
+    <style name="SpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+    </style>
+
+    <style name="SpinnerItem.DropDownItem" parent="@style/Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="DropDownItem.TextStyle" parent="@style/TextAppearance.AppCompat.Widget.DropDownItem">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 
 	<style name="ImageloadingDialogStyle" parent="android:Theme.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -47,7 +148,7 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
      <style name="ImageScale" parent="android:Theme.Black.NoTitleBar">
-        <item name="android:windowAnimationStyle">@style/AnimHead</item>
+        <!--<item name="android:windowAnimationStyle">@style/AnimHead</item>-->
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowFrame">@null</item>
@@ -70,5 +171,49 @@
         <item name="android:paddingRight">10dp</item>
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">4dp</item>
+    </style>
+    <style name="ToolbarTitleAppearance">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="ActivityTabLayoutStyle" parent="Widget.Design.TabLayout">
+        <!--tab的最大的宽度-->
+        <!--<item name="tabMaxWidth">@dimen/design_tab_max_width</item>-->
+        <!--tab指示标的颜色-->
+        <item name="tabIndicatorColor">@color/milk_white</item>
+        <!--tab 指示标的高度-->
+        <item name="tabIndicatorHeight">0dp</item>
+        <!--tab字体的样式-->
+        <item name="tabTextAppearance">@style/MyTabTextStyle</item>
+        <!--tab 选中时的颜色-->
+        <item name="tabSelectedTextColor">@color/milk_white</item>
+        <item name="tabPaddingStart">2dp</item>
+        <item name="tabPaddingEnd">2dp</item>
+    </style>
+    <style name="FragmentTabLayoutStyle" parent="Widget.Design.TabLayout">
+        <!--tab的最大的宽度-->
+        <!--<item name="tabMaxWidth">@dimen/design_tab_max_width</item>-->
+        <!--tab指示标的颜色-->
+        <item name="tabIndicatorColor">?colorAccent</item>
+        <!--tab 指示标的高度-->
+        <item name="tabIndicatorHeight">2dp</item>
+        <!--tab字体的样式-->
+        <item name="tabTextAppearance">@style/MyTabTextStyle</item>
+        <!--tab 选中时的颜色-->
+        <item name="tabSelectedTextColor">?colorAccent</item>
+    </style>
+    <style name="MyTabTextStyle" parent="TextAppearance.Design.Tab">
+        <!--Tab字体的大小-->
+        <item name="android:textSize">@dimen/design_tab_text_size</item>
+        <!--Tab字体的默认的颜色-->
+        <item name="android:textColor">@color/transparent_dark_gray</item>
+        <!--Tab字体是否为大写-->
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Theme.PopupMenu"
+        parent="@android:style/Widget.Holo.Light.ListPopupWindow">
+        <item name="android:popupBackground">?colorAccent</item>
     </style>
 </resources>

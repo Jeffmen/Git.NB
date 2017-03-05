@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/content_background">
+
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/appBarLayout"
+		android:layout_width="match_parent"
+		android:layout_height="230dp"
+		android:fitsSystemWindows="true"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+		app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+		app:elevation="@dimen/toolbar_elevation">
+
+		<android.support.design.widget.CollapsingToolbarLayout
+			android:id="@+id/collapsing_toolbar_layout"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:contentScrim="@android:color/transparent"
+			app:collapsedTitleGravity="left"
+			app:expandedTitleTextAppearance="@style/ToolbarTitleAppearance"
+			app:expandedTitleMarginEnd="4dp"
+			app:expandedTitleMarginStart="4dp"
+			app:expandedTitleGravity="center_horizontal|bottom"
+			app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+			<com.facebook.drawee.view.SimpleDraweeView
+				android:id="@+id/user_background"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:gravity="center"
+				android:ellipsize="end"
+				android:fitsSystemWindows="true"
+				app:contentScrim="?colorAccent"
+				app:layout_collapseParallaxMultiplier="0.6"
+				app:layout_collapseMode="parallax"
+				app:actualImageScaleType="focusCrop"
+				app:placeholderImage="@drawable/ic_git_gray_240"/>
+			<com.facebook.drawee.view.SimpleDraweeView
+				android:id="@+id/user_avatar"
+				android:layout_width="65dp"
+				android:layout_height="65dp"
+				android:layout_marginTop="?attr/actionBarSize"
+				android:layout_gravity="top|center_horizontal"
+				app:actualImageScaleType="focusCrop"
+				app:roundingBorderWidth="2dp"
+				app:roundingBorderColor="@android:color/white"
+				app:roundAsCircle="true"
+				app:placeholderImage="@drawable/ic_git_gray_240"/>
+			<TextView
+				android:id="@+id/issue_title"
+				android:layout_width="match_parent"
+				android:layout_height="100dp"
+				android:layout_gravity="bottom"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:paddingBottom="10dp"
+				android:gravity="center"
+				android:maxLines="4"
+				android:ellipsize="end"
+				android:textColor="@android:color/white"
+				android:textSize="20sp" />
+			<android.support.v7.widget.Toolbar
+				android:id="@+id/toolbar"
+				android:layout_width="match_parent"
+				android:layout_height="?attr/actionBarSize"
+				android:background="?attr/selectableItemBackground"
+				app:popupTheme="@style/ToolbarPopupTheme"
+				app:layout_collapseMode="pin" />
+		</android.support.design.widget.CollapsingToolbarLayout>
+	</android.support.design.widget.AppBarLayout>
+    
+	<android.support.v4.widget.SwipeRefreshLayout
+	    android:id="@+id/swipeRefreshLayout"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/recyclerView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:paddingBottom="6dp"
+			android:clipToPadding="false"
+			android:footerDividersEnabled="false"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</android.support.design.widget.CoordinatorLayout>

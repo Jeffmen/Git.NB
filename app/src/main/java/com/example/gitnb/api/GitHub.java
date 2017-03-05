@@ -3,7 +3,7 @@ package com.example.gitnb.api;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class GitHub implements ApiClient { 
+public class GitHub implements ApiClient {
     public static String NAME = "Github";
 	public static String CLIENT_ID = "";
 	public static String CLIENT_SECRET = "";
@@ -14,7 +14,7 @@ public class GitHub implements ApiClient {
     public static String TOKEN_KEY = "token";
     public static String CODE_KEY = "code";
     public static String STATE = "2015";
-    public static String SCOPE = "user,public_repo";
+    public static String SCOPE = "user,repo,gist,delete_repo,notifications";
     private static GitHub me;
     private Context context;
     private String token;

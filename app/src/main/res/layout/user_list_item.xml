@@ -9,14 +9,14 @@
     android:layout_marginBottom="@dimen/card_padding_vertical"
     android:layout_marginStart="@dimen/card_padding_horizontal"
     android:layout_marginEnd="@dimen/card_padding_horizontal"
-	card_view:cardBackgroundColor="@color/miky_white" 
-	card_view:cardElevation="5dp"
+	card_view:cardElevation="@dimen/list_item_elevation"
 	card_view:cardPreventCornerOverlap="true">
 
     <RelativeLayout
         android:id="@+id/rootLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/list_item_border"
         android:animateLayoutChanges="false">
         android:padding="10dp">
 
@@ -54,7 +54,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:textColor="?android:attr/textColorPrimary"
                         android:textSize="14sp" />
 
@@ -63,7 +63,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:singleLine="true" />
+                        android:maxLines="1"/>
 
             </LinearLayout>
         </LinearLayout>

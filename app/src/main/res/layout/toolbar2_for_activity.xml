@@ -2,35 +2,39 @@
 <android.support.design.widget.AppBarLayout
 	 xmlns:android="http://schemas.android.com/apk/res/android"
 	 xmlns:app="http://schemas.android.com/apk/res-auto"
+	 android:id="@+id/appBarLayout"
 	 android:layout_width="match_parent"
 	 android:layout_height="wrap_content"
-	 android:background="@color/orange_yellow">
+	 android:elevation="@dimen/toolbar_elevation"
+	 app:elevation="@dimen/toolbar_elevation">
 
-	<LinearLayout
-	    android:orientation="vertical"
+	<FrameLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content">
-		<View
-		    android:orientation="vertical"
-		    android:layout_width="match_parent"
-		    android:layout_height="25dp">
-		</View>
+		<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/toolbar_and_status_height"
+			android:scaleType="matrix"
+			android:src="@drawable/title_bg_autumn"/>
 		<android.support.v7.widget.Toolbar
-		    android:id="@+id/toolbar"  
-		    android:layout_width="match_parent"  
-		    android:layout_height="50dp">  
-				<LinearLayout 
+		    android:id="@+id/toolbar"
+            android:layout_marginTop="25dp"
+		    android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			app:theme="@style/AppTheme.ToolbarTheme">
+				<LinearLayout
 			        android:layout_width="match_parent"
 				    android:layout_height="match_parent"
 					android:gravity="center_vertical"
-			        android:orientation="horizontal">
+			        android:orientation="horizontal"
+					app:layout_scrollFlags="scroll|enterAlways">
 			        <TextView
 				        android:id="@+id/title"
 						android:layout_width="0dp"
 						android:layout_height="wrap_content"
 						android:layout_weight="1"
-			            android:singleLine="true"
-			            android:ellipsize="end" 
+			            android:maxLines="1"
+			            android:ellipsize="end"
 						android:paddingLeft="5dp"
 						android:textColor="@android:color/white"
 						android:textSize="20sp"
@@ -48,8 +52,8 @@
 						app:kswThumbHeight="16dp"
 						app:kswThumbWidth="16dp"
 						/>
-			</LinearLayout> 
+			</LinearLayout>
 		</android.support.v7.widget.Toolbar>
-	</LinearLayout>
+	</FrameLayout>
 
 </android.support.design.widget.AppBarLayout>
