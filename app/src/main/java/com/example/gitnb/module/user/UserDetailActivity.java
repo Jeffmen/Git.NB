@@ -9,11 +9,19 @@ import com.example.gitnb.module.repos.EventListActivity;
 import com.example.gitnb.module.repos.ReposListActivity;
 import com.example.gitnb.module.search.HotUserFragment;
 import com.example.gitnb.wxapi.WeiXin;
+import com.facebook.common.executors.CallerThreadExecutor;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
+import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.joanzapata.iconify.widget.IconButton;
+import com.joanzapata.iconify.widget.IconTextView;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
@@ -28,13 +36,16 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -58,10 +69,13 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 	private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private UserOperationAdapter operationAdapter;
     private SimpleDraweeView user_background;
-	private FloatingActionButton faButton;
     private SimpleDraweeView user_avatar;
 	private RecyclerView recyclerView;
+	private IconButton faButton;
+	private boolean isGetFollow = false;
+	private boolean isGetColor = false;
 	private boolean isFollow = false;
+	private int color = -1;
     private IWXAPI api;
 	private User user;
 	
@@ -92,7 +106,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(operationAdapter);
 
-		faButton = (FloatingActionButton) findViewById(R.id.faButton);
+		faButton = (IconButton) findViewById(R.id.faButton);
 		faButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -227,6 +241,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 		//mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);//设置收缩后Toolbar上字体的颜色
 		//mCollapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ToolbarTitleAppearance);
 		//mCollapsingToolbarLayout.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+		color = getResources().getColor(R.color.orange_yellow);
 		user_background = (SimpleDraweeView)findViewById(R.id.user_background);
 		//user_background.setImageURI(Uri.parse(user.getAvatar_url()));
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(user.getAvatar_url()))
@@ -239,36 +254,67 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
                         .setOldController(user_background.getController())
                         .build();
         user_background.setController(controller);
+		processImageWithPaletteApi(request, controller);
     }
 
-	private void showFollowButton(boolean value){
-		this.isFollow = value;
-		AnimatorSet bouncer = new AnimatorSet();
-		ObjectAnimator alpha = ObjectAnimator.ofFloat(faButton, "alpha", 0.0f, 1.0f);
-		ObjectAnimator scaleX = ObjectAnimator.ofFloat(faButton, "scaleX", 0.0f, 1.0f);
-		ObjectAnimator scaleY = ObjectAnimator.ofFloat(faButton, "scaleY", 0.0f, 1.0f);
-		bouncer.play(alpha).with(scaleX).with(scaleY);
-		bouncer.setDuration(500);
-		bouncer.addListener(new AnimatorListenerAdapter() {
+	private void processImageWithPaletteApi(ImageRequest request, final DraweeController controller) {
+		DataSource<CloseableReference<CloseableImage>> dataSource =
+				Fresco.getImagePipeline().fetchDecodedImage(request, user_background.getContext());
+		dataSource.subscribe(new BaseBitmapDataSubscriber() {
 			@Override
-			public void onAnimationStart(Animator animation) {
-				faButton.setVisibility(View.VISIBLE);
-				if(isFollow) {
-					ColorStateList colorRed = ColorStateList.valueOf(getResources().getColor(R.color.orange_yellow));
-					faButton.setBackgroundTintList(colorRed);
-					faButton.setImageResource(R.drawable.ic_like_off_white);
-					//ColorStateList colorWhite = ColorStateList.valueOf(Color.WHITE);
-					//faButton.setImageTintList(colorWhite);
-				}
-				else{
-					ColorStateList colorStateList = ColorStateList.valueOf(Color.WHITE);
-					ViewCompat.setBackgroundTintList(faButton, colorStateList);
-					faButton.setImageResource(R.drawable.ic_like_on_yellow);
-				}
+			protected void onFailureImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
+
 			}
-		});
-		bouncer.start();
-		invalidateOptionsMenu();
+
+			@Override protected void onNewResultImpl(@Nullable Bitmap bitmap) {
+				Palette.from(bitmap).maximumColorCount(24).generate(new Palette.PaletteAsyncListener() {
+					@Override
+					public void onGenerated(Palette palette) {
+						isGetColor = true;
+						if (palette != null) {
+							if(palette.getMutedSwatch() != null) {
+								color = palette.getMutedColor(color);
+							}
+							else if(palette.getVibrantSwatch() != null) {
+								color = palette.getVibrantColor(color);
+							}
+							else if(palette.getDominantSwatch() != null) {
+								color = palette.getDominantColor(color);
+							}
+							showFollowButton();
+						}
+					}
+				});
+			}
+		}, CallerThreadExecutor.getInstance());
+
+		user_background.setController(controller);
+	}
+
+	private void showFollowButton(){
+		if(isGetColor && isGetFollow) {
+			AnimatorSet bouncer = new AnimatorSet();
+			ObjectAnimator alpha = ObjectAnimator.ofFloat(faButton, "alpha", 0.0f, 1.0f);
+			ObjectAnimator scaleX = ObjectAnimator.ofFloat(faButton, "scaleX", 0.0f, 1.0f);
+			ObjectAnimator scaleY = ObjectAnimator.ofFloat(faButton, "scaleY", 0.0f, 1.0f);
+			bouncer.play(alpha).with(scaleX).with(scaleY);
+			bouncer.setDuration(500);
+			bouncer.addListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationStart(Animator animation) {
+					faButton.setVisibility(View.VISIBLE);
+					if (isFollow) {
+						faButton.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+						faButton.setTextColor(Color.WHITE);
+					} else {
+						faButton.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+						faButton.setTextColor(color);
+					}
+				}
+			});
+			bouncer.start();
+			invalidateOptionsMenu();
+		}
 	}
 
 	private void jumpToActivity(int position){
@@ -382,7 +428,9 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 				.subscribe(new Observer<Object>() {
 					@Override
 					public void onNext(Object result) {
-						showFollowButton(true);
+						isGetFollow = true;
+						isFollow = true;
+						showFollowButton();
 					}
 
 					@Override
@@ -391,7 +439,9 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 
 					@Override
 					public void onError(Throwable error) {
-						showFollowButton(false);
+						isGetFollow = true;
+						isFollow = false;
+						showFollowButton();
 					}
 				});
 	}
@@ -406,7 +456,8 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 					@Override
 					public void onNext(Object result) {
 						snackbar.dismiss();
-						showFollowButton(true);
+						isFollow = true;
+						showFollowButton();
 					}
 
 					@Override
@@ -431,7 +482,8 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 					@Override
 					public void onNext(Object result) {
 						snackbar.dismiss();
-						showFollowButton(false);
+						isFollow = false;
+						showFollowButton();
 					}
 
 					@Override

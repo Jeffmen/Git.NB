@@ -6,7 +6,7 @@
 
     <item android:bottom="120dp">
         <bitmap
-            android:tint="@color/orange_yellow"
+            android:tint="@color/content_background"
             android:src="@drawable/ic_git_white_80"
             android:gravity="bottom"/>
     </item>

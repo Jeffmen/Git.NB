@@ -62,18 +62,18 @@ public class BlurPostprocessor extends BasePostprocessor {
     @Override
     public void process(Bitmap dest, Bitmap source) {
         if(colorChangeListener != null) {
-            Palette.Builder builder = Palette.from(source);
-            builder.generate(new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    if (palette != null) {
-                        Palette.Swatch swatch = palette.getLightMutedSwatch();
-                        if (null != swatch) {
-                            //colorChangeListener.toolBarColorChange(swatch.getRgb());
-                        }
-                    }
-                }
-            });
+//            Palette.Builder builder = Palette.from(source);
+//            builder.generate(new Palette.PaletteAsyncListener() {
+//                @Override
+//                public void onGenerated(Palette palette) {
+//                    if (palette != null) {
+//                        Palette.Swatch swatch = palette.getLightMutedSwatch();
+//                        if (null != swatch) {
+//                            colorChangeListener.toolBarColorChange(swatch.getRgb());
+//                        }
+//                    }
+//                }
+//            });
         }
 
         int width = source.getWidth();

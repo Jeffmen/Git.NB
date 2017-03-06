@@ -9,8 +9,8 @@ import com.joanzapata.iconify.Icon;
 public enum  FontelloIcons implements Icon {
 
     fe_location('\uE800'),
-    fe_star('\uE804'),
-    fe_follower('\uE806'),
+    fe_star('\uE823'),
+    fe_follower('\uE807'),
     fe_following('\uF184'),
     fe_language('\uE80f'),
     fe_state('\uF281'),

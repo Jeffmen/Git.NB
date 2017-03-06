@@ -12,11 +12,23 @@ import com.example.gitnb.module.search.HotReposFragment;
 import com.example.gitnb.module.search.HotUserFragment;
 import com.example.gitnb.module.user.UserDetailActivity;
 import com.example.gitnb.module.user.UserListActivity;
+import com.facebook.common.executors.CallerThreadExecutor;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
+import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.CloseableStaticBitmap;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.joanzapata.iconify.widget.IconButton;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -24,18 +36,24 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,12 +77,15 @@ public class ReposDetailActivity extends BaseSwipeActivity{
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
 	private ReposOperationAdapter operationAdapter;
 	private SimpleDraweeView user_background;
-	private FloatingActionButton faButton;
 	private SimpleDraweeView user_avatar;
     private RecyclerView recyclerView;
 	private CoordinatorLayout layout;
+	private IconButton faButton;
+	private boolean isGetStar = false;
+	private boolean isGetColor = false;
 	private boolean isStar = false;
 	private Repository repos;
+	private int color = -1;
 
     protected void setTitle(TextView view){
         if(repos != null && !repos.getName().isEmpty()){
@@ -92,19 +113,18 @@ public class ReposDetailActivity extends BaseSwipeActivity{
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(operationAdapter);
-
-		faButton = (FloatingActionButton) findViewById(R.id.faButton);
+		faButton = (IconButton) findViewById(R.id.faButton);
 		faButton.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                if (isStar) {
-                    unStarRepo();
-                } else {
-                    starRepo();
-                }
-            }
-        });
+			@Override
+			public void onClick(View v) {
+				if (isStar) {
+					unStarRepo();
+				} else {
+					starRepo();
+				}
+			}
+		});
 
 		user_avatar = (SimpleDraweeView)findViewById(R.id.user_avatar);
 		AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
@@ -159,16 +179,18 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 			}
 		});
 
+		color = getResources().getColor(R.color.orange_yellow);
 		user_background = (SimpleDraweeView)findViewById(R.id.user_background);
-		ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(repos.getOwner().getAvatar_url()))
+		ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(repos.getOwner().getAvatar_url()))
 				.setPostprocessor(new BlurPostprocessor(ReposDetailActivity.this))
 				.build();
 		PipelineDraweeController controller = (PipelineDraweeController)
 				Fresco.newDraweeControllerBuilder()
-						.setImageRequest(request)
+						.setImageRequest(imageRequest)
 						.setOldController(user_background.getController())
 						.build();
 		user_background.setController(controller);
+		processImageWithPaletteApi(imageRequest, controller);
 	}
 
 	@Override
@@ -222,39 +244,70 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 	}
 
 	@Override
-	public void toolBarColorChange(int color){
+	public void toolBarColorChange(final int color){
+		this.color = color;
 		//mCollapsingToolbarLayout.setContentScrimColor(color);
         operationAdapter.setIconPrimaryColor(color);
 	}
 
-	private void showStar(boolean value){
-		this.isStar = value;
-		AnimatorSet bouncer = new AnimatorSet();
-		ObjectAnimator alpha = ObjectAnimator.ofFloat(faButton, "alpha", 0.0f, 1.0f);
-		ObjectAnimator scaleX = ObjectAnimator.ofFloat(faButton, "scaleX", 0.0f, 1.0f);
-		ObjectAnimator scaleY = ObjectAnimator.ofFloat(faButton, "scaleY", 0.0f, 1.0f);
-		bouncer.play(alpha).with(scaleX).with(scaleY);
-		bouncer.setDuration(500);
-		bouncer.addListener(new AnimatorListenerAdapter() {
+	private void processImageWithPaletteApi(ImageRequest request, final DraweeController controller) {
+		DataSource<CloseableReference<CloseableImage>> dataSource =
+				Fresco.getImagePipeline().fetchDecodedImage(request, user_background.getContext());
+		dataSource.subscribe(new BaseBitmapDataSubscriber() {
 			@Override
-			public void onAnimationStart(Animator animation) {
-				faButton.setVisibility(View.VISIBLE);
-				if(isStar) {
-					ColorStateList colorRed = ColorStateList.valueOf(getResources().getColor(R.color.orange_yellow));
-					faButton.setBackgroundTintList(colorRed);
-					faButton.setImageResource(R.drawable.ic_star_white_36dp);
-					//ColorStateList colorWhite = ColorStateList.valueOf(Color.WHITE);
-					//faButton.setImageTintList(colorWhite);
-				}
-				else{
-					ColorStateList colorStateList = ColorStateList.valueOf(Color.WHITE);
-					ViewCompat.setBackgroundTintList(faButton, colorStateList);
-					faButton.setImageResource(R.drawable.ic_star_yellow_36dp);
-				}
+			protected void onFailureImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
+
 			}
-		});
-		bouncer.start();
-		invalidateOptionsMenu();
+
+			@Override protected void onNewResultImpl(@Nullable Bitmap bitmap) {
+				Palette.from(bitmap).maximumColorCount(24).generate(new Palette.PaletteAsyncListener() {
+					@Override
+					public void onGenerated(Palette palette) {
+						isGetColor = true;
+						if (palette != null) {
+							if(palette.getMutedSwatch() != null) {
+								color = palette.getMutedColor(color);
+							}
+							else if(palette.getVibrantSwatch() != null) {
+								color = palette.getVibrantColor(color);
+							}
+							else if(palette.getDominantSwatch() != null) {
+								color = palette.getDominantColor(color);
+							}
+							showStar();
+						}
+					}
+				});
+			}
+		}, CallerThreadExecutor.getInstance());
+
+		user_background.setController(controller);
+	}
+
+	private void showStar(){
+		if(isGetColor && isGetStar) {
+			AnimatorSet bouncer = new AnimatorSet();
+			ObjectAnimator alpha = ObjectAnimator.ofFloat(faButton, "alpha", 0.0f, 1.0f);
+			ObjectAnimator scaleX = ObjectAnimator.ofFloat(faButton, "scaleX", 0.0f, 1.0f);
+			ObjectAnimator scaleY = ObjectAnimator.ofFloat(faButton, "scaleY", 0.0f, 1.0f);
+			bouncer.play(alpha).with(scaleX).with(scaleY);
+			bouncer.setDuration(500);
+			bouncer.addListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationStart(Animator animation) {
+					faButton.setVisibility(View.VISIBLE);
+					if (isStar) {
+						faButton.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+						faButton.setTextColor(Color.WHITE);
+					} else {
+						faButton.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+						faButton.setTextColor(color);
+					}
+				}
+			});
+			bouncer.start();
+			invalidateOptionsMenu();
+		}
 	}
 
     public void jumpToActivity(int position){
@@ -340,7 +393,9 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 				.subscribe(new Observer<Object>() {
 					@Override
 					public void onNext(Object result) {
-						showStar(true);
+						isGetStar = true;
+						isStar = true;
+						showStar();
 					}
 
 					@Override
@@ -349,7 +404,9 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 
 					@Override
 					public void onError(Throwable error) {
-						showStar(false);
+						isGetStar = true;
+						isStar = false;
+						showStar();
 					}
 				});
 	}
@@ -388,7 +445,8 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 					@Override
 					public void onNext(Object result) {
 						snackbar.dismiss();
-						showStar(true);
+						isStar = true;
+						showStar();
 					}
 
 					@Override
@@ -413,7 +471,8 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 					@Override
 					public void onNext(Object result) {
 						snackbar.dismiss();
-						showStar(false);
+						isStar = false;
+						showStar();
 					}
 
 					@Override
