@@ -4,12 +4,9 @@ import java.util.ArrayList;
 
 import com.example.gitnb.R;
 import com.example.gitnb.app.BaseFragment;
-import com.example.gitnb.model.Repository;
 import com.example.gitnb.model.ShowCase;
 import com.example.gitnb.module.MainFragment;
-import com.example.gitnb.module.repos.ReposDetailActivity;
 import com.example.gitnb.module.repos.ReposListActivity;
-import com.example.gitnb.module.search.HotReposFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,6 +58,7 @@ public class ShowCaseFragment extends BaseFragment implements MainFragment.TabCl
 		super.startRefresh();
 		requestShowCase();
     }
+
 	private void updateAdapter(ArrayList<ShowCase> ts){
 		if(adapter == null) {
 			adapter = new ShowCaseAdapter(getActivity());

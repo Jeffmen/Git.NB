@@ -2,9 +2,9 @@
 <!-- 底部圆角 白色背景 灰色边框 长方体 -->  
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:top="1px" android:bottom="1px" android:left="1px" android:right="1px">  
-        <shape>  
-            <solid android:color="@color/orange_yellow" />
-            <stroke android:width="1px" android:color="@color/orange_yellow" />
+        <shape>
+            <solid android:color="@color/gray_background" />
+            <stroke android:width="1px" android:color="@color/gray_background" />
             <corners android:topLeftRadius="55dp"
                 android:topRightRadius="0dp"
                 android:bottomLeftRadius="55dp"

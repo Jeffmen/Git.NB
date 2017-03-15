@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.example.gitnb.R;
 import com.example.gitnb.model.Repository;
-import com.example.gitnb.module.custom.animation.ExpandAnimation;
 import com.example.gitnb.module.custom.animation.ExpandCollapseAnimation;
 import com.example.gitnb.module.custom.view.TagListView;
 import com.example.gitnb.module.viewholder.ReposViewHolder;

@@ -9,10 +9,12 @@ import com.example.gitnb.utils.Utils;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.LinearLayout;
 
 public class BaseFragment extends Fragment{
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ApiRxJavaService apiRxJavaService;
+    private LinearLayout emptyView;
 	protected int page = 1;
 
     public static BaseFragment newInstance() {
@@ -34,6 +36,7 @@ public class BaseFragment extends Fragment{
             	startRefresh();
             }
         });
+        emptyView = (LinearLayout) view.findViewById(R.id.emptyView);
     }
 
     public SwipeRefreshLayout getSwipeRefreshLayout(){
@@ -58,5 +61,17 @@ public class BaseFragment extends Fragment{
     public void endError(String errorMessage){
         Utils.setRefreshing(getSwipeRefreshLayout(), false);
         MessageUtils.showErrorMessage(getActivity(), errorMessage);
+        showEmptyView();
+    }
+
+    public void showEmptyView(){
+        emptyView.setVisibility(View.VISIBLE);
+        emptyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                emptyView.setVisibility(View.GONE);
+                startRefresh();
+            }
+        });
     }
 }

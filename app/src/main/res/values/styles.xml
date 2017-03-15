@@ -60,7 +60,10 @@
     </style>
 
 	<style name="ClubToolbar" parent="Widget.AppCompat.Toolbar">
-	        <item name="contentInsetStart">0dp</item><!-- 设置该属性解决空白部分-->
+        <!-- 设置该属性解决Toolbar左边空白 默认为16dp-->
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="titleMargin">0dp</item>
 	</style>
 
     <style name="AppTheme.ToolbarTheme"  parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -103,6 +106,7 @@
 
     <style name="Widget.MyTheme.HeaderBar.Spinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
         <item name="android:theme">@style/ActionBarThemeOverlay</item>
+        <item name="android:background">@drawable/abc_spinner_mtrl_am_alpha</item>
         <item name="android:spinnerMode">dropdown</item>
         <item name="android:dropDownVerticalOffset">35dp</item>
         <item name="android:dropDownWidth">90dp</item>

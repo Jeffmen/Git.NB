@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
@@ -48,11 +49,17 @@ import com.example.gitnb.app.BaseFragment;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.module.LanguageActivity;
 import com.example.gitnb.module.LanguageAdapter;
+import com.example.gitnb.module.MainActivity;
 import com.example.gitnb.module.MainFragment;
 import com.example.gitnb.module.custom.CustomLayoutAnimationController;
+import com.example.gitnb.module.custom.processor.BlurPostprocessor;
 import com.example.gitnb.utils.CurrentUser;
 import com.example.gitnb.utils.Utils;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 public class SearchActivity extends BaseSwipeActivity {
     private static int FOR_LANGUAGE = 200;
@@ -89,7 +96,18 @@ public class SearchActivity extends BaseSwipeActivity {
         language = "all";
         languageText.setText(language);
 
-        setUserBackground(CurrentUser.getInstance().getMe().getAvatar_url());
+        SimpleDraweeView titleImage = (SimpleDraweeView)findViewById(R.id.user_background);
+        Uri uri = Uri.parse("res://" + getPackageName() + "/" + R.drawable.title_bg_autumn);
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setPostprocessor(new BlurPostprocessor(SearchActivity.this))
+                .build();
+        PipelineDraweeController controller = (PipelineDraweeController)
+                Fresco.newDraweeControllerBuilder()
+                        .setImageRequest(request)
+                        .setOldController(titleImage.getController())
+                        .build();
+        titleImage.setController(controller);
+
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,12 +161,6 @@ public class SearchActivity extends BaseSwipeActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
-        findViewById(R.id.searchTri).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchTypeSpinner.performClick();
             }
         });
 

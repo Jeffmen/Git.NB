@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         pager.setOffscreenPageLimit(3);
 
         tabs.setupWithViewPager(pager);
-        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 //controlFloatButton(tab.getPosition());

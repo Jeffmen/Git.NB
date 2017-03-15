@@ -5,19 +5,14 @@ import java.util.ArrayList;
 import com.example.gitnb.R;
 import com.example.gitnb.app.BaseFragment;
 import com.example.gitnb.model.Repository;
-import com.example.gitnb.module.MainActivity;
 import com.example.gitnb.module.MainFragment;
-import com.example.gitnb.module.custom.view.TagListView;
-import com.example.gitnb.module.repos.ReposListAdapter;
 import com.example.gitnb.module.search.HotReposFragment;
 import com.example.gitnb.module.repos.ReposDetailActivity;
-import com.example.gitnb.module.search.SearchActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +30,8 @@ public class TrendingReposFragment extends BaseFragment implements MainFragment.
     private LinearLayoutManager mLayoutManager;
     private TrendingReposAdapter adapter;
     private RecyclerView recyclerView;
-	private String languageText, sinceText;
+	private String languageText = "";
+	private String sinceText = "daily";
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,9 +78,11 @@ public class TrendingReposFragment extends BaseFragment implements MainFragment.
 			adapter.setOnTagChangeListener(new TrendingReposAdapter.TagChangeListener() {
 				@Override
 				public void tagChange(String language, String since) {
-					languageText = language;
-					sinceText = since;
-					startRefresh();
+					if(!languageText.equals(language) || !sinceText.equals(since)) {
+						languageText = language;
+						sinceText = since;
+						startRefresh();
+					}
 				}
 			});
 			ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(adapter);

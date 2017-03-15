@@ -3,7 +3,6 @@ package com.example.gitnb.api.rxjava;
 import com.example.gitnb.api.ApiRetrofit;
 
 public class ApiRxJavaClient {
-    private static ApiRxJavaClient client;
 	private ApiRxJavaService searchService;
 
 	private ApiRxJavaClient(){
@@ -11,11 +10,14 @@ public class ApiRxJavaClient {
 	}
 	
     public static ApiRxJavaClient getNewInstance() {
-        client = new ApiRxJavaClient();
-        return client;
+        return ClientHolder.client;
     }
 
 	public ApiRxJavaService getService() {
 		return searchService;
+	}
+
+	private static class ClientHolder{
+		private static ApiRxJavaClient client = new ApiRxJavaClient();
 	}
 }

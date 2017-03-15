@@ -165,32 +165,34 @@ public class ReposDetailActivity extends BaseSwipeActivity{
         TextView title_name = (TextView)findViewById(R.id.title_name);
         title_name.setText(repos.getOwner().getLogin());
 
-		user_avatar.setImageURI(Uri.parse(repos.getOwner().getAvatar_url()));
-		user_avatar.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (repos.getOwner() != null) {
-					Intent intent = new Intent(ReposDetailActivity.this, UserDetailActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putParcelable(HotUserFragment.USER, repos.getOwner());
-					intent.putExtras(bundle);
-					startActivity(intent);
+		if(!isGetColor) {
+			user_avatar.setImageURI(Uri.parse(repos.getOwner().getAvatar_url()));
+			user_avatar.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (repos.getOwner() != null) {
+						Intent intent = new Intent(ReposDetailActivity.this, UserDetailActivity.class);
+						Bundle bundle = new Bundle();
+						bundle.putParcelable(HotUserFragment.USER, repos.getOwner());
+						intent.putExtras(bundle);
+						startActivity(intent);
+					}
 				}
-			}
-		});
+			});
 
-		color = getResources().getColor(R.color.orange_yellow);
-		user_background = (SimpleDraweeView)findViewById(R.id.user_background);
-		ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(repos.getOwner().getAvatar_url()))
-				.setPostprocessor(new BlurPostprocessor(ReposDetailActivity.this))
-				.build();
-		PipelineDraweeController controller = (PipelineDraweeController)
-				Fresco.newDraweeControllerBuilder()
-						.setImageRequest(imageRequest)
-						.setOldController(user_background.getController())
-						.build();
-		user_background.setController(controller);
-		processImageWithPaletteApi(imageRequest, controller);
+			color = getResources().getColor(R.color.orange_yellow);
+			user_background = (SimpleDraweeView)findViewById(R.id.user_background);
+			ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(repos.getOwner().getAvatar_url()))
+					.setPostprocessor(new BlurPostprocessor(ReposDetailActivity.this))
+					.build();
+			PipelineDraweeController controller = (PipelineDraweeController)
+					Fresco.newDraweeControllerBuilder()
+							.setImageRequest(imageRequest)
+							.setOldController(user_background.getController())
+							.build();
+			user_background.setController(controller);
+			processImageWithPaletteApi(imageRequest, controller);
+		}
 	}
 
 	@Override
@@ -265,10 +267,10 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 					public void onGenerated(Palette palette) {
 						isGetColor = true;
 						if (palette != null) {
-							if(palette.getMutedSwatch() != null) {
-								color = palette.getMutedColor(color);
+							if(palette.getDarkMutedSwatch() != null) {
+								color = palette.getDarkMutedColor(color);
 							}
-							else if(palette.getVibrantSwatch() != null) {
+							else if(palette.getDarkVibrantSwatch() != null) {
 								color = palette.getVibrantColor(color);
 							}
 							else if(palette.getDominantSwatch() != null) {
