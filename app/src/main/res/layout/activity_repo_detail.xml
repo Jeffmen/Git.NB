@@ -94,7 +94,7 @@
 		android:layout_margin="20dp"
 		android:gravity="center"
 		android:visibility="gone"
-		android:foreground="?attr/selectableItemBackground"
+		android:foreground="?attr/selectableItemBackgroundBorderless"
 		android:background="@drawable/background_fab_circle"
 		android:text="{fe-star}"
 		android:textSize="24sp"

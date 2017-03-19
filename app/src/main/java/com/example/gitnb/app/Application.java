@@ -13,7 +13,7 @@ import com.squareup.leakcanary.LeakCanary;
 
 public class Application extends android.app.Application {
 
-    private static Application mContext;
+    public static Application mContext;
 
     @Override
     public void onCreate() {

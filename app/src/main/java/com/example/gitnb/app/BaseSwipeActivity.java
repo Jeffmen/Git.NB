@@ -6,7 +6,6 @@ import com.example.gitnb.R;
 import com.example.gitnb.api.rxjava.ApiRxJavaClient;
 import com.example.gitnb.api.rxjava.ApiRxJavaService;
 import com.example.gitnb.module.custom.processor.BlurPostprocessor;
-import com.example.gitnb.module.repos.ReposDetailActivity;
 import com.example.gitnb.utils.MessageUtils;
 import com.example.gitnb.utils.Utils;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -35,6 +34,7 @@ public abstract class BaseSwipeActivity  extends SwipeBackActivity implements Bl
     private ApiRxJavaService apiRxJavaService;
     private SimpleDraweeView user_background;
 	private Toolbar toolbar;
+    public int color = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,7 @@ public abstract class BaseSwipeActivity  extends SwipeBackActivity implements Bl
         apiRxJavaService = ApiRxJavaClient.getNewInstance().getService();
         user_background = (SimpleDraweeView)findViewById(R.id.user_background);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        color = getResources().getColor(R.color.orange_yellow);
         if(toolbar != null) {
             TextView title = (TextView) toolbar.findViewById(R.id.title);
             if(title != null) {
@@ -170,6 +171,7 @@ public abstract class BaseSwipeActivity  extends SwipeBackActivity implements Bl
     
     protected void endError(String errorMessage){
         Utils.setRefreshing(getSwipeRefreshLayout(), false);
-        MessageUtils.showErrorMessage(this, errorMessage);
+        //MessageUtils.showErrorMessage(this, errorMessage);
+        MessageUtils.getToast(this, errorMessage).show();
     }
 }

@@ -1,6 +1,5 @@
 package com.example.gitnb.api;
 
-import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.security.KeyManagementException;
@@ -21,10 +20,9 @@ public class TrustOkHttpClient extends OkHttpClient {
     static final int CONNECT_TIMEOUT_MILLIS = 30 * 1000;
     static final int READ_TIMEOUT_MILLIS = 30 * 1000;
 
-    public TrustOkHttpClient(Interceptor interceptor){
+    public TrustOkHttpClient(){
         this.setConnectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
         this.setReadTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-        this.interceptors().add(interceptor);
         //ignore https certificate validation
         SSLContext context = null;
         TrustManager[] trustManagers = new TrustManager[] { new FakeX509TrustManager() };

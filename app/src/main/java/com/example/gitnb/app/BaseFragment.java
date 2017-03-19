@@ -16,6 +16,7 @@ public class BaseFragment extends Fragment{
     private ApiRxJavaService apiRxJavaService;
     private LinearLayout emptyView;
 	protected int page = 1;
+    protected int color = -1;
 
     public static BaseFragment newInstance() {
         BaseFragment mainFragment = new BaseFragment();
@@ -23,6 +24,7 @@ public class BaseFragment extends Fragment{
     }
 
     public void initSwipeRefreshLayout(View view) {
+        color = getResources().getColor(R.color.orange_yellow);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(
         		android.R.color.holo_blue_bright,
@@ -60,7 +62,8 @@ public class BaseFragment extends Fragment{
 
     public void endError(String errorMessage){
         Utils.setRefreshing(getSwipeRefreshLayout(), false);
-        MessageUtils.showErrorMessage(getActivity(), errorMessage);
+        //MessageUtils.showErrorMessage(getActivity(), errorMessage);
+        MessageUtils.getToast(getActivity(), errorMessage).show();
         showEmptyView();
     }
 

@@ -8,16 +8,18 @@ import com.example.gitnb.model.Token;
 import rx.Observable;
 
 public class LoginRxJavaClient {
-    private static LoginRxJavaClient client;
 	private LoginRxJavaService loginService;
+
+	private static class Holder{
+		private static LoginRxJavaClient instance = new LoginRxJavaClient();
+	}
 
 	private LoginRxJavaClient(){
 		loginService = OauthUrlRetrofit.getRetrofit().create(LoginRxJavaService.class);
 	}
 	
     public static LoginRxJavaClient getNewInstance() {
-        client = new LoginRxJavaClient();
-        return client;
+        return Holder.instance;
     }
 
 	public LoginRxJavaService getService() {

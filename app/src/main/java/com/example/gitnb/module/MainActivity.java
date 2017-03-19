@@ -63,6 +63,7 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
     private Map<Integer,Integer> mFragmentNameByDrawerId = new HashMap<>();
+    private static int FOR_NOTIFICATION = 300;
 	private NavigationView navigationView;
     private TabPagerAdapter pagerAdapter;
     private DrawerLayout drawerLayout;
@@ -137,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
         initDrawerMap();
         initNavigationView();
 
-
         drawerLayout.setVisibility(View.INVISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             drawerLayout.post(new Runnable() {
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else if (menuItem.getItemId() == R.id.nav_notification) {
                     Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, FOR_NOTIFICATION);
                 } else if (menuItem.getItemId() == R.id.sub_exit) {
                     Dialog dialog = new AlertDialog.Builder(MainActivity.this).setTitle("Caution")
                             .setMessage("Are you sure to sign out?")
@@ -293,9 +293,11 @@ public class MainActivity extends AppCompatActivity {
 	}
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        getNotifications();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == FOR_NOTIFICATION){
+            getNotifications();
+        }
     }
 
     @Override

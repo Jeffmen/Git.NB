@@ -42,6 +42,7 @@ public enum  FontelloIcons implements Icon {
     fe_more('\uF107'),
     fe_edit('\uE836'),
     fe_clear('\uE82A'),
+    fe_message('\uE80D'),
     fe_delete('\uE829');
 
     char character;

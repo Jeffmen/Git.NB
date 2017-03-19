@@ -39,19 +39,6 @@
 						android:textColor="@android:color/white"
 						android:textSize="20sp"
 						android:textStyle="bold" />
-					<com.kyleduo.switchbutton.SwitchButton
-				        android:id="@+id/switch_bt"
-						android:visibility="gone"
-						style="@style/SwitchButtonStyle"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_gravity="center"
-						app:kswBackDrawable="@drawable/miui_back_drawable"
-						app:kswBackMeasureRatio="2.2"
-						app:kswThumbDrawable="@drawable/miui_thumb_drawable"
-						app:kswThumbHeight="16dp"
-						app:kswThumbWidth="16dp"
-						/>
 			</LinearLayout>
 		</android.support.v7.widget.Toolbar>
 	</FrameLayout>

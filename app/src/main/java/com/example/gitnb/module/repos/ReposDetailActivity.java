@@ -12,6 +12,7 @@ import com.example.gitnb.module.search.HotReposFragment;
 import com.example.gitnb.module.search.HotUserFragment;
 import com.example.gitnb.module.user.UserDetailActivity;
 import com.example.gitnb.module.user.UserListActivity;
+import com.example.gitnb.wxapi.WeiXin;
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
@@ -29,6 +30,9 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.joanzapata.iconify.widget.IconButton;
 import com.joanzapata.iconify.widget.IconTextView;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -65,6 +69,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -85,7 +90,6 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 	private boolean isGetColor = false;
 	private boolean isStar = false;
 	private Repository repos;
-	private int color = -1;
 
     protected void setTitle(TextView view){
         if(repos != null && !repos.getName().isEmpty()){
@@ -231,6 +235,19 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 			case R.id.menu_item_fork:
 				forkRepo();
 				break;
+			case R.id.menu_item_share:
+//				final Intent intent = new Intent(Intent.ACTION_SEND);
+//				intent.setType("text/plain");
+//				intent.putExtra(Intent.EXTRA_SUBJECT, repos.getName());
+//				intent.putExtra(Intent.EXTRA_TEXT, repos.getDescription());
+//				startActivity(intent);
+				WeiXin.getInstance().share2WeiXin(this, 1,
+						repos.getName(),
+						repos.getDescription(),
+						repos.getHtml_url(),
+						user_avatar
+				);
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -267,11 +284,11 @@ public class ReposDetailActivity extends BaseSwipeActivity{
 					public void onGenerated(Palette palette) {
 						isGetColor = true;
 						if (palette != null) {
-							if(palette.getDarkMutedSwatch() != null) {
-								color = palette.getDarkMutedColor(color);
+							if(palette.getMutedSwatch() != null) {
+								color = palette.getMutedColor(color);
 							}
 							else if(palette.getDarkVibrantSwatch() != null) {
-								color = palette.getVibrantColor(color);
+								color = palette.getDarkVibrantColor(color);
 							}
 							else if(palette.getDominantSwatch() != null) {
 								color = palette.getDominantColor(color);

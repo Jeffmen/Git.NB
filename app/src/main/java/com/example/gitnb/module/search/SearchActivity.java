@@ -94,7 +94,7 @@ public class SearchActivity extends BaseSwipeActivity {
         languageText = (TextView) findViewById(R.id.language);
         clear = findViewById(R.id.clear_button);
         language = "all";
-        languageText.setText(language);
+        languageText.setText("All");
 
         SimpleDraweeView titleImage = (SimpleDraweeView)findViewById(R.id.user_background);
         Uri uri = Uri.parse("res://" + getPackageName() + "/" + R.drawable.title_bg_autumn);
@@ -241,10 +241,10 @@ public class SearchActivity extends BaseSwipeActivity {
                 languageAnim(true);
                 language = adapter.getItemValue(position);
                 if(TextUtils.isEmpty(language)){
-                    languageText.setText("all");
+                    languageText.setText("All");
                 }
                 else {
-                    languageText.setText(language);
+                    languageText.setText(adapter.getItemName(position));
                 }
                 if(current instanceof MainFragment.UpdateListener){
                     ((MainFragment.UpdateListener)current).update();

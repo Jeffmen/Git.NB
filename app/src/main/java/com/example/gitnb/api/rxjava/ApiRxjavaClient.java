@@ -5,6 +5,10 @@ import com.example.gitnb.api.ApiRetrofit;
 public class ApiRxJavaClient {
 	private ApiRxJavaService searchService;
 
+	private static class ClientHolder{
+		private static ApiRxJavaClient client = new ApiRxJavaClient();
+	}
+
 	private ApiRxJavaClient(){
 	    searchService = ApiRetrofit.getRetrofit().create(ApiRxJavaService.class);
 	}
@@ -15,9 +19,5 @@ public class ApiRxJavaClient {
 
 	public ApiRxJavaService getService() {
 		return searchService;
-	}
-
-	private static class ClientHolder{
-		private static ApiRxJavaClient client = new ApiRxJavaClient();
 	}
 }

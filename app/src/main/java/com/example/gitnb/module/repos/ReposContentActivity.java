@@ -8,19 +8,16 @@ import com.example.gitnb.model.Content;
 import com.example.gitnb.model.Repository;
 import com.example.gitnb.module.custom.view.ProgressWebView;
 import com.example.gitnb.module.search.HotReposFragment;
-import com.kyleduo.switchbutton.SwitchButton;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 public class ReposContentActivity extends BaseSwipeActivity {
     private boolean isShowInWeb = true;
     private ProgressWebView web_content;
-    private SwitchButton switchBt;
 	private TextView text_content;
     private String content_url;
     private Repository repos;
@@ -48,19 +45,6 @@ public class ReposContentActivity extends BaseSwipeActivity {
 
         text_content = (TextView) findViewById(R.id.text_content);
         web_content = (ProgressWebView) findViewById(R.id.web_content);
-
-//        switchBt = (SwitchButton) findViewById(R.id.switch_bt);
-//        switchBt.setChecked(this.isShowInWeb);
-//        //switchBt.setVisibility(View.VISIBLE);
-//        switchBt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//
-//           @Override
-//           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//        	   isShowInWeb = isChecked;
-//        	   updateContent();
-//           }
-//
-//        });
     }
 
     @Override
@@ -107,7 +91,7 @@ public class ReposContentActivity extends BaseSwipeActivity {
 			public void onError(String Message) {
 				endError(Message);
 			}
-			
+
     	}).request(url, Content.class);
     }
 }

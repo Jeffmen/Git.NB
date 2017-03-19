@@ -75,8 +75,6 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 	private boolean isGetFollow = false;
 	private boolean isGetColor = false;
 	private boolean isFollow = false;
-	private int color = -1;
-    private IWXAPI api;
 	private User user;
 	
     protected void setTitle(TextView view){
@@ -136,8 +134,6 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
                 user_avatar.setAlpha(1 - alpha);
             }
         });
-        api = WXAPIFactory.createWXAPI(this, WeiXin.AppID, true);
-        api.registerApp(WeiXin.AppID);
 	}
 
 	@Override
@@ -203,11 +199,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 				popupMenu.setOnMenuItemClickListener(this);
 				popupMenu.inflate(R.menu.repos_detail_menu);
 				popupMenu.show();
-//				final Intent intent = new Intent(Intent.ACTION_SEND);
-//				intent.setType("text/plain")
-//				.putExtra(Intent.EXTRA_TEXT, user.getName());
-//				startActivity(intent);
-//				break;
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -227,7 +219,12 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 				}
 				return true;
 			case R.id.menu_item_share:
-				share2weixin(1);
+				WeiXin.getInstance().share2WeiXin(this, 1,
+						user.getLogin(),
+						user.getName(),
+						user.getHtml_url(),
+						user_avatar
+						);
 				return true;
 		}
 		return false;
@@ -241,7 +238,6 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 		//mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);//设置收缩后Toolbar上字体的颜色
 		//mCollapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ToolbarTitleAppearance);
 		//mCollapsingToolbarLayout.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-		color = getResources().getColor(R.color.orange_yellow);
 		user_background = (SimpleDraweeView)findViewById(R.id.user_background);
 		//user_background.setImageURI(Uri.parse(user.getAvatar_url()));
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(user.getAvatar_url()))
@@ -275,8 +271,8 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 							if(palette.getMutedSwatch() != null) {
 								color = palette.getMutedColor(color);
 							}
-							else if(palette.getVibrantSwatch() != null) {
-								color = palette.getVibrantColor(color);
+							else if(palette.getDarkVibrantSwatch() != null) {
+								color = palette.getDarkVibrantColor(color);
 							}
 							else if(palette.getDominantSwatch() != null) {
 								color = palette.getDominantColor(color);
@@ -377,27 +373,6 @@ public class UserDetailActivity extends BaseSwipeActivity implements PopupMenu.O
 		operationAdapter.updateUser(user);
         recyclerView.setVisibility(View.VISIBLE);
 	}
-
-    private void share2weixin(int flag) {
-        if (!api.isWXAppInstalled()) {
-            Toast.makeText(UserDetailActivity.this, "您还未安装微信客户端",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        WXWebpageObject webPage = new WXWebpageObject();
-		webPage.webpageUrl = user.getHtml_url();
-        WXMediaMessage msg = new WXMediaMessage(webPage);
-
-        msg.title = user.getLogin();
-        msg.description = user.getName();
-        msg.setThumbImage(convertViewToBitmap(user_avatar));
-        SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = String.valueOf(System.currentTimeMillis());
-        req.message = msg;
-        req.scene = SendMessageToWX.Req.WXSceneTimeline;
-        api.sendReq(req);
-    }
 
 	private void getSingleUser(){
 		getApiService().getSingleUser(user.getLogin())

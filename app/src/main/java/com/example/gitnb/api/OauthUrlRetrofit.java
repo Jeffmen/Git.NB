@@ -7,10 +7,11 @@ import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 
 import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class OauthUrlRetrofit implements Interceptor{
+public class OauthUrlRetrofit{
 
     private static OauthUrlRetrofit apiRetrofit;
     private Retrofit retrofit;
@@ -27,22 +28,25 @@ public class OauthUrlRetrofit implements Interceptor{
     }
 
     private OauthUrlRetrofit(){
+        OkHttpClient okHttpClient = new TrustOkHttpClient();
+        okHttpClient.interceptors().add(getInterceptor());
+
         retrofit = new Retrofit.Builder()
-                .baseUrl(getBaseUrl())
+                .baseUrl(GitHub.API_OAUTH_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .client(new TrustOkHttpClient(this)).build();
+                .client(okHttpClient).build();
     }
 
-	public static String getBaseUrl() {
-		return GitHub.API_OAUTH_URL;
-	}
-
-    @Override
-    public Response intercept(Interceptor.Chain chain) throws IOException {
-        Request request = chain.request().newBuilder()
-                .header("Accept", "application/json")
-                .build();
-        return chain.proceed(request);
+    private Interceptor getInterceptor(){
+        return new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request().newBuilder()
+                        .header("Accept", "application/json")
+                        .build();
+                return chain.proceed(request);
+            }
+        };
     }
 }
