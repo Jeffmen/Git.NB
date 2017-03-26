@@ -11,6 +11,7 @@ Git.NB现以升级到2.0，功能大有升级，UI大改版本。各种有趣的
 如果发现有任何问题和建议，随时欢迎Email或者开Issues, 如果有版权问题，立即删除。
 
 ###使用的开源技术
+
 1，网络端使用非常牛叉非常好用的[Retrofit2.0](https://github.com/square/retrofit)
 
 2，网络图片加载用的[Fresco](https://github.com/facebook/fresco)
