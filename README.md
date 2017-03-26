@@ -1,16 +1,17 @@
 # Git.NB
 A android app client for Github.
 
-##效果图
+# 效果图
 
 ![image](https://github.com/Jeffmen/Git.NB/blob/master/apk/MI%204LTE_Recording_20170326.gif)
 
-##关于项目
+# 关于项目
+
 Git.NB现以升级到2.0，功能大有升级，UI大改版本。各种有趣的操作，欢迎下载代码试完。
 
 如果发现有任何问题和建议，随时欢迎Email或者开Issues, 如果有版权问题，立即删除。
 
-###使用的开源技术
+# 使用的开源技术
 
 1，网络端使用非常牛叉非常好用的[Retrofit2.0](https://github.com/square/retrofit)
 
@@ -24,7 +25,8 @@ Git.NB现以升级到2.0，功能大有升级，UI大改版本。各种有趣的
 
 6，个人非常喜欢的图标库[iconify](https://github.com/JoanZapata/android-iconify)
 
-###关于GitHub的api
+# 关于GitHub的api
+
 GitHub的api管理非学好，好用易懂，真是楷模啊，可以去官网看[api](https://developer.github.com/v3/)的使用介绍。
 
 GitHub客户端登录认证，可以的自己账户设置里OAuth applications－Developer applications中申请。
