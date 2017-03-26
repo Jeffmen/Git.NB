@@ -3,7 +3,7 @@ A android app client for Github.
 
 ##效果图
 
-![image](https://github.com/Jeffmen/Git.NB/blob/master/apk/MI%204LTE_Recording_20170326.mp4)
+![image](https://github.com/Jeffmen/Git.NB/blob/master/apk/MI%204LTE_Recording_20170326.gif)
 
 ##关于项目
 Git.NB现以升级到2.0，功能大有升级，UI大改版本。各种有趣的操作，欢迎下载代码试完。
@@ -21,8 +21,11 @@ Git.NB现以升级到2.0，功能大有升级，UI大改版本。各种有趣的
 
 5，[Rxjava](https://github.com/ReactiveX/RxJava)
 
+6，个人非常喜欢的图标库[iconify](https://github.com/JoanZapata/android-iconify)
+
 ###关于GitHub的api
 GitHub的api管理非学好，好用易懂，真是楷模啊，可以去官网看[api](https://developer.github.com/v3/)的使用介绍。
+
 GitHub客户端登录认证，可以的自己账户设置里OAuth applications－Developer applications中申请。
 
 
