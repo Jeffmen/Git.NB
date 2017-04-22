@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 
 public class GitHub{
     public static String NAME = "Github";
-	public static String CLIENT_ID = "a4220ecd856ed8c01689";
-	public static String CLIENT_SECRET = "cdf66e915c257e7e657be966c823b7b64151cf15";
+	public static String CLIENT_ID = "";
+	public static String CLIENT_SECRET = "";
 	public static String REDIRECT_URI = "https://github.com/Jeffmen/GitNB";
 	public static String API_AUTHORIZE_URL = "https://github.com/login/oauth/authorize/";
     public static String API_OAUTH_URL = "https://github.com/";
