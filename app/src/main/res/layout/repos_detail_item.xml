@@ -69,7 +69,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:layout_marginLeft="25dp"
-                    android:tint="@color/search_gray"
                     android:text="{fe-state}"/>
                 <TextView
                     android:id="@+id/type"

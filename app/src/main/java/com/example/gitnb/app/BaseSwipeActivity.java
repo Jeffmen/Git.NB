@@ -69,9 +69,9 @@ public abstract class BaseSwipeActivity  extends SwipeBackActivity implements Bl
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         if(mSwipeRefreshLayout != null){
 	        mSwipeRefreshLayout.setColorSchemeResources(
-//                    android.R.color.holo_blue_bright,
-//                    android.R.color.holo_green_light,
-//                    android.R.color.holo_orange_light,
+                    android.R.color.holo_blue_bright,
+                    android.R.color.holo_green_light,
+                    android.R.color.holo_orange_light,
                     android.R.color.holo_red_light);
 	        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override

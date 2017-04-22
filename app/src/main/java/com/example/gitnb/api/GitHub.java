@@ -3,10 +3,10 @@ package com.example.gitnb.api;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class GitHub implements ApiClient {
+public class GitHub{
     public static String NAME = "Github";
-	public static String CLIENT_ID = "";
-	public static String CLIENT_SECRET = "";
+	public static String CLIENT_ID = "a4220ecd856ed8c01689";
+	public static String CLIENT_SECRET = "cdf66e915c257e7e657be966c823b7b64151cf15";
 	public static String REDIRECT_URI = "https://github.com/Jeffmen/GitNB";
 	public static String API_AUTHORIZE_URL = "https://github.com/login/oauth/authorize/";
     public static String API_OAUTH_URL = "https://github.com/";
@@ -34,21 +34,6 @@ public class GitHub implements ApiClient {
 	public static void initialize(Context context) {
 		me = new GitHub(context);
 	}
-    
-    @Override
-    public String getApiOauthUrlEndpoint() {
-        return API_OAUTH_URL;
-    }
-
-    @Override
-    public String getApiEndpoint() {
-        return API_URL;
-    }
-
-    @Override
-    public String getType() {
-        return "github";
-    }
 
     public String getCode() {
 		return code;

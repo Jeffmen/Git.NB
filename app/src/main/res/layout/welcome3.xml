@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.gitnb.module.custom.view.BubbleView
-        android:id="@+id/bubbleView"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <!--<com.example.gitnb.module.custom.view.BubbleView-->
+        <!--android:id="@+id/bubbleView"-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
 
     <LinearLayout
         android:id="@+id/button_ll"

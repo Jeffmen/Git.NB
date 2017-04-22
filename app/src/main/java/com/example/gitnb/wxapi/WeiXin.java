@@ -1,14 +1,10 @@
 package com.example.gitnb.wxapi;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.view.View;
-import android.widget.Toast;
 
-import com.example.gitnb.api.ApiClient;
 import com.example.gitnb.app.Application;
-import com.example.gitnb.module.user.UserDetailActivity;
 import com.example.gitnb.utils.MessageUtils;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;

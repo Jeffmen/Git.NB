@@ -26,7 +26,7 @@ public class RedPointDrawable extends Drawable {
     public RedPointDrawable(Context context, Drawable origin) {
         mDrawable = origin;// 原来的drawable
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-        mPaint.setColor(Color.RED);
+        mPaint.setColor(context.getResources().getColor(R.color.orange_yellow));
         mRadius = context.getResources().getDimensionPixelSize(R.dimen.red_point_radius_small);//小红点半径
     }
 

@@ -1,16 +1,10 @@
 package com.example.gitnb.module.user;
 
-import java.text.SimpleDateFormat;
-
 import com.example.gitnb.R;
-import com.example.gitnb.api.RetrofitNetworkAbs;
-import com.example.gitnb.api.client.UsersClient;
-import com.example.gitnb.api.rxjava.ApiRxJavaClient;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.model.Organization;
 import com.example.gitnb.module.repos.EventListActivity;
 import com.example.gitnb.module.repos.ReposListActivity;
-import com.example.gitnb.utils.MessageUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import android.content.Intent;
@@ -18,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import rx.Observer;
@@ -35,6 +28,7 @@ public class OrganizationDetailActivity extends BaseSwipeActivity{
     protected void setTitle(TextView view){
         if(orgs != null && !orgs.login.isEmpty()){
         	view.setText(orgs.login);
+			setUserBackground(orgs.avatar_url);
         }else{
         	view.setText("NULL");
         }

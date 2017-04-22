@@ -1,7 +1,7 @@
 package com.example.gitnb.module.repos;
 
 import com.example.gitnb.R;
-import com.example.gitnb.api.client.OKHttpClient;
+import com.example.gitnb.api.rxjava.OKHttpClient;
 import com.example.gitnb.api.RetrofitNetworkAbs;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.model.Content;

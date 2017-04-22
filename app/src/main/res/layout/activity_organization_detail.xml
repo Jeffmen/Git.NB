@@ -6,7 +6,7 @@
     android:baselineAligned="false"
 	android:background="#88EDEDED">
     
-	<include layout="@layout/toolbar2_for_activity" />
+	<include layout="@layout/toolbar_for_activity" />
     
 	<android.support.v4.widget.SwipeRefreshLayout
 	    android:id="@+id/swipeRefreshLayout"
@@ -37,12 +37,12 @@
 				    <LinearLayout 
 				       android:layout_width="match_parent"
 				       android:layout_height="wrap_content">
-				       <ImageView 
-				           android:layout_width="wrap_content"
-				           android:layout_height="match_parent"
-					       android:layout_marginLeft="25dp"
-				           android:tint="@color/search_gray"
-				           android:src="@drawable/ic_chevron_right_white_18dp"/>
+						<com.joanzapata.iconify.widget.IconTextView
+							android:layout_width="17dp"
+							android:layout_height="wrap_content"
+							android:gravity="center_vertical"
+							android:layout_marginLeft="25dp"
+							android:text="{fe-contributor}"/>
 				       <TextView 
 				           android:id="@+id/members"
 					       android:layout_width="0dp"
@@ -50,7 +50,7 @@
 					       android:layout_weight="1"
 					       android:gravity="center_vertical"
 					       android:paddingLeft="20dp"
-				           android:singleLine="true"
+				           android:maxLines="1"
 				           android:autoLink="all" 
 				           android:text="Members"
 				           android:textColor="?android:attr/textColorPrimary"
@@ -59,7 +59,8 @@
 					        android:layout_width="wrap_content"
 					        android:layout_height="match_parent"
 					        android:tint="@color/search_gray"
-					        android:src="@drawable/ic_chevron_right_white_48dp"/>
+							android:layout_marginRight="25dp"
+					        android:src="@drawable/ic_chevron_right_white_18dp"/>
 			       </LinearLayout>
 			    </LinearLayout>
 			    <LinearLayout 
@@ -74,12 +75,12 @@
 				    <LinearLayout 
 				       android:layout_width="match_parent"
 				       android:layout_height="wrap_content">
-				       <ImageView 
-				           android:layout_width="wrap_content"
-				           android:layout_height="match_parent"
-					       android:layout_marginLeft="25dp"
-				           android:tint="@color/search_gray"
-				           android:src="@drawable/ic_chevron_right_white_18dp"/>
+						<com.joanzapata.iconify.widget.IconTextView
+							android:layout_width="17dp"
+							android:layout_height="wrap_content"
+							android:gravity="center_vertical"
+							android:layout_marginLeft="25dp"
+							android:text="{fe-event}"/>
 				       <TextView 
 				           android:id="@+id/events"
 					       android:layout_width="0dp"
@@ -94,17 +95,18 @@
 					        android:layout_width="wrap_content"
 					        android:layout_height="match_parent"
 					        android:tint="@color/search_gray"
-					        android:src="@drawable/ic_chevron_right_white_48dp"/>
+							android:layout_marginRight="25dp"
+					        android:src="@drawable/ic_chevron_right_white_18dp"/>
 			       </LinearLayout>
 			       <LinearLayout 
 				       android:layout_width="match_parent"
 				       android:layout_height="wrap_content">
-				       <ImageView 
-				           android:layout_width="wrap_content"
-				           android:layout_height="match_parent"
-					       android:layout_marginLeft="25dp"
-				           android:tint="@color/search_gray"
-				           android:src="@drawable/ic_chevron_right_white_18dp"/>
+					   <com.joanzapata.iconify.widget.IconTextView
+						   android:layout_width="17dp"
+						   android:layout_height="wrap_content"
+						   android:gravity="center_vertical"
+						   android:layout_marginLeft="25dp"
+						   android:text="{fe-repos}"/>
 				       <TextView 
 				           android:id="@+id/repositories"
 					       android:layout_width="0dp"
@@ -119,7 +121,8 @@
 					        android:layout_width="wrap_content"
 					        android:layout_height="match_parent"
 					        android:tint="@color/search_gray"
-					        android:src="@drawable/ic_chevron_right_white_48dp"/>
+							android:layout_marginRight="25dp"
+					        android:src="@drawable/ic_chevron_right_white_18dp"/>
 			       </LinearLayout>
             	</LinearLayout>
 		    </LinearLayout>

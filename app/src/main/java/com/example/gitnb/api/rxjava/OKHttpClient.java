@@ -1,4 +1,4 @@
-package com.example.gitnb.api.client;
+package com.example.gitnb.api.rxjava;
 
 import java.io.IOException;
 

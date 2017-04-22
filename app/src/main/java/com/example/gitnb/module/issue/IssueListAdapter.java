@@ -221,16 +221,16 @@ public class IssueListAdapter extends RecyclerView.Adapter<ViewHolder>{
 				searchHolder.close.setTextColor(Color.BLACK);
 				Drawable drawable = mContext.getResources().getDrawable(R.drawable.custom_dropdown_spinner);
 				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());//必须设置图片大小，否则不显示
-				searchHolder.open.setCompoundDrawables(drawable, null, null, null);
-				searchHolder.close.setCompoundDrawables(null, null, null, null);
+				searchHolder.open.setCompoundDrawables(null, null, null, null);
+				searchHolder.close.setCompoundDrawables(drawable, null, null, null);
 			}
 			else{
 				searchHolder.open.setTextColor(Color.BLACK);
 				searchHolder.close.setTextColor(Color.GRAY);
 				Drawable drawable = mContext.getResources().getDrawable(R.drawable.custom_dropdown_spinner);
 				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());//必须设置图片大小，否则不显示
-				searchHolder.open.setCompoundDrawables(null, null, null, null);
-				searchHolder.close.setCompoundDrawables(drawable, null, null, null);
+				searchHolder.open.setCompoundDrawables(drawable, null, null, null);
+				searchHolder.close.setCompoundDrawables(null, null, null, null);
 			}
 			break;
 		}

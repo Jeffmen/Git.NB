@@ -90,7 +90,7 @@ public class OrganizationListActivity  extends BaseSwipeActivity{
 		}); 
         
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
+        //recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 		ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(adapter);
 		SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);

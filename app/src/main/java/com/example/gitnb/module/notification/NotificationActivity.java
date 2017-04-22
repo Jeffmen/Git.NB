@@ -12,19 +12,8 @@ import android.widget.TextView;
 import com.example.gitnb.R;
 import com.example.gitnb.app.BaseSwipeActivity;
 import com.example.gitnb.model.Notification;
-import com.example.gitnb.model.Organization;
-import com.example.gitnb.model.Repository;
-import com.example.gitnb.model.ShowCase;
-import com.example.gitnb.model.User;
-import com.example.gitnb.model.search.ShowCaseSearch;
 import com.example.gitnb.module.issue.IssueDetailActivity;
-import com.example.gitnb.module.issue.IssueListActivity;
-import com.example.gitnb.module.repos.ReposDetailActivity;
-import com.example.gitnb.module.repos.ReposListAdapter;
 import com.example.gitnb.module.search.HotReposFragment;
-import com.example.gitnb.module.search.HotUserFragment;
-import com.example.gitnb.module.trending.ShowCaseFragment;
-import com.example.gitnb.module.user.OrganizationDetailActivity;
 import com.example.gitnb.utils.CurrentUser;
 
 import java.util.ArrayList;
@@ -38,6 +27,7 @@ import rx.schedulers.Schedulers;
 
 public class NotificationActivity extends BaseSwipeActivity{
 	private String TAG = NotificationActivity.class.getName();
+	private static int FOR_NOTIFICATION = 300;
 	public static String USER = "user_key";
 	private RecyclerView recyclerView;
 	private NotificationListAdapter adapter;
@@ -65,7 +55,7 @@ public class NotificationActivity extends BaseSwipeActivity{
 			 public void onItemClick(View view, final int position) {
 				 getApiService().markAsRead(String.valueOf(adapter.getItem(position).id))
 						 .subscribeOn(Schedulers.io())
-						 .observeOn(AndroidSchedulers.mainThread())
+						 //.observeOn(AndroidSchedulers.mainThread())
 						 .subscribe(new Observer<Response<Boolean>>() {
 							 @Override
 							 public void onNext(Response<Boolean> result) {
@@ -88,7 +78,7 @@ public class NotificationActivity extends BaseSwipeActivity{
 				 bundle.putString(IssueDetailActivity.ISSUE_URL, adapter.getItem(position).subject.url);
 				 bundle.putParcelable(HotReposFragment.REPOS, adapter.getItem(position).repository);
 				 intent.putExtras(bundle);
-				 startActivity(intent);
+				 startActivityForResult(intent, FOR_NOTIFICATION);
 			 }
 		 });
 		 adapter.setOnLoadMoreClickListener(new NotificationListAdapter.OnItemClickListener() {
@@ -112,18 +102,24 @@ public class NotificationActivity extends BaseSwipeActivity{
 		 slideInAdapter.setDuration(300);
 		 slideInAdapter.setInterpolator(new OvershootInterpolator());
 		 recyclerView.setAdapter(slideInAdapter);
-
-		 getNotifications();
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		super.startRefresh();
-		if(toRemovePosition >= 0){
-			adapter.remove(toRemovePosition);
-			toRemovePosition = -1;
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == FOR_NOTIFICATION){
+			startRefresh();
+			if(toRemovePosition >= 0){
+				adapter.remove(toRemovePosition);
+				toRemovePosition = -1;
+			}
 		}
+	}
+
+	@Override
+	protected void startRefresh(){
+		super.startRefresh();
+		getNotifications();
 	}
 
 	public void onOK(ArrayList<Notification> list) {
